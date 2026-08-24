@@ -168,30 +168,53 @@
     .delay-2 { animation-delay: 0.2s; }
     .delay-3 { animation-delay: 0.3s; }
     .delay-4 { animation-delay: 0.4s; }
+
+    /* Responsive tweaks */
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 3rem !important;
+      }
+      .hero-sub {
+        font-size: 1.25rem !important;
+      }
+      .btn-solid, .btn-ghost {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        font-size: 0.7rem;
+      }
+    }
+    @media (max-width: 640px) {
+      .announcement-text {
+        font-size: 0.55rem;
+      }
+      .category-tile {
+        height: 10rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- ====== TOP ANNOUNCEMENT BAR (sleeker) ====== -->
-  <div class="bg-[#0b0b0b] text-white text-[0.65rem] tracking-[0.1em] py-2.5 px-4 flex flex-wrap justify-between items-center border-b border-white/5">
-    <div class="flex flex-wrap items-center gap-x-5 gap-y-1 mx-auto md:mx-0">
-      <span><i class="fas fa-truck-fast mr-2 text-[#b0a28f]"></i> FREE SHIPPING ON ORDERS OVER $100</span>
-      <span class="hidden sm:inline-block w-px h-4 bg-white/20"></span>
-      <span class="hidden sm:inline"><i class="fas fa-tag mr-2 text-[#b0a28f]"></i> 10% OFF FIRST ORDER | CODE: STREET10</span>
+  <!-- ====== TOP ANNOUNCEMENT BAR (fully responsive) ====== -->
+  <div class="bg-[#0b0b0b] text-white text-[0.65rem] tracking-[0.1em] py-2.5 px-4 flex flex-wrap justify-between items-center border-b border-white/5 gap-2">
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mx-auto md:mx-0 text-center md:text-left">
+      <span class="announcement-text"><i class="fas fa-truck-fast mr-1.5 text-[#b0a28f]"></i> FREE SHIPPING OVER $100</span>
+      <span class="hidden xs:inline-block w-px h-4 bg-white/20"></span>
+      <span class="hidden xs:inline announcement-text"><i class="fas fa-tag mr-1.5 text-[#b0a28f]"></i> 10% OFF | CODE: STREET10</span>
     </div>
-    <div class="flex gap-5 text-[0.65rem]">
-      <a href="#" class="hover:text-[#b0a28f] transition-colors"><i class="far fa-question-circle mr-1.5"></i> HELP</a>
-      <a href="#" class="hover:text-[#b0a28f] transition-colors"><i class="fas fa-box mr-1.5"></i> TRACK</a>
+    <div class="flex gap-3 text-[0.6rem]">
+      <a href="#" class="hover:text-[#b0a28f] transition-colors hidden sm:inline"><i class="far fa-question-circle mr-1"></i> HELP</a>
+      <a href="#" class="hover:text-[#b0a28f] transition-colors"><i class="fas fa-box mr-1"></i> TRACK</a>
     </div>
   </div>
 
-  <!-- ====== HEADER / NAV (more refined) ====== -->
+  <!-- ====== HEADER / NAV (responsive) ====== -->
   <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/5 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
       <div class="flex items-center">
-        <span class="text-2xl font-black tracking-[-0.06em] text-black">URBANX</span>
+        <span class="text-xl sm:text-2xl font-black tracking-[-0.06em] text-black">URBANX</span>
       </div>
-      <nav class="hidden md:flex space-x-8 text-xs font-semibold uppercase tracking-[0.08em]">
+      <nav class="hidden md:flex space-x-6 lg:space-x-8 text-xs font-semibold uppercase tracking-[0.08em]">
         <a href="#" class="nav-link text-black/80 hover:text-black">Home</a>
         <a href="#" class="nav-link text-black/80 hover:text-black">Shop</a>
         <a href="#" class="nav-link text-black/80 hover:text-black">New</a>
@@ -199,9 +222,9 @@
         <a href="#" class="nav-link text-black/80 hover:text-black">Sale</a>
         <a href="#" class="nav-link text-black/80 hover:text-black">About</a>
       </nav>
-      <div class="flex items-center gap-5 text-sm">
+      <div class="flex items-center gap-3 sm:gap-5 text-sm">
         <i class="fas fa-search hover:text-black/60 transition cursor-pointer"></i>
-        <i class="far fa-user hover:text-black/60 transition cursor-pointer"></i>
+        <i class="far fa-user hover:text-black/60 transition cursor-pointer hidden sm:inline"></i>
         <i class="fas fa-shopping-bag hover:text-black/60 transition cursor-pointer relative">
           <span class="absolute -top-2 -right-2 bg-black text-white text-[0.5rem] rounded-full w-4 h-4 flex items-center justify-center font-bold">0</span>
         </i>
@@ -219,190 +242,194 @@
   </header>
 
   <main>
-    <!-- ====== HERO (more dramatic) ====== -->
+    <!-- ====== HERO (fully responsive) ====== -->
     <section class="relative bg-black text-white overflow-hidden">
       <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=1600&q=80')] bg-cover bg-center opacity-60 scale-105"></div>
       <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
       <div class="absolute inset-0 distressed-overlay"></div>
 
-      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-28 md:py-36 lg:py-44 flex items-center">
-        <div class="max-w-2xl space-y-5">
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-28 md:py-36 lg:py-44 flex items-center min-h-[70vh] sm:min-h-[80vh]">
+        <div class="max-w-2xl space-y-3 sm:space-y-5">
           <p class="text-xs tracking-[0.25em] font-medium text-[#b0a28f] uppercase">New Collection</p>
-          <h1 class="hero-title text-6xl sm:text-7xl md:text-8xl font-black leading-[0.95] tracking-tight">
+          <h1 class="hero-title text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[0.95] tracking-tight">
             BUILT <br> DIFFERENT
           </h1>
-          <p class="text-2xl md:text-4xl font-light tracking-[0.06em] text-white/90">MADE TO STAND OUT</p>
-          <div class="flex items-center gap-5 text-sm font-light text-white/60 tracking-[0.15em]">
+          <p class="hero-sub text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light tracking-[0.06em] text-white/90">MADE TO STAND OUT</p>
+          <div class="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm font-light text-white/60 tracking-[0.15em]">
             <span>URBANX</span>
-            <span class="w-px h-5 bg-white/30"></span>
+            <span class="w-px h-4 sm:h-5 bg-white/30"></span>
             <span>WORLDWIDE</span>
           </div>
-          <p class="max-w-sm text-sm font-light text-white/80 leading-relaxed">
+          <p class="max-w-sm text-xs sm:text-sm font-light text-white/80 leading-relaxed">
             Premium streetwear for those who set their own rules.
           </p>
-          <div class="flex flex-wrap gap-4 pt-3">
-            <a href="#" class="btn-solid px-9 py-3.5 text-sm font-bold uppercase tracking-widest rounded-sm">Shop Now</a>
-            <a href="#" class="btn-ghost px-9 py-3.5 text-sm font-bold uppercase tracking-widest border-white text-white hover:bg-white hover:text-black rounded-sm transition">Explore</a>
+          <div class="flex flex-wrap gap-3 sm:gap-4 pt-2">
+            <a href="#" class="btn-solid px-6 sm:px-9 py-2.5 sm:py-3.5 text-xs sm:text-sm font-bold uppercase tracking-widest rounded-sm">Shop Now</a>
+            <a href="#" class="btn-ghost px-6 sm:px-9 py-2.5 sm:py-3.5 text-xs sm:text-sm font-bold uppercase tracking-widest border-white text-white hover:bg-white hover:text-black rounded-sm transition">Explore</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ====== FEATURES BAR (cleaner) ====== -->
-    <section class="bg-white border-b border-black/5 py-7">
-      <div class="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-xs uppercase tracking-[0.12em]">
-        <div><i class="fas fa-truck-fast text-2xl block mb-2 text-black/50"></i> Free Shipping <span class="block font-light text-[0.55rem] text-gray-400">On orders over $100</span></div>
-        <div><i class="fas fa-rotate-left text-2xl block mb-2 text-black/50"></i> Easy Returns <span class="block font-light text-[0.55rem] text-gray-400">30-day returns</span></div>
-        <div><i class="fas fa-lock text-2xl block mb-2 text-black/50"></i> Secure Payment <span class="block font-light text-[0.55rem] text-gray-400">100% secure checkout</span></div>
-        <div><i class="fas fa-headset text-2xl block mb-2 text-black/50"></i> Customer Support <span class="block font-light text-[0.55rem] text-gray-400">24/7 support</span></div>
+    <!-- ====== FEATURES BAR (responsive grid) ====== -->
+    <section class="bg-white border-b border-black/5 py-5 sm:py-7">
+      <div class="max-w-6xl mx-auto px-4 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 text-center text-[0.6rem] sm:text-xs uppercase tracking-[0.12em]">
+        <div><i class="fas fa-truck-fast text-xl sm:text-2xl block mb-1.5 text-black/50"></i> Free Shipping <span class="block font-light text-[0.5rem] sm:text-[0.55rem] text-gray-400">On orders over $100</span></div>
+        <div><i class="fas fa-rotate-left text-xl sm:text-2xl block mb-1.5 text-black/50"></i> Easy Returns <span class="block font-light text-[0.5rem] sm:text-[0.55rem] text-gray-400">30-day returns</span></div>
+        <div><i class="fas fa-lock text-xl sm:text-2xl block mb-1.5 text-black/50"></i> Secure Payment <span class="block font-light text-[0.5rem] sm:text-[0.55rem] text-gray-400">100% secure</span></div>
+        <div><i class="fas fa-headset text-xl sm:text-2xl block mb-1.5 text-black/50"></i> Customer Support <span class="block font-light text-[0.5rem] sm:text-[0.55rem] text-gray-400">24/7 support</span></div>
       </div>
     </section>
 
-    <!-- ====== SHOP BY CATEGORY (more immersive) ====== -->
-    <section class="py-14 bg-[#f9f7f4]">
+    <!-- ====== SHOP BY CATEGORY (responsive) ====== -->
+    <section class="py-10 sm:py-14 bg-[#f9f7f4]">
       <div class="max-w-7xl mx-auto px-4">
-        <h2 class="text-2xl font-black tracking-tight mb-8 uppercase">Shop by Category</h2>
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-5">
-          <!-- each tile with better overlay -->
-          <div class="category-tile relative rounded-2xl overflow-hidden h-44 flex items-end justify-center p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&q=80');">
+        <h2 class="text-xl sm:text-2xl font-black tracking-tight mb-6 sm:mb-8 uppercase">Shop by Category</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-5">
+          <!-- tiles -->
+          <div class="category-tile relative rounded-2xl overflow-hidden h-32 sm:h-40 md:h-44 flex items-end justify-center p-3 sm:p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&q=80');">
             <div class="absolute inset-0 overlay"></div>
-            <span class="relative text-white font-bold text-sm tracking-[0.15em] uppercase z-10">Hoodies</span>
+            <span class="relative text-white font-bold text-xs sm:text-sm tracking-[0.15em] uppercase z-10">Hoodies</span>
             <a href="#" class="absolute inset-0 z-20"></a>
           </div>
-          <div class="category-tile relative rounded-2xl overflow-hidden h-44 flex items-end justify-center p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&q=80');">
+          <div class="category-tile relative rounded-2xl overflow-hidden h-32 sm:h-40 md:h-44 flex items-end justify-center p-3 sm:p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&q=80');">
             <div class="absolute inset-0 overlay"></div>
-            <span class="relative text-white font-bold text-sm tracking-[0.15em] uppercase z-10">T-Shirts</span>
+            <span class="relative text-white font-bold text-xs sm:text-sm tracking-[0.15em] uppercase z-10">T-Shirts</span>
             <a href="#" class="absolute inset-0 z-20"></a>
           </div>
-          <div class="category-tile relative rounded-2xl overflow-hidden h-44 flex items-end justify-center p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&q=80');">
+          <div class="category-tile relative rounded-2xl overflow-hidden h-32 sm:h-40 md:h-44 flex items-end justify-center p-3 sm:p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&q=80');">
             <div class="absolute inset-0 overlay"></div>
-            <span class="relative text-white font-bold text-sm tracking-[0.15em] uppercase z-10">Pants</span>
+            <span class="relative text-white font-bold text-xs sm:text-sm tracking-[0.15em] uppercase z-10">Pants</span>
             <a href="#" class="absolute inset-0 z-20"></a>
           </div>
-          <div class="category-tile relative rounded-2xl overflow-hidden h-44 flex items-end justify-center p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&q=80');">
+          <div class="category-tile relative rounded-2xl overflow-hidden h-32 sm:h-40 md:h-44 flex items-end justify-center p-3 sm:p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&q=80');">
             <div class="absolute inset-0 overlay"></div>
-            <span class="relative text-white font-bold text-sm tracking-[0.15em] uppercase z-10">Jackets</span>
+            <span class="relative text-white font-bold text-xs sm:text-sm tracking-[0.15em] uppercase z-10">Jackets</span>
             <a href="#" class="absolute inset-0 z-20"></a>
           </div>
-          <div class="category-tile relative rounded-2xl overflow-hidden h-44 flex items-end justify-center p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&q=80');">
+          <div class="category-tile relative rounded-2xl overflow-hidden h-32 sm:h-40 md:h-44 flex items-end justify-center p-3 sm:p-5 bg-cover bg-center col-span-2 sm:col-span-1" style="background-image: url('https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&q=80');">
             <div class="absolute inset-0 overlay"></div>
-            <span class="relative text-white font-bold text-sm tracking-[0.15em] uppercase z-10">Accessories</span>
+            <span class="relative text-white font-bold text-xs sm:text-sm tracking-[0.15em] uppercase z-10">Accessories</span>
             <a href="#" class="absolute inset-0 z-20"></a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ====== NEW ARRIVALS (enhanced cards) ====== -->
-    <section class="py-14 bg-white">
+    <!-- ====== NEW ARRIVALS (responsive grid) ====== -->
+    <section class="py-10 sm:py-14 bg-white">
       <div class="max-w-7xl mx-auto px-4">
-        <div class="flex justify-between items-center border-b border-black/5 pb-4 mb-8">
-          <h2 class="text-2xl font-black tracking-tight uppercase">New Arrivals</h2>
-          <a href="#" class="text-xs uppercase tracking-[0.12em] text-black/50 hover:text-black transition flex items-center gap-1">View All <i class="fas fa-arrow-right text-[0.6rem]"></i></a>
+        <div class="flex justify-between items-center border-b border-black/5 pb-3 sm:pb-4 mb-6 sm:mb-8">
+          <h2 class="text-xl sm:text-2xl font-black tracking-tight uppercase">New Arrivals</h2>
+          <a href="#" class="text-[0.6rem] sm:text-xs uppercase tracking-[0.12em] text-black/50 hover:text-black transition flex items-center gap-1">View All <i class="fas fa-arrow-right text-[0.5rem] sm:text-[0.6rem]"></i></a>
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
           <!-- card 1 -->
-          <div class="product-card group rounded-2xl overflow-hidden">
+          <div class="product-card group rounded-xl sm:rounded-2xl overflow-hidden">
             <div class="relative aspect-square bg-[#e5ddd4] flex items-center justify-center overflow-hidden">
-              <span class="absolute top-3 left-3 badge-new z-10">NEW</span>
+              <span class="absolute top-2 sm:top-3 left-2 sm:left-3 badge-new z-10">NEW</span>
               <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&q=80" alt="Chaos Tee" class="object-cover w-full h-full">
-              <div class="quick-add absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
-                <button class="bg-white text-black text-[0.6rem] font-bold uppercase tracking-[0.1em] px-5 py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
+              <div class="quick-add absolute bottom-0 left-0 w-full p-2 sm:p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
+                <button class="bg-white text-black text-[0.5rem] sm:text-[0.6rem] font-bold uppercase tracking-[0.1em] px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
               </div>
             </div>
-            <div class="p-4 bg-white">
-              <p class="font-semibold text-sm tracking-tight">CHAOS TEE - BLACK</p>
-              <p class="text-sm font-medium text-black/70">$49.00</p>
+            <div class="p-2 sm:p-4 bg-white">
+              <p class="font-semibold text-[0.7rem] sm:text-sm tracking-tight">CHAOS TEE - BLACK</p>
+              <p class="text-[0.7rem] sm:text-sm font-medium text-black/70">$49.00</p>
             </div>
           </div>
           <!-- card 2 -->
-          <div class="product-card group rounded-2xl overflow-hidden">
+          <div class="product-card group rounded-xl sm:rounded-2xl overflow-hidden">
             <div class="relative aspect-square bg-[#d4c9bc] flex items-center justify-center overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1578587018451-2fe16e2e2d4a?w=400&q=80" alt="Washed Hoodie" class="object-cover w-full h-full">
-              <div class="quick-add absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
-                <button class="bg-white text-black text-[0.6rem] font-bold uppercase tracking-[0.1em] px-5 py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
+              <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&q=80" alt="Washed Hoodie" class="object-cover w-full h-full">
+              <div class="quick-add absolute bottom-0 left-0 w-full p-2 sm:p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
+                <button class="bg-white text-black text-[0.5rem] sm:text-[0.6rem] font-bold uppercase tracking-[0.1em] px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
               </div>
             </div>
-            <div class="p-4 bg-white">
-              <p class="font-semibold text-sm tracking-tight">WASHED HOODIE - CHARCOAL</p>
-              <p class="text-sm font-medium text-black/70">$89.00</p>
+            <div class="p-2 sm:p-4 bg-white">
+              <p class="font-semibold text-[0.7rem] sm:text-sm tracking-tight">WASHED HOODIE - CHARCOAL</p>
+              <p class="text-[0.7rem] sm:text-sm font-medium text-black/70">$89.00</p>
             </div>
           </div>
           <!-- card 3 -->
-          <div class="product-card group rounded-2xl overflow-hidden">
+          <div class="product-card group rounded-xl sm:rounded-2xl overflow-hidden">
             <div class="relative aspect-square bg-[#c2b8aa] flex items-center justify-center overflow-hidden">
               <img src="https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?w=400&q=80" alt="Cargo Pants" class="object-cover w-full h-full">
-              <div class="quick-add absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
-                <button class="bg-white text-black text-[0.6rem] font-bold uppercase tracking-[0.1em] px-5 py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
+              <div class="quick-add absolute bottom-0 left-0 w-full p-2 sm:p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
+                <button class="bg-white text-black text-[0.5rem] sm:text-[0.6rem] font-bold uppercase tracking-[0.1em] px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
               </div>
             </div>
-            <div class="p-4 bg-white">
-              <p class="font-semibold text-sm tracking-tight">UTILITY CARGO PANTS - BLACK</p>
-              <p class="text-sm font-medium text-black/70">$99.00</p>
+            <div class="p-2 sm:p-4 bg-white">
+              <p class="font-semibold text-[0.7rem] sm:text-sm tracking-tight">UTILITY CARGO PANTS - BLACK</p>
+              <p class="text-[0.7rem] sm:text-sm font-medium text-black/70">$99.00</p>
             </div>
           </div>
           <!-- card 4 -->
-          <div class="product-card group rounded-2xl overflow-hidden">
+          <div class="product-card group rounded-xl sm:rounded-2xl overflow-hidden">
             <div class="relative aspect-square bg-[#e8ddd2] flex items-center justify-center overflow-hidden">
-              <span class="absolute top-3 left-3 badge-new z-10">SALE</span>
+              <span class="absolute top-2 sm:top-3 left-2 sm:left-3 badge-new z-10">SALE</span>
               <img src="https://images.unsplash.com/photo-1516826957135-700dedea698c?w=400&q=80" alt="Sketch Tee" class="object-cover w-full h-full">
-              <div class="quick-add absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
-                <button class="bg-white text-black text-[0.6rem] font-bold uppercase tracking-[0.1em] px-5 py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
+              <div class="quick-add absolute bottom-0 left-0 w-full p-2 sm:p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
+                <button class="bg-white text-black text-[0.5rem] sm:text-[0.6rem] font-bold uppercase tracking-[0.1em] px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
               </div>
             </div>
-            <div class="p-4 bg-white">
-              <p class="font-semibold text-sm tracking-tight">SKETCH TEE - SAND</p>
-              <p class="text-sm font-medium text-black/70">$45.00</p>
+            <div class="p-2 sm:p-4 bg-white">
+              <p class="font-semibold text-[0.7rem] sm:text-sm tracking-tight">SKETCH TEE - SAND</p>
+              <p class="text-[0.7rem] sm:text-sm font-medium text-black/70">$45.00</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ====== MOVEMENT / SPLIT BANNER (more dynamic) ====== -->
-    <section class="bg-black text-white">
-      <div class="grid md:grid-cols-2 min-h-[420px]">
-        <div class="bg-[url('https://images.unsplash.com/photo-1558618666-fcd25c85f7c6?w=800&q=80')] bg-cover bg-center relative">
-          <div class="absolute inset-0 bg-black/20"></div>
-          <div class="relative h-full flex items-center justify-center p-6"></div>
-        </div>
-        <div class="flex flex-col justify-center px-8 py-14 md:px-12 bg-[#121212]">
-          <p class="text-[#b0a28f] text-xs tracking-[0.25em] uppercase font-medium">Limited drop</p>
-          <h2 class="text-4xl md:text-5xl font-black leading-[1.05] tracking-tight mt-2">JOIN THE <br>MOVEMENT</h2>
-          <p class="text-sm font-light text-white/60 max-w-sm mt-4 leading-relaxed">
-            BE PART OF EXCLUSIVE STYLES. SOMETHING REAL. LIMITED QUANTITIES.
-          </p>
-          <div class="flex flex-wrap gap-4 mt-7">
-            <a href="#" class="btn-solid px-9 py-3.5 text-xs font-bold uppercase tracking-[0.12em] rounded-sm">Shop Now</a>
-            <a href="#" class="btn-ghost px-9 py-3.5 text-xs font-bold uppercase tracking-[0.12em] border-white text-white hover:bg-white hover:text-black rounded-sm transition">Explore</a>
-          </div>
-        </div>
+<!-- ====== MOVEMENT / SPLIT BANNER (responsive) ====== -->
+<section class="bg-black text-white">
+  <div class="grid md:grid-cols-2 min-h-[320px] sm:min-h-[420px]">
+    <!-- LEFT SIDE: IMAGE (updated - more dynamic streetwear scene) -->
+    <div class="bg-[url('https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=1600&q=80')] bg-cover bg-center relative min-h-[200px] md:min-h-full">
+      <div class="absolute inset-0 bg-black/20"></div>
+      <div class="relative h-full flex items-center justify-center p-6">
+        <!-- optional subtle overlay text or icon -->
       </div>
-    </section>
+    </div>
+    <!-- RIGHT SIDE: TEXT CONTENT -->
+    <div class="flex flex-col justify-center px-6 sm:px-8 md:px-12 py-10 sm:py-14 bg-[#121212]">
+      <p class="text-[#b0a28f] text-[0.6rem] sm:text-xs tracking-[0.25em] uppercase font-medium">Limited drop</p>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-black leading-[1.05] tracking-tight mt-2">JOIN THE <br>MOVEMENT</h2>
+      <p class="text-xs sm:text-sm font-light text-white/60 max-w-sm mt-3 sm:mt-4 leading-relaxed">
+        BE PART OF EXCLUSIVE STYLES. SOMETHING REAL. LIMITED QUANTITIES.
+      </p>
+      <div class="flex flex-wrap gap-3 sm:gap-4 mt-5 sm:mt-7">
+        <a href="#" class="btn-solid px-6 sm:px-9 py-2.5 sm:py-3.5 text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] rounded-sm">Shop Now</a>
+        <a href="#" class="btn-ghost px-6 sm:px-9 py-2.5 sm:py-3.5 text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] border-white text-white hover:bg-white hover:text-black rounded-sm transition">Explore</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- ====== NEWSLETTER (cleaner) ====== -->
-    <section class="bg-[#0b0b0b] py-16 border-t border-white/5">
+    <!-- ====== NEWSLETTER (responsive) ====== -->
+    <section class="bg-[#0b0b0b] py-12 sm:py-16 border-t border-white/5">
       <div class="max-w-2xl mx-auto px-4 text-center">
-        <h2 class="text-2xl font-black text-white tracking-tight">STAY IN THE LOOP</h2>
-        <p class="text-sm text-white/40 mt-1">New drops, exclusive offers, and more.</p>
-        <div class="mt-7 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-          <input type="email" placeholder="Enter your email" class="input-underline flex-1 text-white placeholder-white/30 py-2.5 px-2 text-sm">
-          <button class="bg-white text-black text-xs font-bold uppercase tracking-[0.12em] px-7 py-2.5 rounded-sm hover:bg-gray-200 transition shadow-md">Subscribe</button>
+        <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">STAY IN THE LOOP</h2>
+        <p class="text-xs sm:text-sm text-white/40 mt-1">New drops, exclusive offers, and more.</p>
+        <div class="mt-5 sm:mt-7 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <input type="email" placeholder="Enter your email" class="input-underline flex-1 text-white placeholder-white/30 py-2 sm:py-2.5 px-2 text-xs sm:text-sm">
+          <button class="bg-white text-black text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] px-5 sm:px-7 py-2 sm:py-2.5 rounded-sm hover:bg-gray-200 transition shadow-md">Subscribe</button>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ====== FOOTER (more refined) ====== -->
+  <!-- ====== FOOTER (responsive) ====== -->
   <footer class="bg-black text-white/70 border-t border-white/5">
-    <div class="max-w-7xl mx-auto px-4 py-14 grid grid-cols-2 md:grid-cols-4 gap-10">
-      <div>
-        <span class="text-2xl font-black tracking-[-0.06em] text-white">URBANX</span>
-        <p class="text-xs mt-3 leading-relaxed text-white/30 max-w-xs">Streetwear made for the bold. Designed to break the norm. Worn worldwide.</p>
+    <div class="max-w-7xl mx-auto px-4 py-10 sm:py-14 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-10">
+      <div class="col-span-2 sm:col-span-1">
+        <span class="text-xl sm:text-2xl font-black tracking-[-0.06em] text-white">URBANX</span>
+        <p class="text-xs mt-2 sm:mt-3 leading-relaxed text-white/30 max-w-xs">Streetwear made for the bold. Designed to break the norm. Worn worldwide.</p>
       </div>
       <div>
-        <h4 class="text-xs font-bold uppercase tracking-[0.12em] text-white/70 mb-4">Shop</h4>
-        <ul class="space-y-2 text-sm">
+        <h4 class="text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] text-white/70 mb-3 sm:mb-4">Shop</h4>
+        <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
           <li><a href="#" class="footer-link">All Products</a></li>
           <li><a href="#" class="footer-link">Hoodies</a></li>
           <li><a href="#" class="footer-link">T-Shirts</a></li>
@@ -410,18 +437,18 @@
         </ul>
       </div>
       <div>
-        <h4 class="text-xs font-bold uppercase tracking-[0.12em] text-white/70 mb-4">Customer Care</h4>
-        <ul class="space-y-2 text-sm">
+        <h4 class="text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] text-white/70 mb-3 sm:mb-4">Customer Care</h4>
+        <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
           <li><a href="#" class="footer-link">Contact Us</a></li>
-          <li><a href="#" class="footer-link">Shipping & Delivery</a></li>
-          <li><a href="#" class="footer-link">Returns & Exchanges</a></li>
+          <li><a href="#" class="footer-link">Shipping</a></li>
+          <li><a href="#" class="footer-link">Returns</a></li>
           <li><a href="#" class="footer-link">Track Order</a></li>
           <li><a href="#" class="footer-link">Size Guide</a></li>
         </ul>
       </div>
       <div>
-        <h4 class="text-xs font-bold uppercase tracking-[0.12em] text-white/70 mb-4">Company</h4>
-        <ul class="space-y-2 text-sm">
+        <h4 class="text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] text-white/70 mb-3 sm:mb-4">Company</h4>
+        <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
           <li><a href="#" class="footer-link">About Us</a></li>
           <li><a href="#" class="footer-link">Our Story</a></li>
           <li><a href="#" class="footer-link">Sustainability</a></li>
@@ -429,11 +456,11 @@
         </ul>
       </div>
     </div>
-    <div class="border-t border-white/5 py-5 flex flex-col sm:flex-row justify-between items-center text-[0.6rem] text-white/30 px-4">
+    <div class="border-t border-white/5 py-4 sm:py-5 flex flex-col sm:flex-row justify-between items-center text-[0.5rem] sm:text-[0.6rem] text-white/30 px-4 gap-2">
       <span>© 2026 URBANX. All rights reserved.</span>
-      <div class="flex items-center gap-5 mt-2 sm:mt-0">
+      <div class="flex items-center gap-3 sm:gap-5">
         <span class="tracking-widest">En/USO</span>
-        <div class="flex gap-4 text-base">
+        <div class="flex gap-3 sm:gap-4 text-sm sm:text-base">
           <i class="fab fa-cc-visa"></i>
           <i class="fab fa-cc-paypal"></i>
           <i class="fab fa-cc-mastercard"></i>
