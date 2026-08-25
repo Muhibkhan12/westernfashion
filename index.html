@@ -1,574 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>URBANX · premium streetwear</title>
-  <!-- Tailwind + custom base -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome 6 (free) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <style>
-    /* ----- refined micro-interactions & typography ----- */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', 'Helvetica Neue', system-ui, sans-serif;
-      letter-spacing: 0.01em;
-      background: #faf9f7;
-    }
-    .hero-title {
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 0.95;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-    .hero-sub {
-      font-weight: 300;
-      letter-spacing: 0.12em;
-    }
-    .nav-link {
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      font-size: 0.75rem;
-      position: relative;
-    }
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: black;
-      transition: width 0.25s ease;
-    }
-    .nav-link:hover::after { width: 100%; }
-
-    .category-tile {
-      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      will-change: transform;
-    }
-    .category-tile:hover {
-      transform: scale(1.03) translateY(-4px);
-      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.4);
-    }
-    .category-tile .overlay {
-      background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 80%);
-      transition: background 0.3s;
-    }
-    .category-tile:hover .overlay {
-      background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 80%);
-    }
-
-    .product-card {
-      transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      will-change: transform;
-      background: #f5efe6;
-    }
-    .product-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15);
-    }
-    .product-card .quick-add {
-      opacity: 0;
-      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      transform: translateY(12px);
-    }
-    .product-card:hover .quick-add {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .product-card img {
-      transition: transform 0.5s ease;
-    }
-    .product-card:hover img {
-      transform: scale(1.04);
-    }
-
-    .btn-ghost {
-      border: 1.5px solid white;
-      background: transparent;
-      transition: all 0.25s ease;
-    }
-    .btn-ghost:hover {
-      background: white;
-      color: black;
-      box-shadow: 0 4px 12px rgba(255,255,255,0.2);
-    }
-    .btn-solid {
-      background: white;
-      color: black;
-      transition: all 0.25s ease;
-    }
-    .btn-solid:hover {
-      background: #eaeaea;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .btn-dark-solid {
-      background: #111;
-      color: white;
-      transition: all 0.25s ease;
-    }
-    .btn-dark-solid:hover {
-      background: #2a2a2a;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-
-    .input-underline {
-      border-bottom: 2px solid rgba(255,255,255,0.2);
-      background: transparent;
-      transition: border 0.25s ease, background 0.2s;
-    }
-    .input-underline:focus {
-      outline: none;
-      border-bottom-color: white;
-      background: rgba(255,255,255,0.03);
-    }
-    .footer-link {
-      font-size: 0.8rem;
-      font-weight: 400;
-      letter-spacing: 0.02em;
-      color: #aaa;
-      transition: color 0.2s, transform 0.2s;
-      display: inline-block;
-    }
-    .footer-link:hover {
-      color: white;
-      transform: translateX(4px);
-    }
-    .badge-new {
-      background: #0a0a0a;
-      color: white;
-      font-size: 0.55rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      padding: 0.2rem 0.7rem;
-      border-radius: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .bg-sand { background-color: #f5efe6; }
-    .text-sand { color: #d4c5b2; }
-
-    /* distressed overlay (more subtle) */
-    .distressed-overlay {
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-      pointer-events: none;
-    }
-
-    /* subtle scroll reveal (optional) */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.8s ease forwards;
-    }
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
-    .delay-4 { animation-delay: 0.4s; }
-
-    /* Responsive tweaks */
-    @media (max-width: 480px) {
-      .hero-title {
-        font-size: 3rem !important;
-      }
-      .hero-sub {
-        font-size: 1.25rem !important;
-      }
-      .btn-solid, .btn-ghost {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-        font-size: 0.7rem;
-      }
-    }
-    @media (max-width: 640px) {
-      .announcement-text {
-        font-size: 0.55rem;
-      }
-      .category-tile {
-        height: 10rem;
-      }
-    }
-
-    /* review card style */
-    .review-card {
-      background: #f5efe6;
-      transition: all 0.3s ease;
-    }
-    .review-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 30px -10px rgba(0,0,0,0.1);
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heartbeat — A Capsule Collection</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background:#FAF9F6; color:#1A1A1A; }
+  .font-serif-display { font-family: 'Playfair Display', serif; }
+  .tracking-widest2 { letter-spacing: 0.18em; }
+  .tracking-widest3 { letter-spacing: 0.28em; }
+  .underline-link { background-image: linear-gradient(#1A1A1A,#1A1A1A); background-position: 0 100%; background-repeat: no-repeat; background-size: 0% 1px; transition: background-size .3s ease; }
+  .underline-link:hover { background-size: 100% 1px; }
+  .fade-up { opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
+  .fade-up.in { opacity:1; transform:translateY(0); }
+  .dark body {}
+  ::selection { background:#1A1A1A; color:#FAF9F6; }
+  .filter-pill.active { background:#1A1A1A; color:#FAF9F6; }
+</style>
 </head>
-<body>
+<body class="antialiased">
 
-  <!-- ====== TOP ANNOUNCEMENT BAR (fully responsive) ====== -->
-  <div class="bg-[#0b0b0b] text-white text-[0.65rem] tracking-[0.1em] py-2.5 px-4 flex flex-wrap justify-between items-center border-b border-white/5 gap-2">
-    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mx-auto md:mx-0 text-center md:text-left">
-      <span class="announcement-text"><i class="fas fa-truck-fast mr-1.5 text-[#b0a28f]"></i> FREE SHIPPING OVER $100</span>
-      <span class="hidden xs:inline-block w-px h-4 bg-white/20"></span>
-      <span class="hidden xs:inline announcement-text"><i class="fas fa-tag mr-1.5 text-[#b0a28f]"></i> 10% OFF | CODE: STREET10</span>
+<!-- Top promo bar -->
+<div class="bg-[#1A1A1A] text-white text-[11px] tracking-widest2 uppercase text-center py-2 px-4">
+  Midseason Sale 20% Off — Auto Applied at Checkout — Limited Time Only
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 z-40 bg-[#FAF9F6]/90 backdrop-blur border-b border-black/5">
+  <div class="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-10 py-4">
+    <!-- Left nav -->
+    <div class="flex items-center gap-6">
+      <button id="menuBtn" class="flex items-center gap-2 text-[12px] uppercase tracking-widest2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <nav class="hidden md:flex items-center gap-6 text-[12px] uppercase tracking-widest2">
+        <a href="#" class="underline-link pb-0.5">Presets</a>
+        <a href="#" class="underline-link pb-0.5">Catalog</a>
+        <a href="#" class="underline-link pb-0.5">About</a>
+        <a href="#" class="underline-link pb-0.5">Journal</a>
+      </nav>
     </div>
-    <div class="flex gap-3 text-[0.6rem]">
-      <a href="#" class="hover:text-[#b0a28f] transition-colors hidden sm:inline"><i class="far fa-question-circle mr-1"></i> HELP</a>
-      <a href="#" class="hover:text-[#b0a28f] transition-colors"><i class="fas fa-box mr-1"></i> TRACK</a>
+
+    <!-- Logo -->
+    <a href="#" class="font-serif-display text-xl md:text-2xl tracking-widest3 uppercase">Heartbeat</a>
+
+    <!-- Right icons -->
+    <div class="flex items-center gap-4 md:gap-5 text-[12px] uppercase tracking-widest2">
+      <button id="darkToggle" class="hidden sm:flex items-center gap-1.5">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span class="hidden lg:inline">Dark Mode</span>
+      </button>
+      <button class="hidden sm:flex items-center gap-1.5">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="hidden lg:inline">Search</span>
+      </button>
+      <span class="hidden sm:inline text-black/30">|</span>
+      <span class="hidden sm:inline">🇨🇦 CA</span>
+      <span class="hidden sm:inline">EN</span>
+      <button aria-label="Account">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      </button>
+      <button aria-label="Cart">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+      </button>
     </div>
   </div>
+</header>
 
-  <!-- ====== HEADER / NAV (responsive) ====== -->
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/5 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-      <div class="flex items-center">
-        <span class="text-xl sm:text-2xl font-black tracking-[-0.06em] text-black">URBANX</span>
-      </div>
-      <nav class="hidden md:flex space-x-6 lg:space-x-8 text-xs font-semibold uppercase tracking-[0.08em]">
-        <a href="#" class="nav-link text-black/80 hover:text-black">Home</a>
-        <a href="#" class="nav-link text-black/80 hover:text-black">Shop</a>
-        <a href="#" class="nav-link text-black/80 hover:text-black">New</a>
-        <a href="#" class="nav-link text-black/80 hover:text-black">Collections</a>
-        <a href="#" class="nav-link text-black/80 hover:text-black">Sale</a>
-        <a href="#" class="nav-link text-black/80 hover:text-black">About</a>
-      </nav>
-      <div class="flex items-center gap-3 sm:gap-5 text-sm">
-        <i class="fas fa-search hover:text-black/60 transition cursor-pointer"></i>
-        <i class="far fa-user hover:text-black/60 transition cursor-pointer hidden sm:inline"></i>
-        <i class="fas fa-shopping-bag hover:text-black/60 transition cursor-pointer relative">
-          <span class="absolute -top-2 -right-2 bg-black text-white text-[0.5rem] rounded-full w-4 h-4 flex items-center justify-center font-bold">0</span>
-        </i>
-        <button id="menuBtn" class="md:hidden text-xl"><i class="fas fa-bars"></i></button>
-      </div>
+<!-- Hero -->
+<section class="relative max-w-[1440px] mx-auto px-6 md:px-10 pt-10 pb-16 md:pt-14 md:pb-20">
+  <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-8 md:gap-4">
+
+    <!-- Left collage -->
+    <div class="relative h-[300px] md:h-[420px] order-2 md:order-1">
+      <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=400&auto=format&fit=crop" alt="Model in striped top" class="absolute top-0 left-0 w-[58%] h-[55%] object-cover">
+      <img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=400&auto=format&fit=crop" alt="Model in coat" class="absolute bottom-0 left-[8%] w-[55%] h-[58%] object-cover">
+      <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=300&auto=format&fit=crop" alt="Detail shot" class="absolute bottom-0 right-0 w-[38%] h-[30%] object-cover">
     </div>
-    <div id="mobileMenu" class="md:hidden bg-white/95 backdrop-blur-sm border-t border-black/5 px-4 py-4 space-y-3 text-sm font-medium uppercase tracking-wide hidden">
-      <a href="#" class="block hover:text-black/60 transition">Home</a>
-      <a href="#" class="block hover:text-black/60 transition">Shop</a>
-      <a href="#" class="block hover:text-black/60 transition">New Arrivals</a>
-      <a href="#" class="block hover:text-black/60 transition">Collections</a>
-      <a href="#" class="block hover:text-black/60 transition">Sale</a>
-      <a href="#" class="block hover:text-black/60 transition">About Us</a>
+
+    <!-- Center text -->
+    <div class="order-1 md:order-2 text-center px-2 md:px-8 max-w-md mx-auto">
+      <p class="text-[11px] tracking-widest3 uppercase text-black/50 mb-4">Capsule</p>
+      <h1 class="font-serif-display text-3xl sm:text-4xl md:text-[2.6rem] leading-tight mb-7">
+        A Capsule Collection<br>by Michael Brooks<br>AW'23
+      </h1>
+      <button class="inline-flex items-center gap-2 bg-[#1A1A1A] text-white text-[12px] uppercase tracking-widest2 rounded-full px-6 py-3 hover:bg-black/80 transition">
+        Explore Collection
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      </button>
     </div>
-  </header>
 
-  <main>
-    <!-- ====== HERO (fully responsive) ====== -->
-    <section class="relative bg-black text-white overflow-hidden">
-      <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=1600&q=80')] bg-cover bg-center opacity-60 scale-105"></div>
-      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
-      <div class="absolute inset-0 distressed-overlay"></div>
-
-      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-28 md:py-36 lg:py-44 flex items-center min-h-[70vh] sm:min-h-[80vh]">
-        <div class="max-w-2xl space-y-3 sm:space-y-5">
-          <p class="text-xs tracking-[0.25em] font-medium text-[#b0a28f] uppercase">New Collection</p>
-          <h1 class="hero-title text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[0.95] tracking-tight">
-            BUILT <br> DIFFERENT
-          </h1>
-          <p class="hero-sub text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light tracking-[0.06em] text-white/90">MADE TO STAND OUT</p>
-          <div class="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm font-light text-white/60 tracking-[0.15em]">
-            <span>URBANX</span>
-            <span class="w-px h-4 sm:h-5 bg-white/30"></span>
-            <span>WORLDWIDE</span>
-          </div>
-          <p class="max-w-sm text-xs sm:text-sm font-light text-white/80 leading-relaxed">
-            Premium streetwear for those who set their own rules.
-          </p>
-          <div class="flex flex-wrap gap-3 sm:gap-4 pt-2">
-            <a href="#" class="btn-solid px-6 sm:px-9 py-2.5 sm:py-3.5 text-xs sm:text-sm font-bold uppercase tracking-widest rounded-sm">Shop Now</a>
-            <a href="#" class="btn-ghost px-6 sm:px-9 py-2.5 sm:py-3.5 text-xs sm:text-sm font-bold uppercase tracking-widest border-white text-white hover:bg-white hover:text-black rounded-sm transition">Explore</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====== FEATURES BAR (responsive grid) ====== -->
-    <section class="bg-white border-b border-black/5 py-5 sm:py-7">
-      <div class="max-w-6xl mx-auto px-4 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 text-center text-[0.6rem] sm:text-xs uppercase tracking-[0.12em]">
-        <div><i class="fas fa-truck-fast text-xl sm:text-2xl block mb-1.5 text-black/50"></i> Free Shipping <span class="block font-light text-[0.5rem] sm:text-[0.55rem] text-gray-400">On orders over $100</span></div>
-        <div><i class="fas fa-rotate-left text-xl sm:text-2xl block mb-1.5 text-black/50"></i> Easy Returns <span class="block font-light text-[0.5rem] sm:text-[0.55rem] text-gray-400">30-day returns</span></div>
-        <div><i class="fas fa-lock text-xl sm:text-2xl block mb-1.5 text-black/50"></i> Secure Payment <span class="block font-light text-[0.5rem] sm:text-[0.55rem] text-gray-400">100% secure</span></div>
-        <div><i class="fas fa-headset text-xl sm:text-2xl block mb-1.5 text-black/50"></i> Customer Support <span class="block font-light text-[0.5rem] sm:text-[0.55rem] text-gray-400">24/7 support</span></div>
-      </div>
-    </section>
-
-    <!-- ====== SHOP BY CATEGORY (responsive) ====== -->
-    <section class="py-10 sm:py-14 bg-[#f9f7f4]">
-      <div class="max-w-7xl mx-auto px-4">
-        <h2 class="text-xl sm:text-2xl font-black tracking-tight mb-6 sm:mb-8 uppercase">Shop by Category</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-5">
-          <!-- tiles -->
-          <div class="category-tile relative rounded-2xl overflow-hidden h-32 sm:h-40 md:h-44 flex items-end justify-center p-3 sm:p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&q=80');">
-            <div class="absolute inset-0 overlay"></div>
-            <span class="relative text-white font-bold text-xs sm:text-sm tracking-[0.15em] uppercase z-10">Hoodies</span>
-            <a href="#" class="absolute inset-0 z-20"></a>
-          </div>
-          <div class="category-tile relative rounded-2xl overflow-hidden h-32 sm:h-40 md:h-44 flex items-end justify-center p-3 sm:p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&q=80');">
-            <div class="absolute inset-0 overlay"></div>
-            <span class="relative text-white font-bold text-xs sm:text-sm tracking-[0.15em] uppercase z-10">T-Shirts</span>
-            <a href="#" class="absolute inset-0 z-20"></a>
-          </div>
-          <div class="category-tile relative rounded-2xl overflow-hidden h-32 sm:h-40 md:h-44 flex items-end justify-center p-3 sm:p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&q=80');">
-            <div class="absolute inset-0 overlay"></div>
-            <span class="relative text-white font-bold text-xs sm:text-sm tracking-[0.15em] uppercase z-10">Pants</span>
-            <a href="#" class="absolute inset-0 z-20"></a>
-          </div>
-          <div class="category-tile relative rounded-2xl overflow-hidden h-32 sm:h-40 md:h-44 flex items-end justify-center p-3 sm:p-5 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&q=80');">
-            <div class="absolute inset-0 overlay"></div>
-            <span class="relative text-white font-bold text-xs sm:text-sm tracking-[0.15em] uppercase z-10">Jackets</span>
-            <a href="#" class="absolute inset-0 z-20"></a>
-          </div>
-          <div class="category-tile relative rounded-2xl overflow-hidden h-32 sm:h-40 md:h-44 flex items-end justify-center p-3 sm:p-5 bg-cover bg-center col-span-2 sm:col-span-1" style="background-image: url('https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&q=80');">
-            <div class="absolute inset-0 overlay"></div>
-            <span class="relative text-white font-bold text-xs sm:text-sm tracking-[0.15em] uppercase z-10">Accessories</span>
-            <a href="#" class="absolute inset-0 z-20"></a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====== NEW ARRIVALS (responsive grid) ====== -->
-    <section class="py-10 sm:py-14 bg-white">
-      <div class="max-w-7xl mx-auto px-4">
-        <div class="flex justify-between items-center border-b border-black/5 pb-3 sm:pb-4 mb-6 sm:mb-8">
-          <h2 class="text-xl sm:text-2xl font-black tracking-tight uppercase">New Arrivals</h2>
-          <a href="#" class="text-[0.6rem] sm:text-xs uppercase tracking-[0.12em] text-black/50 hover:text-black transition flex items-center gap-1">View All <i class="fas fa-arrow-right text-[0.5rem] sm:text-[0.6rem]"></i></a>
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
-          <!-- card 1 -->
-          <div class="product-card group rounded-xl sm:rounded-2xl overflow-hidden">
-            <div class="relative aspect-square bg-[#e5ddd4] flex items-center justify-center overflow-hidden">
-              <span class="absolute top-2 sm:top-3 left-2 sm:left-3 badge-new z-10">NEW</span>
-              <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&q=80" alt="Chaos Tee" class="object-cover w-full h-full">
-              <div class="quick-add absolute bottom-0 left-0 w-full p-2 sm:p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
-                <button class="bg-white text-black text-[0.5rem] sm:text-[0.6rem] font-bold uppercase tracking-[0.1em] px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
-              </div>
-            </div>
-            <div class="p-2 sm:p-4 bg-white">
-              <p class="font-semibold text-[0.7rem] sm:text-sm tracking-tight">CHAOS TEE - BLACK</p>
-              <p class="text-[0.7rem] sm:text-sm font-medium text-black/70">$49.00</p>
-            </div>
-          </div>
-          <!-- card 2 -->
-          <div class="product-card group rounded-xl sm:rounded-2xl overflow-hidden">
-            <div class="relative aspect-square bg-[#d4c9bc] flex items-center justify-center overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&q=80" alt="Washed Hoodie" class="object-cover w-full h-full">
-              <div class="quick-add absolute bottom-0 left-0 w-full p-2 sm:p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
-                <button class="bg-white text-black text-[0.5rem] sm:text-[0.6rem] font-bold uppercase tracking-[0.1em] px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
-              </div>
-            </div>
-            <div class="p-2 sm:p-4 bg-white">
-              <p class="font-semibold text-[0.7rem] sm:text-sm tracking-tight">WASHED HOODIE - CHARCOAL</p>
-              <p class="text-[0.7rem] sm:text-sm font-medium text-black/70">$89.00</p>
-            </div>
-          </div>
-          <!-- card 3 -->
-          <div class="product-card group rounded-xl sm:rounded-2xl overflow-hidden">
-            <div class="relative aspect-square bg-[#c2b8aa] flex items-center justify-center overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?w=400&q=80" alt="Cargo Pants" class="object-cover w-full h-full">
-              <div class="quick-add absolute bottom-0 left-0 w-full p-2 sm:p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
-                <button class="bg-white text-black text-[0.5rem] sm:text-[0.6rem] font-bold uppercase tracking-[0.1em] px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
-              </div>
-            </div>
-            <div class="p-2 sm:p-4 bg-white">
-              <p class="font-semibold text-[0.7rem] sm:text-sm tracking-tight">UTILITY CARGO PANTS - BLACK</p>
-              <p class="text-[0.7rem] sm:text-sm font-medium text-black/70">$99.00</p>
-            </div>
-          </div>
-          <!-- card 4 -->
-          <div class="product-card group rounded-xl sm:rounded-2xl overflow-hidden">
-            <div class="relative aspect-square bg-[#e8ddd2] flex items-center justify-center overflow-hidden">
-              <span class="absolute top-2 sm:top-3 left-2 sm:left-3 badge-new z-10">SALE</span>
-              <img src="https://images.unsplash.com/photo-1516826957135-700dedea698c?w=400&q=80" alt="Sketch Tee" class="object-cover w-full h-full">
-              <div class="quick-add absolute bottom-0 left-0 w-full p-2 sm:p-4 bg-gradient-to-t from-black/70 to-transparent flex justify-center">
-                <button class="bg-white text-black text-[0.5rem] sm:text-[0.6rem] font-bold uppercase tracking-[0.1em] px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md hover:bg-gray-100 transition">Quick Add</button>
-              </div>
-            </div>
-            <div class="p-2 sm:p-4 bg-white">
-              <p class="font-semibold text-[0.7rem] sm:text-sm tracking-tight">SKETCH TEE - SAND</p>
-              <p class="text-[0.7rem] sm:text-sm font-medium text-black/70">$45.00</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-<!-- ====== MOVEMENT / SPLIT BANNER (responsive) ====== -->
-<section class="bg-black text-white">
-  <div class="grid md:grid-cols-2 min-h-[320px] sm:min-h-[420px]">
-    <!-- LEFT SIDE: IMAGE (updated - more dynamic streetwear scene) -->
-    <div class="bg-[url('https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=1600&q=80')] bg-cover bg-center relative min-h-[200px] md:min-h-full">
-      <div class="absolute inset-0 bg-black/20"></div>
-      <div class="relative h-full flex items-center justify-center p-6">
-        <!-- optional subtle overlay text or icon -->
-      </div>
-    </div>
-    <!-- RIGHT SIDE: TEXT CONTENT -->
-    <div class="flex flex-col justify-center px-6 sm:px-8 md:px-12 py-10 sm:py-14 bg-[#121212]">
-      <p class="text-[#b0a28f] text-[0.6rem] sm:text-xs tracking-[0.25em] uppercase font-medium">Limited drop</p>
-      <h2 class="text-3xl sm:text-4xl md:text-5xl font-black leading-[1.05] tracking-tight mt-2">JOIN THE <br>MOVEMENT</h2>
-      <p class="text-xs sm:text-sm font-light text-white/60 max-w-sm mt-3 sm:mt-4 leading-relaxed">
-        BE PART OF EXCLUSIVE STYLES. SOMETHING REAL. LIMITED QUANTITIES.
-      </p>
-      <div class="flex flex-wrap gap-3 sm:gap-4 mt-5 sm:mt-7">
-        <a href="#" class="btn-solid px-6 sm:px-9 py-2.5 sm:py-3.5 text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] rounded-sm">Shop Now</a>
-        <a href="#" class="btn-ghost px-6 sm:px-9 py-2.5 sm:py-3.5 text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] border-white text-white hover:bg-white hover:text-black rounded-sm transition">Explore</a>
-      </div>
+    <!-- Right collage -->
+    <div class="relative h-[300px] md:h-[420px] order-3">
+      <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=400&auto=format&fit=crop" alt="Model in beanie" class="absolute top-0 right-0 w-[62%] h-[55%] object-cover">
+      <img src="https://images.unsplash.com/photo-1516826957135-700dedea698c?q=80&w=350&auto=format&fit=crop" alt="Model in sweater" class="absolute bottom-0 right-[6%] w-[52%] h-[55%] object-cover">
     </div>
   </div>
 </section>
 
-    <!-- ====== CUSTOMER REVIEWS (NEW SECTION) ====== -->
-    <section class="py-12 sm:py-16 bg-[#f9f7f4]">
-      <div class="max-w-7xl mx-auto px-4">
-        <div class="text-center mb-8 sm:mb-10">
-          <p class="text-[#b0a28f] text-[0.6rem] sm:text-xs tracking-[0.25em] uppercase font-medium">Testimonials</p>
-          <h2 class="text-xl sm:text-2xl font-black tracking-tight uppercase mt-1">What Our Community Says</h2>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <!-- review 1 -->
-          <div class="review-card rounded-2xl p-6 sm:p-8 text-center">
-            <div class="flex justify-center gap-1 text-[#b0a28f] text-sm mb-3">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-            </div>
-            <p class="text-sm font-light text-black/70 leading-relaxed">"URBANX is the definition of premium streetwear. The quality is unmatched and the designs are always ahead of the curve."</p>
-            <p class="text-xs font-bold uppercase tracking-[0.08em] mt-4 text-black/60">— Marcus T.</p>
-          </div>
-          <!-- review 2 -->
-          <div class="review-card rounded-2xl p-6 sm:p-8 text-center">
-            <div class="flex justify-center gap-1 text-[#b0a28f] text-sm mb-3">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-            </div>
-            <p class="text-sm font-light text-black/70 leading-relaxed">"The limited drops keep me coming back. Every piece feels exclusive and the fit is always perfect."</p>
-            <p class="text-xs font-bold uppercase tracking-[0.08em] mt-4 text-black/60">— Sarah K.</p>
-          </div>
-          <!-- review 3 -->
-          <div class="review-card rounded-2xl p-6 sm:p-8 text-center">
-            <div class="flex justify-center gap-1 text-[#b0a28f] text-sm mb-3">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-            </div>
-            <p class="text-sm font-light text-black/70 leading-relaxed">"Best streetwear brand out there. The customer service is top-notch and shipping is always fast."</p>
-            <p class="text-xs font-bold uppercase tracking-[0.08em] mt-4 text-black/60">— James R.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+<!-- Featured / Editorial split -->
+<section class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-24 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
+  <div class="fade-up">
+    <p class="text-[11px] tracking-widest3 uppercase text-black/50 mb-4">Featured Items</p>
+    <h2 class="font-serif-display text-3xl md:text-4xl leading-snug mb-10 max-w-md">
+      Under-the-radar basics brands, consciously-created for comfort, style, and elegance.
+    </h2>
+    <ul class="divide-y divide-black/10 border-t border-black/10 max-w-sm">
+      <li><a href="#" class="flex items-center justify-between py-4 text-[15px] underline-link">Women <span>↗</span></a></li>
+      <li><a href="#" class="flex items-center justify-between py-4 text-[15px] underline-link">Men <span>↗</span></a></li>
+      <li><a href="#" class="flex items-center justify-between py-4 text-[15px] underline-link">Lifestyle <span>↗</span></a></li>
+    </ul>
+  </div>
 
-    <!-- ====== NEWSLETTER (responsive) ====== -->
-    <section class="bg-[#0b0b0b] py-12 sm:py-16 border-t border-white/5">
-      <div class="max-w-2xl mx-auto px-4 text-center">
-        <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">STAY IN THE LOOP</h2>
-        <p class="text-xs sm:text-sm text-white/40 mt-1">New drops, exclusive offers, and more.</p>
-        <div class="mt-5 sm:mt-7 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-          <input type="email" placeholder="Enter your email" class="input-underline flex-1 text-white placeholder-white/30 py-2 sm:py-2.5 px-2 text-xs sm:text-sm">
-          <button class="bg-white text-black text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] px-5 sm:px-7 py-2 sm:py-2.5 rounded-sm hover:bg-gray-200 transition shadow-md">Subscribe</button>
-        </div>
+  <div class="relative fade-up">
+    <span class="absolute top-4 left-4 bg-white/90 text-[10px] uppercase tracking-widest2 px-3 py-1.5 rounded-full">Quick View</span>
+    <img src="https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=800&auto=format&fit=crop" alt="Double-breasted coat" class="w-full h-[460px] md:h-[560px] object-cover">
+    <div class="absolute -bottom-6 left-6 right-6 md:left-10 md:right-10 bg-white shadow-sm px-5 py-4 flex items-center justify-between">
+      <div>
+        <p class="text-[10px] uppercase tracking-widest2 text-black/50 mb-1">Portland Heartbeat</p>
+        <p class="text-[15px] underline-link">Double-Breasted Coat</p>
       </div>
-    </section>
-  </main>
+      <span class="text-[15px]">$400.00</span>
+    </div>
+  </div>
+</section>
 
-  <!-- ====== FOOTER (responsive) ====== -->
-  <footer class="bg-black text-white/70 border-t border-white/5">
-    <div class="max-w-7xl mx-auto px-4 py-10 sm:py-14 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-10">
-      <div class="col-span-2 sm:col-span-1">
-        <span class="text-xl sm:text-2xl font-black tracking-[-0.06em] text-white">URBANX</span>
-        <p class="text-xs mt-2 sm:mt-3 leading-relaxed text-white/30 max-w-xs">Streetwear made for the bold. Designed to break the norm. Worn worldwide.</p>
-      </div>
-      <div>
-        <h4 class="text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] text-white/70 mb-3 sm:mb-4">Shop</h4>
-        <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
-          <li><a href="#" class="footer-link">All Products</a></li>
-          <li><a href="#" class="footer-link">Hoodies</a></li>
-          <li><a href="#" class="footer-link">T-Shirts</a></li>
-          <li><a href="#" class="footer-link">Pants</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] text-white/70 mb-3 sm:mb-4">Customer Care</h4>
-        <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
-          <li><a href="#" class="footer-link">Contact Us</a></li>
-          <li><a href="#" class="footer-link">Shipping</a></li>
-          <li><a href="#" class="footer-link">Returns</a></li>
-          <li><a href="#" class="footer-link">Track Order</a></li>
-          <li><a href="#" class="footer-link">Size Guide</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-[0.6rem] sm:text-xs font-bold uppercase tracking-[0.12em] text-white/70 mb-3 sm:mb-4">Company</h4>
-        <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
-          <li><a href="#" class="footer-link">About Us</a></li>
-          <li><a href="#" class="footer-link">Our Story</a></li>
-          <li><a href="#" class="footer-link">Sustainability</a></li>
-          <li><a href="#" class="footer-link">Wholesale</a></li>
-        </ul>
+<!-- Popular items -->
+<section class="max-w-[1440px] mx-auto px-6 md:px-10 pt-16 pb-24">
+  <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+    <h2 class="font-serif-display text-3xl md:text-4xl">Popular Items</h2>
+    <a href="#" class="text-[12px] uppercase tracking-widest2 underline-link self-start md:self-auto">View All</a>
+  </div>
+
+  <div id="filters" class="flex flex-wrap gap-2 mb-10">
+    <button data-filter="all" class="filter-pill active border border-black/10 rounded-full px-4 py-1.5 text-[11px] uppercase tracking-widest2">All</button>
+    <button data-filter="shoes" class="filter-pill border border-black/10 rounded-full px-4 py-1.5 text-[11px] uppercase tracking-widest2">Shoes</button>
+    <button data-filter="jeans" class="filter-pill border border-black/10 rounded-full px-4 py-1.5 text-[11px] uppercase tracking-widest2">Jeans</button>
+    <button data-filter="sweater" class="filter-pill border border-black/10 rounded-full px-4 py-1.5 text-[11px] uppercase tracking-widest2">Sweater</button>
+    <button data-filter="t-shirt" class="filter-pill border border-black/10 rounded-full px-4 py-1.5 text-[11px] uppercase tracking-widest2">T-Shirt</button>
+  </div>
+
+  <div id="grid" class="grid grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-12"></div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-black/10 bg-[#F1EDE6]">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-10 py-14 grid grid-cols-2 md:grid-cols-5 gap-8">
+    <div class="col-span-2">
+      <p class="font-serif-display text-xl tracking-widest3 uppercase mb-3">Heartbeat</p>
+      <p class="text-[13px] text-black/60 max-w-xs leading-relaxed">Under-the-radar basics brands, consciously-created for comfort, style, and elegance.</p>
+    </div>
+    <div>
+      <p class="text-[11px] uppercase tracking-widest2 text-black/50 mb-4">Shop</p>
+      <ul class="space-y-2.5 text-[13px]">
+        <li><a href="#" class="underline-link">Women</a></li>
+        <li><a href="#" class="underline-link">Men</a></li>
+        <li><a href="#" class="underline-link">Lifestyle</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="text-[11px] uppercase tracking-widest2 text-black/50 mb-4">Company</p>
+      <ul class="space-y-2.5 text-[13px]">
+        <li><a href="#" class="underline-link">About</a></li>
+        <li><a href="#" class="underline-link">Journal</a></li>
+        <li><a href="#" class="underline-link">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="text-[11px] uppercase tracking-widest2 text-black/50 mb-4">Newsletter</p>
+      <div class="flex border-b border-black/30 pb-2">
+        <input type="email" placeholder="Email address" class="bg-transparent text-[13px] outline-none flex-1 placeholder:text-black/40">
+        <button class="text-[13px]">↗</button>
       </div>
     </div>
-    <div class="border-t border-white/5 py-4 sm:py-5 flex flex-col sm:flex-row justify-between items-center text-[0.5rem] sm:text-[0.6rem] text-white/30 px-4 gap-2">
-      <span>© 2026 URBANX. All rights reserved.</span>
-      <div class="flex items-center gap-3 sm:gap-5">
-        <span class="tracking-widest">En/USO</span>
-        <div class="flex gap-3 sm:gap-4 text-sm sm:text-base">
-          <i class="fab fa-cc-visa"></i>
-          <i class="fab fa-cc-paypal"></i>
-          <i class="fab fa-cc-mastercard"></i>
-        </div>
-      </div>
-    </div>
-  </footer>
+  </div>
+  <div class="border-t border-black/10 py-5 text-center text-[11px] text-black/40 tracking-widest2 uppercase">
+    © 2026 Heartbeat. All rights reserved.
+  </div>
+</footer>
 
-  <!-- ====== JS (enhanced) ====== -->
-  <script>
-    // mobile menu toggle
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    if (menuBtn && mobileMenu) {
-      menuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-      });
-    }
+<script>
+  const products = [
+    { name:"Wide-Leg Velvet Trousers", brand:"Portland Heartbeat", price:400, oldPrice:null, badge:"Sale", cat:"jeans", swatches:["#1A1A1A","#3B5BA5","#B23A3A"], img:"https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=500&auto=format&fit=crop" },
+    { name:"Classic Beige Trench Coat", brand:"Portland Heartbeat", price:400, oldPrice:450, badge:"Sale", cat:"sweater", swatches:["#1A1A1A","#3B5BA5"], img:"https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=500&auto=format&fit=crop" },
+    { name:"Handknit Wool Sweater", brand:"Portland Heartbeat", price:400, oldPrice:null, badge:"Sold out", cat:"sweater", swatches:["#1A1A1A","#B23A3A"], img:"https://images.unsplash.com/photo-1576871337622-98d48d1cf531?q=80&w=500&auto=format&fit=crop" },
+    { name:"Classic Black Satin Shirt", brand:"Portland Heartbeat", price:400, oldPrice:450, badge:"Sale", cat:"t-shirt", swatches:["#1A1A1A","#B23A3A"], img:"https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=500&auto=format&fit=crop" },
+    { name:"Ribbed Turtleneck Top", brand:"Portland Heartbeat", price:400, oldPrice:null, badge:null, cat:"sweater", swatches:["#1A1A1A","#3B5BA5","#B23A3A"], img:"https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500&auto=format&fit=crop" },
+    { name:"Accordion Pleat Blouse", brand:"Portland Heartbeat", price:400, oldPrice:null, badge:null, cat:"t-shirt", swatches:["#1A1A1A","#3B5BA5","#B23A3A"], img:"https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?q=80&w=500&auto=format&fit=crop" },
+    { name:"Solid Taupe Polo Shirt", brand:"Portland Heartbeat", price:400, oldPrice:450, badge:"Sold out", cat:"t-shirt", swatches:["#1A1A1A","#EDE9E3"], img:"https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?q=80&w=500&auto=format&fit=crop" },
+    { name:"Overshirt with Pockets", brand:"Portland Heartbeat", price:400, oldPrice:null, badge:null, cat:"jeans", swatches:["#1A1A1A","#B23A3A"], img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=500&auto=format&fit=crop" },
+  ];
 
-    // quick add buttons with better feedback
-    document.querySelectorAll('.quick-add button').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const originalText = btn.textContent;
-        btn.textContent = '✓ ADDED';
-        btn.classList.add('bg-green-600', 'text-white');
-        setTimeout(() => {
-          btn.textContent = originalText;
-          btn.classList.remove('bg-green-600', 'text-white');
-        }, 1500);
-      });
-    });
+  const grid = document.getElementById('grid');
 
-    // subtle intersection observer for fade-in (optional)
-    document.addEventListener('DOMContentLoaded', () => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-          }
-        });
-      }, { threshold: 0.1 });
-      document.querySelectorAll('.product-card, .category-tile, .review-card, .fade-in').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
-        observer.observe(el);
+  function render(filter='all'){
+    grid.innerHTML = '';
+    products
+      .filter(p => filter === 'all' || p.cat === filter)
+      .forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'group';
+        card.innerHTML = `
+          <div class="relative bg-[#EDE9E3] aspect-[3/4] overflow-hidden mb-3">
+            <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-500">
+            ${p.badge ? `<span class="absolute top-3 right-3 text-[10px] uppercase tracking-widest2 px-3 py-1 rounded-full ${p.badge==='Sale' ? 'bg-[#B23A3A]/90 text-white' : 'bg-white/90 text-black/70'}">${p.badge}</span>` : ''}
+          </div>
+          <div class="flex items-center gap-1.5 mb-2">
+            ${p.swatches.map(c => `<span class="w-3 h-3 rounded-full border border-black/10" style="background:${c}"></span>`).join('')}
+          </div>
+          <p class="text-[10px] uppercase tracking-widest2 text-black/50 mb-1">${p.brand}</p>
+          <p class="text-[14px] underline-link mb-1.5">${p.name}</p>
+          <p class="text-[14px]">
+            ${p.oldPrice ? `<span class="text-[#B23A3A] mr-2">$${p.price.toFixed(2)}</span><span class="line-through text-black/40">$${p.oldPrice.toFixed(2)}</span>` : `$${p.price.toFixed(2)}`}
+          </p>
+        `;
+        grid.appendChild(card);
       });
-    });
-  </script>
+  }
+  render();
+
+  document.getElementById('filters').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-pill');
+    if(!btn) return;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render(btn.dataset.filter);
+  });
+
+  // Dark mode toggle (simple palette invert)
+  const darkToggle = document.getElementById('darkToggle');
+  darkToggle.addEventListener('click', () => {
+    document.body.classList.toggle('invert-mode');
+    document.body.style.filter = document.body.classList.contains('invert-mode') ? 'invert(1) hue-rotate(180deg)' : 'none';
+  });
+
+  // Fade-up on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
 </body>
 </html>
