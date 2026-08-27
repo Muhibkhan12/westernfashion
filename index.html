@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Heartbeat — A Capsule Collection</title>
+<title>The Western Fashion — A Capsule Collection</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +36,7 @@
   .font-display-sm { font-family: 'Fraunces', serif; font-variation-settings: 'opsz' 18; }
   .font-mono { font-family: 'Space Mono', monospace; }
   .tracking-tag { letter-spacing: 0.14em; }
-  .tracking-wordmark { letter-spacing: 0.24em; }
+  .tracking-wordmark { letter-spacing: 0.16em; }
 
   ::selection { background: #1C1A16; color: #F6F1E7; }
 
@@ -55,18 +55,26 @@
   .star { color: #1C1A16; }
   .star.empty { color: rgba(28,26,22,0.2); }
 
-  /* Hang-tag badge, punched hole + string knot, replacing the generic rounded pill */
+  /* Hang-tag badge, punched hole, replacing the generic rounded pill */
   .hang-tag { position: relative; padding-left: 20px; }
   .hang-tag::before { content: ''; position: absolute; left: 7px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.55; }
 
-  /* Pulse line signature — drawn once on load in the hero */
-  .pulse-path { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: draw 2.6s cubic-bezier(.65,0,.35,1) .4s forwards; }
+  /* Yoke-stitch signature — the double-line saddle stitch found on a western shirt yoke, drawn once on load */
+  .yoke-path { stroke-dasharray: 1600; stroke-dashoffset: 1600; animation: draw 2.4s cubic-bezier(.65,0,.35,1) .4s forwards; }
   @keyframes draw { to { stroke-dashoffset: 0; } }
 
   @media (prefers-reduced-motion: reduce) {
     .fade-up { opacity: 1; transform: none; transition: none; }
-    .pulse-path { stroke-dashoffset: 0; animation: none; }
+    .yoke-path { stroke-dashoffset: 0; animation: none; }
   }
+
+  /* Reviews slider */
+  #reviewTrack { scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; }
+  #reviewTrack::-webkit-scrollbar { display: none; }
+  .review-slide { scroll-snap-align: center; }
+  .review-dot { width: 6px; height: 6px; background: rgba(28,26,22,0.25); transition: background .25s ease, width .25s ease; }
+  .review-dot.active { background: #1C1A16; width: 20px; border-radius: 3px; }
+  .review-dot:not(.active) { border-radius: 50%; }
 </style>
 </head>
 <body class="antialiased">
@@ -91,7 +99,7 @@
       </nav>
     </div>
 
-    <a href="#" class="font-display text-2xl md:text-[1.75rem] tracking-wordmark uppercase">Heartbeat</a>
+    <a href="#" class="font-display text-lg sm:text-xl md:text-2xl tracking-wordmark uppercase whitespace-nowrap">The Western Fashion</a>
 
     <div class="flex items-center gap-4 md:gap-5 text-[11px] font-mono uppercase tracking-tag">
       <button id="darkToggle" class="hidden sm:flex items-center gap-1.5">
@@ -136,13 +144,13 @@
     </div>
   </div>
 
-  <!-- Signature: a pulse line tracing the brand name across the base of the hero -->
+  <!-- Signature: a saddle-stitch yoke seam traced across the base of the hero -->
   <div class="absolute bottom-0 left-0 right-0 z-10">
-    <svg viewBox="0 0 1440 90" class="w-full h-[60px] md:h-[90px]" preserveAspectRatio="none">
-      <polyline
-        class="pulse-path"
-        points="0,45 200,45 240,45 260,10 285,80 310,45 350,45 620,45 660,45 680,15 705,75 730,45 770,45 1040,45 1080,45 1100,12 1125,78 1150,45 1190,45 1440,45"
-        fill="none" stroke="#F6F1E7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85" />
+    <svg viewBox="0 0 1440 70" class="w-full h-[46px] md:h-[70px]" preserveAspectRatio="none">
+      <path class="yoke-path" d="M0,55 C 180,55 220,15 360,15 C 500,15 540,55 720,55 C 900,55 940,15 1080,15 C 1220,15 1260,55 1440,55"
+        fill="none" stroke="#F6F1E7" stroke-width="1.5" stroke-linecap="round" opacity="0.8" />
+      <path class="yoke-path" d="M0,63 C 180,63 220,23 360,23 C 500,23 540,63 720,63 C 900,63 940,23 1080,23 C 1220,23 1260,63 1440,63"
+        fill="none" stroke="#F6F1E7" stroke-width="1.5" stroke-dasharray="1 9" stroke-linecap="round" opacity="0.65" />
     </svg>
   </div>
 </section>
@@ -230,7 +238,7 @@
     <img src="https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=800&auto=format&fit=crop" alt="Double-breasted coat" class="w-full h-[460px] md:h-[560px] object-cover">
     <div class="absolute -bottom-6 left-6 right-6 md:left-10 md:right-10 bg-card shadow-sm px-5 py-4 flex items-center justify-between">
       <div>
-        <p class="text-[10px] font-mono uppercase tracking-tag text-ink/50 mb-1">Portland Heartbeat</p>
+        <p class="text-[10px] font-mono uppercase tracking-tag text-ink/50 mb-1">The Western Fashion</p>
         <p class="text-[15px] font-display-sm underline-link">Double-Breasted Coat</p>
       </div>
       <span class="text-[15px] font-mono">$400.00</span>
@@ -262,7 +270,7 @@
 <!-- Brand Story -->
 <section class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-24 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
   <div class="relative fade-up order-2 md:order-1">
-    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop" alt="Michael Brooks in the Heartbeat workshop" class="w-full h-[400px] md:h-[500px] object-cover">
+    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop" alt="Michael Brooks in the workshop" class="w-full h-[400px] md:h-[500px] object-cover">
   </div>
   <div class="fade-up order-1 md:order-2">
     <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Our Story</p>
@@ -270,7 +278,7 @@
       Built on quiet craftsmanship, one small run at a time.
     </h2>
     <p class="text-[14px] leading-relaxed text-ink/70 mb-4 max-w-md">
-      Heartbeat began in a single-room Portland workshop in 2016, where founder Michael Brooks set out to make outerwear that lasted longer than a season. Every piece is still cut, sewn, and finished in small batches by the same close-knit team.
+      The Western Fashion began in a single-room Portland workshop in 2016, where founder Michael Brooks set out to make outerwear that lasted longer than a season. Every piece is still cut, sewn, and finished in small batches by the same close-knit team.
     </p>
     <p class="text-[14px] leading-relaxed text-ink/70 mb-8 max-w-md">
       We work with mills we've known for years, favor natural fibers over synthetics, and would rather make less and make it well. That's the whole philosophy — nothing louder than that.
@@ -282,8 +290,8 @@
   </div>
 </section>
 
-<!-- Reviews -->
-<section class="bg-paperdeep py-16 md:py-24">
+<!-- Reviews — interactive slider -->
+<section class="bg-paperdeep py-16 md:py-24 overflow-hidden">
   <div class="max-w-[1440px] mx-auto px-6 md:px-10">
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
       <div>
@@ -298,7 +306,21 @@
       </div>
     </div>
 
-    <div id="reviews-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+    <div class="relative">
+      <!-- Track -->
+      <div id="reviewTrack" class="flex overflow-x-auto gap-6 pb-2 -mx-1 px-1"></div>
+
+      <!-- Arrows -->
+      <button id="reviewPrev" aria-label="Previous review" class="hidden md:flex items-center justify-center absolute -left-5 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-card border border-ink/10 hover:bg-white transition">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 6 9 12 15 18"/></svg>
+      </button>
+      <button id="reviewNext" aria-label="Next review" class="hidden md:flex items-center justify-center absolute -right-5 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-card border border-ink/10 hover:bg-white transition">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>
+    </div>
+
+    <!-- Dots -->
+    <div id="reviewDots" class="flex items-center justify-center gap-2 mt-8"></div>
   </div>
 </section>
 
@@ -306,8 +328,8 @@
 <section class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-24">
   <div class="text-center mb-10">
     <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Social</p>
-    <h2 class="font-display text-3xl md:text-4xl mb-3">Follow Along @heartbeat</h2>
-    <a href="#" class="text-[13px] underline-link">@heartbeat.co on Instagram</a>
+    <h2 class="font-display text-3xl md:text-4xl mb-3">Follow Along @thewesternfashion</h2>
+    <a href="#" class="text-[13px] underline-link">@thewesternfashion on Instagram</a>
   </div>
 
   <div id="instagram-grid" class="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3"></div>
@@ -332,7 +354,7 @@
 <footer class="border-t border-ink/10 bg-paperdeep">
   <div class="max-w-[1440px] mx-auto px-6 md:px-10 py-14 grid grid-cols-2 md:grid-cols-5 gap-8">
     <div class="col-span-2">
-      <p class="font-display text-xl tracking-wordmark uppercase mb-3">Heartbeat</p>
+      <p class="font-display text-lg sm:text-xl tracking-wordmark uppercase mb-3">The Western Fashion</p>
       <p class="text-[13px] text-ink/60 max-w-xs leading-relaxed">Under-the-radar basics, consciously made for comfort, style, and elegance.</p>
     </div>
     <div>
@@ -360,27 +382,27 @@
     </div>
   </div>
   <div class="border-t border-ink/10 py-5 text-center text-[11px] font-mono text-ink/40 tracking-tag uppercase">
-    © 2026 Heartbeat. All rights reserved.
+    © 2026 The Western Fashion. All rights reserved.
   </div>
 </footer>
 
 <script>
   const products = [
-    { name:"Camel Wool Overcoat", brand:"Portland Heartbeat", price:400, oldPrice:null, badge:"Sale", cat:"coat", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1544923246-77307dd654cb?q=80&w=500&auto=format&fit=crop" },
-    { name:"Classic Beige Trench Coat", brand:"Portland Heartbeat", price:400, oldPrice:450, badge:"Sale", cat:"coat", swatches:["#1C1A16","#3B5BA5"], img:"https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=500&auto=format&fit=crop" },
-    { name:"Quilted Field Jacket", brand:"Portland Heartbeat", price:400, oldPrice:null, badge:"Sold out", cat:"jacket", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=500&auto=format&fit=crop" },
-    { name:"Cropped Leather Jacket", brand:"Portland Heartbeat", price:400, oldPrice:450, badge:"Sale", cat:"jacket", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=500&auto=format&fit=crop" },
-    { name:"Handknit Wool Sweater", brand:"Portland Heartbeat", price:400, oldPrice:null, badge:null, cat:"sweater", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1576871337622-98d48d1cf531?q=80&w=500&auto=format&fit=crop" },
-    { name:"Ribbed Turtleneck Sweater", brand:"Portland Heartbeat", price:400, oldPrice:null, badge:null, cat:"sweater", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500&auto=format&fit=crop" },
-    { name:"Solid Taupe Shirt", brand:"Portland Heartbeat", price:400, oldPrice:450, badge:"Sold out", cat:"shirt", swatches:["#1C1A16","#EDE9E3"], img:"https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?q=80&w=500&auto=format&fit=crop" },
-    { name:"Denim Trucker Jacket", brand:"Portland Heartbeat", price:400, oldPrice:null, badge:null, cat:"jacket", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?q=80&w=500&auto=format&fit=crop" },
+    { name:"Camel Wool Overcoat", brand:"The Western Fashion", price:400, oldPrice:null, badge:"Sale", cat:"coat", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1544923246-77307dd654cb?q=80&w=500&auto=format&fit=crop" },
+    { name:"Classic Beige Trench Coat", brand:"The Western Fashion", price:400, oldPrice:450, badge:"Sale", cat:"coat", swatches:["#1C1A16","#3B5BA5"], img:"https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=500&auto=format&fit=crop" },
+    { name:"Quilted Field Jacket", brand:"The Western Fashion", price:400, oldPrice:null, badge:"Sold out", cat:"jacket", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=500&auto=format&fit=crop" },
+    { name:"Cropped Leather Jacket", brand:"The Western Fashion", price:400, oldPrice:450, badge:"Sale", cat:"jacket", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=500&auto=format&fit=crop" },
+    { name:"Handknit Wool Sweater", brand:"The Western Fashion", price:400, oldPrice:null, badge:null, cat:"sweater", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1576871337622-98d48d1cf531?q=80&w=500&auto=format&fit=crop" },
+    { name:"Ribbed Turtleneck Sweater", brand:"The Western Fashion", price:400, oldPrice:null, badge:null, cat:"sweater", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500&auto=format&fit=crop" },
+    { name:"Solid Taupe Shirt", brand:"The Western Fashion", price:400, oldPrice:450, badge:"Sold out", cat:"shirt", swatches:["#1C1A16","#EDE9E3"], img:"https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?q=80&w=500&auto=format&fit=crop" },
+    { name:"Denim Trucker Jacket", brand:"The Western Fashion", price:400, oldPrice:null, badge:null, cat:"jacket", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?q=80&w=500&auto=format&fit=crop" },
   ];
 
   const newArrivals = [
-    { name:"Oversized Wool Blazer Coat", brand:"Portland Heartbeat", price:420, badge:"New", swatches:["#1C1A16","#3B5BA5"], img:"https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=500&auto=format&fit=crop" },
-    { name:"Shearling Aviator Jacket", brand:"Portland Heartbeat", price:480, badge:"New", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=500&auto=format&fit=crop" },
-    { name:"Belted Cotton Trench", brand:"Portland Heartbeat", price:390, badge:"New", swatches:["#1C1A16","#EDE9E3"], img:"https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=500&auto=format&fit=crop" },
-    { name:"Cable Knit Cardigan", brand:"Portland Heartbeat", price:260, badge:"New", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1516826957135-700dedea698c?q=80&w=500&auto=format&fit=crop" },
+    { name:"Oversized Wool Blazer Coat", brand:"The Western Fashion", price:420, badge:"New", swatches:["#1C1A16","#3B5BA5"], img:"https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=500&auto=format&fit=crop" },
+    { name:"Shearling Aviator Jacket", brand:"The Western Fashion", price:480, badge:"New", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=500&auto=format&fit=crop" },
+    { name:"Belted Cotton Trench", brand:"The Western Fashion", price:390, badge:"New", swatches:["#1C1A16","#EDE9E3"], img:"https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=500&auto=format&fit=crop" },
+    { name:"Cable Knit Cardigan", brand:"The Western Fashion", price:260, badge:"New", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1516826957135-700dedea698c?q=80&w=500&auto=format&fit=crop" },
   ];
 
   const instagramPosts = [
@@ -396,6 +418,8 @@
     { name:"Amelia R.", initials:"AR", rating:5, item:"Camel Wool Overcoat", text:"The coat is even better in person, the wool feels heavy and warm without being bulky. Runs true to size and the tailoring around the shoulders is excellent." },
     { name:"James T.", initials:"JT", rating:5, item:"Cropped Leather Jacket", text:"Been wearing this jacket almost daily since it arrived. The leather has already started to soften up nicely and the stitching feels genuinely well made." },
     { name:"Priya N.", initials:"PN", rating:4, item:"Classic Beige Trench Coat", text:"Beautiful coat and fast shipping. Sizing runs slightly large so I'd recommend going down a size if you're between two." },
+    { name:"Daniel K.", initials:"DK", rating:5, item:"Handknit Wool Sweater", text:"This sweater is on another level compared to the mass-market stuff. Thick, warm, holds its shape after washing. Worth every dollar." },
+    { name:"Sofia M.", initials:"SM", rating:5, item:"Quilted Field Jacket", text:"Ordered this for fall hikes and it's held up through wind and light rain without any issue. The quilting pattern is a nice touch too." },
   ];
 
   const grid = document.getElementById('grid');
@@ -458,7 +482,7 @@
     tile.href = '#';
     tile.className = 'relative aspect-square overflow-hidden group block';
     tile.innerHTML = `
-      <img src="${src}" alt="Heartbeat on Instagram" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+      <img src="${src}" alt="The Western Fashion on Instagram" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
       <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition flex items-center justify-center">
         <svg class="opacity-0 group-hover:opacity-100 transition" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
       </div>
@@ -466,24 +490,74 @@
     instagramGrid.appendChild(tile);
   });
 
-  const reviewsGrid = document.getElementById('reviews-grid');
-  reviews.forEach(r => {
-    const card = document.createElement('div');
-    card.className = 'bg-card p-6 md:p-7';
-    const stars = Array.from({length:5}, (_, i) => `<span class="star ${i < r.rating ? '' : 'empty'}">★</span>`).join('');
-    card.innerHTML = `
+  // ---- Reviews slider ----
+  const reviewTrack = document.getElementById('reviewTrack');
+  const reviewDots = document.getElementById('reviewDots');
+  const reviewPrev = document.getElementById('reviewPrev');
+  const reviewNext = document.getElementById('reviewNext');
+  let activeReview = 0;
+  let reviewAutoplay;
+
+  reviews.forEach((r, i) => {
+    const stars = Array.from({length:5}, (_, s) => `<span class="star ${s < r.rating ? '' : 'empty'}">★</span>`).join('');
+    const slide = document.createElement('div');
+    slide.className = 'review-slide shrink-0 w-full sm:w-[420px] bg-card p-7 md:p-8';
+    slide.innerHTML = `
       <div class="flex text-sm mb-4">${stars}</div>
-      <p class="text-[14px] leading-relaxed text-ink/80 mb-6 font-display-sm">"${r.text}"</p>
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-full bg-paperdeep flex items-center justify-center text-[11px] font-mono tracking-wide">${r.initials}</div>
+      <p class="text-[15px] leading-relaxed text-ink/80 mb-6 font-display-sm min-h-[96px]">"${r.text}"</p>
+      <div class="flex items-center gap-3 stitch pt-5">
+        <div class="w-9 h-9 rounded-full bg-paperdeep flex items-center justify-center text-[11px] font-mono tracking-wide shrink-0">${r.initials}</div>
         <div>
           <p class="text-[13px] font-medium">${r.name}</p>
           <p class="text-[11px] font-mono text-ink/50">Purchased: ${r.item}</p>
         </div>
       </div>
     `;
-    reviewsGrid.appendChild(card);
+    reviewTrack.appendChild(slide);
+
+    const dot = document.createElement('button');
+    dot.className = `review-dot ${i === 0 ? 'active' : ''}`;
+    dot.setAttribute('aria-label', `Go to review ${i + 1}`);
+    dot.addEventListener('click', () => goToReview(i));
+    reviewDots.appendChild(dot);
   });
+
+  const slideEls = () => Array.from(reviewTrack.querySelectorAll('.review-slide'));
+  const dotEls = () => Array.from(reviewDots.querySelectorAll('.review-dot'));
+
+  function goToReview(i){
+    activeReview = (i + reviews.length) % reviews.length;
+    const target = slideEls()[activeReview];
+    reviewTrack.scrollTo({ left: target.offsetLeft - reviewTrack.offsetLeft, behavior: 'smooth' });
+    dotEls().forEach((d, idx) => d.classList.toggle('active', idx === activeReview));
+  }
+
+  reviewPrev.addEventListener('click', () => { goToReview(activeReview - 1); restartAutoplay(); });
+  reviewNext.addEventListener('click', () => { goToReview(activeReview + 1); restartAutoplay(); });
+
+  // Keep dots in sync if the person swipes/drags the track directly
+  let scrollTimeout;
+  reviewTrack.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      const trackLeft = reviewTrack.getBoundingClientRect().left;
+      let closest = 0, closestDist = Infinity;
+      slideEls().forEach((el, idx) => {
+        const dist = Math.abs(el.getBoundingClientRect().left - trackLeft);
+        if (dist < closestDist) { closestDist = dist; closest = idx; }
+      });
+      activeReview = closest;
+      dotEls().forEach((d, idx) => d.classList.toggle('active', idx === activeReview));
+    }, 120);
+  }, { passive: true });
+
+  function restartAutoplay(){
+    clearInterval(reviewAutoplay);
+    reviewAutoplay = setInterval(() => goToReview(activeReview + 1), 6000);
+  }
+  restartAutoplay();
+  reviewTrack.addEventListener('mouseenter', () => clearInterval(reviewAutoplay));
+  reviewTrack.addEventListener('mouseleave', restartAutoplay);
 
   const darkToggle = document.getElementById('darkToggle');
   darkToggle.addEventListener('click', () => {
