@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nexova — BPO & Marketing Agency</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F5F3EF;
+    --ink:#0A0A0A;
+  }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    cursor:default;
+  }
+  .font-display{ font-family:'Poppins',sans-serif; }
+  .wordmark{
+    font-family:'Poppins',sans-serif;
+    font-weight:800;
+    letter-spacing:-0.04em;
+    line-height:0.85;
+  }
+  .underline-link{
+    position:relative;
+    text-decoration:underline;
+    text-underline-offset:4px;
+    text-decoration-thickness:1px;
+  }
+
+  ::selection{ background:#0A0A0A; color:#F5F3EF; }
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  .reveal-img{
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 1.1s cubic-bezier(.16,1,.3,1);
+  }
+  .reveal-img.in{ clip-path: inset(0 0 0% 0); }
+
+  /* ---------- Media hover zoom ---------- */
+  .media-frame{ overflow:hidden; position:relative; }
+  .media-frame img, .media-frame video{
+    width:100%; height:100%; object-fit:cover;
+    transform:scale(1.08);
+    transition: transform 1.2s cubic-bezier(.16,1,.3,1), filter 1.2s ease;
+  }
+  .media-frame:hover img, .media-frame:hover video{ transform:scale(1.16); }
+
+  /* ---------- Magnetic buttons ---------- */
+  .magnetic{ display:inline-block; transition: transform 0.25s cubic-bezier(.16,1,.3,1); will-change: transform; }
+
+  /* ---------- Custom cursor dot ---------- */
+  #cursor-dot{
+    position:fixed; top:0; left:0; width:10px; height:10px; border-radius:9999px;
+    background:var(--cream); pointer-events:none; z-index:9999; mix-blend-mode:difference;
+    transform:translate(-50%,-50%); transition: width .25s ease, height .25s ease, opacity .25s ease;
+    opacity:0;
+  }
+  #cursor-dot.grow{ width:56px; height:56px; }
+
+  /* ---------- Hero parallax layers ---------- */
+  #hero-video-wrap{ transition: transform 0.1s linear; }
+  .wordmark-parallax{ will-change: transform; }
+
+  /* ---------- Hero background video ---------- */
+  #hero-bg-video{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  }
+
+  /* ---------- Loader ---------- */
+  #loader{
+    position:fixed; inset:0; background:#000; z-index:99999;
+    display:flex; align-items:center; justify-content:center;
+    transition: opacity .7s ease, visibility .7s ease;
+  }
+  #loader .font-display{ color:var(--cream); font-size:2rem; letter-spacing:-0.03em; }
+  #loader.hide{ opacity:0; visibility:hidden; }
+
+  /* ---------- Marquee ---------- */
+  .marquee-track{
+    display:flex; width:max-content;
+    animation: marquee 22s linear infinite;
+  }
+  @keyframes marquee{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+
+  /* ---------- Duotone photography filter ---------- */
+  .duotone{ filter:grayscale(1) contrast(1.05) brightness(0.95); }
+  .duotone-soft{ filter:grayscale(0.4) contrast(1.02); }
+
+  video::-webkit-media-controls{ display:none !important; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .reveal, .reveal-img, .media-frame img, .media-frame video, .magnetic{ transition:none !important; }
+    .marquee-track{ animation:none; }
+  }
+
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--cream);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body class="antialiased">
+
+  <!-- Loader -->
+  <div id="loader"><span class="font-display">Nexova<sup class="text-xs">®</sup></span></div>
+
+  <!-- Custom cursor -->
+  <div id="cursor-dot"></div>
+
+  <!-- ===================== HERO ===================== -->
+  <header class="bg-black text-[var(--cream)] relative overflow-hidden">
+    <nav class="flex items-center justify-between px-6 md:px-10 py-6 max-w-[1440px] mx-auto relative z-10">
+      <div class="font-display font-700 text-lg tracking-tight">Nexova <sup class="text-[10px]">®</sup></div>
+      <div class="hidden md:flex items-center gap-8 text-sm text-neutral-300">
+        <a href="#work" class="hover:text-white transition-colors duration-300">Services</a>
+        <a href="#about" class="hover:text-white transition-colors duration-300">About</a>
+        <a href="#news" class="hover:text-white transition-colors duration-300">Results</a>
+      </div>
+      <a href="#contact" data-magnetic class="magnetic text-sm underline-link hover:text-neutral-300">Get a quote</a>
+    </nav>
+
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 pt-10 md:pt-16 relative z-10">
+      <p class="ml-auto max-w-xs md:max-w-sm text-right text-base md:text-lg leading-relaxed text-neutral-100 reveal">
+        We run the calls, campaigns, and back-office work that let growing brands scale their customer experience without slowing down.
+      </p>
+    </div>
+
+    <div class="max-w-[1440px] mx-auto px-4 md:px-8 pt-6 md:pt-10 pb-10 relative z-10">
+      <h1 id="hero-word" class="wordmark wordmark-parallax text-[22vw] md:text-[15vw] leading-none select-none reveal">Nexova<span class="align-top text-[3vw] md:text-[2vw] font-medium ml-1">®</span></h1>
+      <div class="flex justify-end mt-4 md:mt-6">
+        <div class="flex items-center gap-2 text-xs md:text-sm text-neutral-400">
+          <span>Scroll to explore</span>
+          <span class="inline-block border border-neutral-600 rounded-full px-3 py-1 text-neutral-300 animate-bounce">↓</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero background video: live call center floor -->
+    <div id="hero-video-wrap" class="pointer-events-none absolute inset-0 z-0">
+      <video id="hero-bg-video" autoplay muted loop playsinline
+        poster="https://picsum.photos/seed/nexova-floor/1600/900">
+        <source src="https://assets.mixkit.co/videos/23064/23064-360.mp4" type="video/mp4">
+      </video>
+      <div class="absolute inset-0 bg-black/70"></div>
+      <div class="absolute -top-1/3 left-1/4 w-[60vw] h-[60vw] rounded-full bg-neutral-800/20 blur-3xl animate-[pulse_9s_ease-in-out_infinite]"></div>
+    </div>
+  </header>
+
+  <!-- ===================== PHOTO BREAK (video + images) ===================== -->
+  <section class="w-full h-[62vh] md:h-[78vh] relative overflow-hidden grid grid-cols-2">
+    <div class="media-frame reveal-img relative">
+      <video class="duotone" autoplay muted loop playsinline poster="https://picsum.photos/seed/nexova-agent/900/1200">
+        <source src="https://assets.mixkit.co/videos/22987/22987-360.mp4" type="video/mp4">
+      </video>
+      <div class="absolute inset-0 bg-black/25"></div>
+    </div>
+    <div class="media-frame reveal-img relative">
+      <img class="duotone-soft" src="https://picsum.photos/seed/nexova-strategy/900/1200" alt="Marketing strategy session" loading="lazy" />
+      <div class="absolute inset-0 bg-gradient-to-l from-transparent to-black/10"></div>
+    </div>
+  </section>
+
+  <!-- ===================== MANIFESTO ===================== -->
+  <section id="about" class="bg-black text-[var(--cream)]">
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 py-20 md:py-28 grid md:grid-cols-2 gap-10">
+      <p class="text-xl md:text-2xl leading-snug text-neutral-100 reveal">
+        Nexova blends trained call center teams with performance marketing, so every customer conversation and every campaign pulls in the same direction: growth for the brands we support.
+      </p>
+      <p class="text-xl md:text-2xl leading-snug text-neutral-100 reveal">
+        We staff, train, and manage the people behind your support lines and sales campaigns, while our marketing team keeps the pipeline of new customers flowing in.
+      </p>
+    </div>
+
+    <!-- Values -->
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 pb-24 md:pb-32 border-t border-neutral-800 pt-14">
+      <p class="text-sm text-neutral-400 mb-10">(What we run)</p>
+
+      <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+        <a href="#" class="value-card reveal group relative block rounded-sm overflow-hidden border border-neutral-800">
+          <div class="media-frame reveal-img aspect-[4/5]">
+            <img class="duotone value-card-img" src="https://picsum.photos/seed/nexova-inbound/800/1000" alt="Support agents on a call center floor" loading="lazy" />
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/0 value-card-overlay"></div>
+          <div class="absolute inset-x-0 bottom-0 p-6 md:p-7">
+            <span class="text-xs text-neutral-400 value-card-eyebrow">01</span>
+            <h3 class="font-display font-semibold text-xl mt-2 mb-2 text-white transition-transform duration-500 group-hover:-translate-y-1">Inbound & Outbound Support</h3>
+            <p class="text-sm text-neutral-300 leading-relaxed max-h-0 opacity-0 value-card-copy transition-all duration-500">Trained agents handle customer calls, live chat, and email around the clock, so your customers get answers fast and your team stays focused on the business.</p>
+          </div>
+        </a>
+
+        <a href="#" class="value-card reveal group relative block rounded-sm overflow-hidden border border-neutral-800">
+          <div class="media-frame reveal-img aspect-[4/5]">
+            <img class="duotone value-card-img" src="https://picsum.photos/seed/nexova-sales/800/1000" alt="Sales team on outbound calls" loading="lazy" />
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/0 value-card-overlay"></div>
+          <div class="absolute inset-x-0 bottom-0 p-6 md:p-7">
+            <span class="text-xs text-neutral-400 value-card-eyebrow">02</span>
+            <h3 class="font-display font-semibold text-xl mt-2 mb-2 text-white transition-transform duration-500 group-hover:-translate-y-1">Sales & Lead Generation</h3>
+            <p class="text-sm text-neutral-300 leading-relaxed max-h-0 opacity-0 value-card-copy transition-all duration-500">Outbound campaigns and appointment setting built around your sales process, run by teams who know how to qualify a lead and close the loop.</p>
+          </div>
+        </a>
+
+        <a href="#" class="value-card reveal group relative block rounded-sm overflow-hidden border border-neutral-800">
+          <div class="media-frame reveal-img aspect-[4/5]">
+            <img class="duotone value-card-img" src="https://picsum.photos/seed/nexova-marketing/800/1000" alt="Marketing team planning a campaign" loading="lazy" />
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/0 value-card-overlay"></div>
+          <div class="absolute inset-x-0 bottom-0 p-6 md:p-7">
+            <span class="text-xs text-neutral-400 value-card-eyebrow">03</span>
+            <h3 class="font-display font-semibold text-xl mt-2 mb-2 text-white transition-transform duration-500 group-hover:-translate-y-1">Marketing & Brand Growth</h3>
+            <p class="text-sm text-neutral-300 leading-relaxed max-h-0 opacity-0 value-card-copy transition-all duration-500">Paid media, content, and social campaigns planned and reported alongside our support operations, so marketing spend and service quality move together.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FEATURED WORK ===================== -->
+  <section id="work" class="bg-[var(--cream)] text-black">
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 pt-24 md:pt-32 pb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+      <h2 class="font-display font-semibold text-4xl md:text-6xl tracking-tight reveal">Client Results</h2>
+      <div class="flex items-center justify-between md:justify-end gap-10 md:gap-16">
+        <p class="text-sm text-neutral-500 max-w-[180px]">A few of the accounts we support and grow.</p>
+        <a href="#" data-magnetic class="magnetic text-sm underline-link whitespace-nowrap">See all case studies</a>
+      </div>
+    </div>
+
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 grid md:grid-cols-2 gap-6 md:gap-8 pb-24 md:pb-32">
+      <div class="reveal">
+        <div class="media-frame reveal-img aspect-[4/3] rounded-sm mb-4">
+          <img src="https://picsum.photos/seed/nexova-support-team/900/700" alt="Harbor Retail customer support team" loading="lazy" />
+        </div>
+        <h3 class="font-display font-semibold text-lg">Harbor Retail</h3>
+        <p class="text-sm text-neutral-500">24/7 customer support, cut wait times by half</p>
+      </div>
+      <div class="reveal">
+        <div class="media-frame reveal-img aspect-[4/3] rounded-sm mb-4">
+          <img class="duotone" src="https://picsum.photos/seed/nexova-leadgen/900/700" alt="Belmont Group lead generation campaign" loading="lazy" />
+        </div>
+        <h3 class="font-display font-semibold text-lg">The Belmont Group</h3>
+        <p class="text-sm text-neutral-500">Outbound + paid media, booked qualified leads</p>
+      </div>
+    </div>
+
+    <!-- Services marquee -->
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 pb-24 md:pb-32 overflow-hidden">
+      <p class="text-sm text-neutral-500 mb-10 reveal">(Services)</p>
+      <div class="marquee-track font-display font-semibold text-[10vw] md:text-[6vw] leading-none text-neutral-300 select-none">
+        <span class="flex items-center gap-10 pr-10">
+          <span>Inbound Support</span><span class="text-neutral-200">/</span>
+          <span>Outbound Sales</span><span class="text-neutral-200">/</span>
+          <span>Digital Marketing</span><span class="text-neutral-200">/</span>
+          <span>Back Office</span><span class="text-neutral-200">/</span>
+        </span>
+        <span class="flex items-center gap-10 pr-10" aria-hidden="true">
+          <span>Inbound Support</span><span class="text-neutral-200">/</span>
+          <span>Outbound Sales</span><span class="text-neutral-200">/</span>
+          <span>Digital Marketing</span><span class="text-neutral-200">/</span>
+          <span>Back Office</span><span class="text-neutral-200">/</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Latest updates -->
+    <div id="news" class="max-w-[1440px] mx-auto px-6 md:px-10 pb-24 md:pb-32">
+      <div class="flex items-center justify-between mb-10">
+        <p class="text-sm text-neutral-500 reveal">(Latest updates)</p>
+        <a href="#" data-magnetic class="magnetic text-sm underline-link">Read all Articles</a>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+        <div class="reveal">
+          <div class="media-frame reveal-img aspect-[4/3] rounded-sm mb-4">
+            <img class="duotone-soft" src="https://picsum.photos/seed/nexova-article/700/560" alt="Featured article" loading="lazy" />
+          </div>
+          <p class="text-xs text-neutral-500 mb-1">Recognition</p>
+          <h4 class="font-display font-semibold leading-snug">Featured in an industry outsourcing report</h4>
+        </div>
+        <div class="reveal">
+          <div class="media-frame reveal-img aspect-[4/3] rounded-sm mb-4">
+            <img src="https://picsum.photos/seed/nexova-award/700/560" alt="Team award" loading="lazy" />
+          </div>
+          <p class="text-xs text-neutral-500 mb-1">Recognition</p>
+          <h4 class="font-display font-semibold leading-snug">Named a top BPO partner for customer experience</h4>
+        </div>
+        <div class="reveal">
+          <div class="media-frame reveal-img aspect-[4/3] rounded-sm mb-4">
+            <img class="duotone" src="https://picsum.photos/seed/nexova-partner/700/560" alt="New partnership" loading="lazy" />
+          </div>
+          <p class="text-xs text-neutral-400 mb-1">Collaboration</p>
+          <h4 class="font-display font-semibold leading-snug">New partnership with a leading e-commerce brand</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA / FOOTER ===================== -->
+  <footer id="contact" class="bg-black text-[var(--cream)]">
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 pt-24 md:pt-32 pb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+      <h2 class="font-display font-semibold text-4xl md:text-6xl leading-tight max-w-xl reveal">Ready to scale your support and marketing without scaling headcount?</h2>
+      <a href="#" data-magnetic class="magnetic text-lg underline-link whitespace-nowrap">Get in touch</a>
+    </div>
+
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 grid grid-cols-2 md:grid-cols-3 gap-8 pb-20 text-sm">
+      <div>
+        <p class="text-neutral-500 mb-3">Sitemap</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="text-white">Home</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Services</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">About</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Results</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Contact</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-neutral-500 mb-3">Social</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Instagram</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">LinkedIn</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Facebook</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-neutral-500 mb-3">Company</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Careers</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Case Studies</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Pricing</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">FAQ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="max-w-[1440px] mx-auto px-4 md:px-8">
+      <h2 class="wordmark text-[24vw] md:text-[16vw] leading-none select-none">Nexova<span class="align-top text-[3vw] md:text-[2vw] font-medium ml-1">®</span></h2>
+      <div class="flex items-center justify-between px-2 md:px-4 py-6 text-xs text-neutral-500 border-t border-neutral-800">
+        <a href="#" class="underline-link">Back to top ↑</a>
+        <span>Copyright © Nexova 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ---------- Loader ----------
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('loader');
+      setTimeout(() => loader.classList.add('hide'), 500);
+    });
+
+    // ---------- Scroll reveal ----------
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('in'), i * 60);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal, .reveal-img').forEach(el => io.observe(el));
+
+    // ---------- Smooth in-page anchor scroll ----------
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const targetId = link.getAttribute('href');
+        if (targetId.length > 1) {
+          const target = document.querySelector(targetId);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
+
+    // ---------- Hero parallax ----------
+    const heroWord = document.getElementById('hero-word');
+    const heroGlow = document.getElementById('hero-video-wrap');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (heroWord) heroWord.style.transform = `translateY(${y * 0.15}px) scale(${1 - Math.min(y, 400) * 0.0002})`;
+      if (heroGlow) heroGlow.style.transform = `translateY(${y * 0.25}px)`;
+    }, { passive: true });
+
+    // ---------- Magnetic buttons ----------
+    const magnets = document.querySelectorAll('[data-magnetic]');
+    magnets.forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const r = el.getBoundingClientRect();
+        const x = e.clientX - r.left - r.width / 2;
+        const y = e.clientY - r.top - r.height / 2;
+        el.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px)`;
+      });
+      el.addEventListener('mouseleave', () => { el.style.transform = 'translate(0,0)'; });
+    });
+
+    // ---------- Custom cursor ----------
+    const dot = document.getElementById('cursor-dot');
+    let mx = 0, my = 0, dx = 0, dy = 0;
+    window.addEventListener('mousemove', (e) => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.opacity = 1;
+    });
+    document.querySelectorAll('a, button, .media-frame').forEach(el => {
+      el.addEventListener('mouseenter', () => dot.classList.add('grow'));
+      el.addEventListener('mouseleave', () => dot.classList.remove('grow'));
+    });
+    (function raf(){
+      dx += (mx - dx) * 0.18;
+      dy += (my - dy) * 0.18;
+      dot.style.left = dx + 'px';
+      dot.style.top = dy + 'px';
+      requestAnimationFrame(raf);
+    })();
+
+    // Respect reduced motion: skip cursor/parallax entirely
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      dot.style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product — The Western Fashion</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter+Tight:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper: '#FFFFFF',
+          paperdeep: '#F4F4F4',
+          ink: '#1C1A16',
+          brick: '#9A3D28',
+          sage: '#57624A',
+          card: '#FFFFFF',
+        },
+        fontFamily: {
+          display: ['"Fraunces"', 'serif'],
+          body: ['"Inter Tight"', 'sans-serif'],
+          mono: ['"Space Mono"', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter Tight', sans-serif; background: #FFFFFF; color: #1C1A16; }
+  .font-display { font-family: 'Fraunces', serif; font-variation-settings: 'opsz' 40; }
+  .font-display-sm { font-family: 'Fraunces', serif; font-variation-settings: 'opsz' 18; }
+  .font-mono { font-family: 'Space Mono', monospace; }
+  .tracking-tag { letter-spacing: 0.14em; }
+  .tracking-wordmark { letter-spacing: 0.16em; }
+
+  ::selection { background: #1C1A16; color: #FFFFFF; }
+
+  .underline-link { background-image: linear-gradient(#1C1A16,#1C1A16); background-position: 0 100%; background-repeat: no-repeat; background-size: 0% 1px; transition: background-size .3s ease; }
+  .underline-link:hover { background-size: 100% 1px; }
+
+  .stitch { border: none; border-top: 1.5px dashed rgba(28,26,22,0.28); }
+
+  .hang-tag { position: relative; padding-left: 20px; }
+  .hang-tag::before { content: ''; position: absolute; left: 7px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.55; }
+
+  .star { color: #1C1A16; }
+  .star.empty { color: rgba(28,26,22,0.2); }
+
+  .thumb { border: 1.5px solid transparent; }
+  .thumb.active { border-color: #1C1A16; }
+
+  .swatch-btn { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid rgba(28,26,22,0.15); position: relative; }
+  .swatch-btn.active::after { content: ''; position: absolute; inset: -4px; border: 1.5px solid #1C1A16; border-radius: 50%; }
+  .size-btn { border: 1px solid rgba(28,26,22,0.2); min-width: 44px; }
+  .size-btn.active { background: #1C1A16; color: #FFFFFF; border-color: #1C1A16; }
+  .size-btn:disabled { opacity: 0.3; text-decoration: line-through; cursor: not-allowed; }
+
+  .accordion-panel { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+  .accordion-panel.open { max-height: 400px; }
+  .accordion-chevron { transition: transform .3s ease; }
+  .accordion-chevron.open { transform: rotate(180deg); }
+
+  .fade-up { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+  .fade-up.in { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-up { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body class="antialiased bg-white">
+
+<!-- Top promo bar -->
+<div class="bg-ink text-paper text-[11px] font-mono tracking-tag uppercase text-center py-2 px-4">
+  Midseason Sale — 20% Off, Auto-Applied at Checkout — Limited Time
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 z-40 bg-white/92 backdrop-blur border-b border-ink/10">
+  <div class="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-10 py-4">
+    <div class="flex items-center gap-6">
+      <button class="flex items-center gap-2 text-[11px] font-mono uppercase tracking-tag">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <nav class="hidden md:flex items-center gap-6 text-[11px] font-mono uppercase tracking-tag">
+        <a href="#" class="underline-link pb-0.5">Presets</a>
+        <a href="products.html" class="underline-link pb-0.5">Catalog</a>
+        <a href="#" class="underline-link pb-0.5">About</a>
+        <a href="#" class="underline-link pb-0.5">Journal</a>
+      </nav>
+    </div>
+
+    <a href="index.html" class="font-display text-lg sm:text-xl md:text-2xl tracking-wordmark uppercase whitespace-nowrap">The Western Fashion</a>
+
+    <div class="flex items-center gap-4 md:gap-5 text-[11px] font-mono uppercase tracking-tag">
+      <button class="hidden sm:flex items-center gap-1.5">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="hidden lg:inline">Search</span>
+      </button>
+      <span class="hidden sm:inline text-ink/25">|</span>
+      <span class="hidden sm:inline">CA</span>
+      <span class="hidden sm:inline">EN</span>
+      <button aria-label="Account">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      </button>
+      <button aria-label="Cart">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div id="app">
+  <!-- Populated by script; see #notFoundState for the fallback -->
+</div>
+
+<template id="notFoundState">
+  <section class="max-w-[1440px] mx-auto px-6 md:px-10 py-32 text-center">
+    <p class="font-display text-2xl md:text-3xl mb-4">We couldn't find that jacket.</p>
+    <p class="text-[14px] text-ink/60 mb-8">It may have sold out and been retired, or the link may be off.</p>
+    <a href="products.html" class="inline-flex items-center gap-2 bg-ink text-paper text-[11px] font-mono uppercase tracking-tag px-7 py-3.5">Back to All Jackets</a>
+  </section>
+</template>
+
+<!-- Footer -->
+<footer class="border-t border-ink/10 bg-white">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-10 py-14 grid grid-cols-2 md:grid-cols-5 gap-8">
+    <div class="col-span-2">
+      <p class="font-display text-lg sm:text-xl tracking-wordmark uppercase mb-3">The Western Fashion</p>
+      <p class="text-[13px] text-ink/60 max-w-xs leading-relaxed">Under-the-radar jackets, consciously made for comfort, style, and elegance.</p>
+    </div>
+    <div>
+      <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Shop</p>
+      <ul class="space-y-2.5 text-[13px]">
+        <li><a href="products.html" class="underline-link">All Jackets</a></li>
+        <li><a href="#" class="underline-link">Women's Jackets</a></li>
+        <li><a href="#" class="underline-link">Men's Jackets</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Company</p>
+      <ul class="space-y-2.5 text-[13px]">
+        <li><a href="#" class="underline-link">About</a></li>
+        <li><a href="#" class="underline-link">Journal</a></li>
+        <li><a href="#" class="underline-link">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Newsletter</p>
+      <div class="flex border-b border-ink/30 pb-2">
+        <input type="email" placeholder="Email address" class="bg-transparent text-[13px] outline-none flex-1 placeholder:text-ink/40">
+        <button class="text-[13px] font-mono">↗</button>
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-ink/10 py-5 text-center text-[11px] font-mono text-ink/40 tracking-tag uppercase">
+    © 2026 The Western Fashion. All rights reserved.
+  </div>
+</footer>
+
+<script src="products-data.js"></script>
+<script>
+  const app = document.getElementById("app");
+  const params = new URLSearchParams(window.location.search);
+  const product = twfGetProduct(params.get("id"));
+
+  if (!product) {
+    app.appendChild(document.getElementById("notFoundState").content.cloneNode(true));
+  } else {
+    document.title = `${product.name} — The Western Fashion`;
+    renderProduct(product);
+  }
+
+  function starsHtml(rating) {
+    return Array.from({ length: 5 }, (_, i) => `<span class="star ${i < rating ? '' : 'empty'}">★</span>`).join('');
+  }
+
+  function renderProduct(p) {
+    const soldOut = p.badge === "Sold out";
+
+    app.innerHTML = `
+      <section class="max-w-[1440px] mx-auto px-6 md:px-10 pt-8 pb-4">
+        <p class="text-[11px] font-mono uppercase tracking-tag text-ink/45">
+          <a href="index.html" class="underline-link">Home</a> /
+          <a href="products.html" class="underline-link">All Jackets</a> /
+          <span class="text-ink/70">${p.name}</span>
+        </p>
+      </section>
+
+      <section class="max-w-[1440px] mx-auto px-6 md:px-10 pb-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+
+        <!-- Gallery -->
+        <div class="fade-up in">
+          <div class="relative bg-paperdeep aspect-[3/4] overflow-hidden mb-3">
+            <img id="mainImage" src="${p.images[0]}" alt="${p.name}" class="w-full h-full object-cover">
+            ${p.badge ? `<span class="hang-tag absolute top-4 right-4 text-[10px] font-mono uppercase tracking-tag px-3 py-1.5 ${p.badge==='Sale' ? 'bg-brick text-paper' : p.badge==='Sold out' ? 'bg-white/95 text-ink/70' : 'bg-ink/90 text-paper'}">${p.badge}</span>` : ''}
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            ${p.images.map((img, i) => `
+              <button class="thumb ${i === 0 ? 'active' : ''} bg-paperdeep aspect-[3/4] overflow-hidden" data-img="${img}" data-idx="${i}">
+                <img src="${img}" alt="${p.name} view ${i + 1}" class="w-full h-full object-cover">
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="fade-up in md:pt-2">
+          <p class="text-[11px] font-mono uppercase tracking-tag text-ink/50 mb-2">${p.brand}</p>
+          <h1 class="font-display text-3xl md:text-4xl leading-snug mb-4">${p.name}</h1>
+
+          <div class="flex items-center gap-2.5 mb-6">
+            <div class="flex text-[15px]">${starsHtml(p.rating)}</div>
+            <span class="text-[12px] font-mono text-ink/50">${p.rating.toFixed(1)} · ${p.reviewCount} reviews</span>
+          </div>
+
+          <p class="text-[20px] font-mono mb-6">
+            ${p.oldPrice
+              ? `<span class="text-brick mr-3">${twfFormatPrice(p.price)}</span><span class="line-through text-ink/40">${twfFormatPrice(p.oldPrice)}</span>`
+              : twfFormatPrice(p.price)}
+          </p>
+
+          <p class="text-[14px] leading-relaxed text-ink/70 mb-8 max-w-md">${p.short}</p>
+
+          <!-- Color -->
+          <div class="mb-7">
+            <p class="text-[11px] font-mono uppercase tracking-tag text-ink/50 mb-3">Color — <span id="selectedColor">${p.colors[0].name}</span></p>
+            <div id="colorPicker" class="flex gap-3"></div>
+          </div>
+
+          <!-- Size -->
+          <div class="mb-8">
+            <div class="flex items-center justify-between mb-3">
+              <p class="text-[11px] font-mono uppercase tracking-tag text-ink/50">Size</p>
+              <button class="text-[11px] font-mono uppercase tracking-tag underline-link text-ink/50">Size Guide</button>
+            </div>
+            <div id="sizePicker" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <!-- CTA -->
+          <button id="addToCartBtn" ${soldOut ? 'disabled' : ''} class="w-full ${soldOut ? 'bg-ink/20 text-ink/50 cursor-not-allowed' : 'bg-ink text-paper hover:bg-ink/90'} text-[11px] font-mono uppercase tracking-tag py-4 transition mb-3">
+            ${soldOut ? 'Sold Out' : 'Add to Cart'}
+          </button>
+          <p id="addToCartNote" class="text-[11px] font-mono text-ink/40 text-center mb-10 h-4"></p>
+
+          <!-- Accordions -->
+          <div class="stitch pt-2">
+            <button class="accordion-toggle w-full flex items-center justify-between py-4 text-left" data-target="descPanel">
+              <span class="text-[13px] font-display-sm">Description</span>
+              <svg class="accordion-chevron open" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div id="descPanel" class="accordion-panel open">
+              <p class="text-[13px] leading-relaxed text-ink/70 pb-6">${p.description}</p>
+            </div>
+          </div>
+          <div class="stitch">
+            <button class="accordion-toggle w-full flex items-center justify-between py-4 text-left" data-target="detailsPanel">
+              <span class="text-[13px] font-display-sm">Materials &amp; Care</span>
+              <svg class="accordion-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div id="detailsPanel" class="accordion-panel">
+              <ul class="text-[13px] leading-relaxed text-ink/70 pb-6 space-y-1.5 list-disc list-inside">
+                ${p.details.map(d => `<li>${d}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+          <div class="stitch">
+            <button class="accordion-toggle w-full flex items-center justify-between py-4 text-left" data-target="shipPanel">
+              <span class="text-[13px] font-display-sm">Shipping &amp; Returns</span>
+              <svg class="accordion-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div id="shipPanel" class="accordion-panel">
+              <p class="text-[13px] leading-relaxed text-ink/70 pb-6">Free shipping on orders over $150. Delivered in 3–7 business days within the continental US. Returns accepted within 30 days in original, unworn condition.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Related products -->
+      <section class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-24 fade-up in">
+        <div class="flex items-end justify-between mb-10">
+          <div>
+            <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">You May Also Like</p>
+            <h2 class="font-display text-2xl md:text-3xl">More Jackets</h2>
+          </div>
+          <a href="products.html" class="text-[11px] font-mono uppercase tracking-tag underline-link">View All</a>
+        </div>
+        <div id="relatedGrid" class="grid grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-12"></div>
+      </section>
+    `;
+
+    // Gallery thumbnails
+    const mainImage = document.getElementById("mainImage");
+    document.querySelectorAll(".thumb").forEach(btn => {
+      btn.addEventListener("click", () => {
+        mainImage.src = btn.dataset.img;
+        document.querySelectorAll(".thumb").forEach(t => t.classList.remove("active"));
+        btn.classList.add("active");
+      });
+    });
+
+    // Color picker
+    let selectedColor = p.colors[0].name;
+    const colorPicker = document.getElementById("colorPicker");
+    p.colors.forEach((c, i) => {
+      const btn = document.createElement("button");
+      btn.className = `swatch-btn ${i === 0 ? "active" : ""}`;
+      btn.style.background = c.hex;
+      btn.title = c.name;
+      btn.setAttribute("aria-label", c.name);
+      btn.addEventListener("click", () => {
+        selectedColor = c.name;
+        document.getElementById("selectedColor").textContent = c.name;
+        colorPicker.querySelectorAll(".swatch-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+      colorPicker.appendChild(btn);
+    });
+
+    // Size picker
+    let selectedSize = null;
+    const ALL_SIZES = ["XS", "S", "M", "L", "XL"];
+    const sizePicker = document.getElementById("sizePicker");
+    ALL_SIZES.forEach(s => {
+      const available = p.sizes.includes(s);
+      const btn = document.createElement("button");
+      btn.className = "size-btn h-11 text-[12px] font-mono px-3";
+      btn.textContent = s;
+      if (!available) {
+        btn.disabled = true;
+      } else {
+        btn.addEventListener("click", () => {
+          selectedSize = s;
+          sizePicker.querySelectorAll(".size-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+        });
+      }
+      sizePicker.appendChild(btn);
+    });
+
+    // Add to cart
+    const addBtn = document.getElementById("addToCartBtn");
+    const addNote = document.getElementById("addToCartNote");
+    if (addBtn && !addBtn.disabled) {
+      addBtn.addEventListener("click", () => {
+        if (!selectedSize) {
+          addNote.textContent = "Please select a size";
+          addNote.classList.add("text-brick");
+          return;
+        }
+        addNote.classList.remove("text-brick");
+        addNote.textContent = `Added — ${selectedColor}, size ${selectedSize}`;
+      });
+    }
+
+    // Accordions
+    document.querySelectorAll(".accordion-toggle").forEach(toggle => {
+      toggle.addEventListener("click", () => {
+        const panel = document.getElementById(toggle.dataset.target);
+        const chevron = toggle.querySelector(".accordion-chevron");
+        panel.classList.toggle("open");
+        chevron.classList.toggle("open");
+      });
+    });
+
+    // Related products (same category, excluding current)
+    const related = PRODUCTS.filter(rp => rp.cat === p.cat && rp.id !== p.id).slice(0, 4);
+    const fallback = related.length < 4
+      ? PRODUCTS.filter(rp => rp.id !== p.id && !related.includes(rp)).slice(0, 4 - related.length)
+      : [];
+    const relatedGrid = document.getElementById("relatedGrid");
+    relatedGrid.innerHTML = [...related, ...fallback].map(rp => `
+      <a href="product.html?id=${rp.id}" class="group block">
+        <div class="relative bg-paperdeep aspect-[3/4] overflow-hidden mb-3">
+          <img src="${rp.images[0]}" alt="${rp.name}" class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-500">
+          ${rp.badge ? `<span class="hang-tag absolute top-3 right-3 text-[10px] font-mono uppercase tracking-tag px-3 py-1.5 ${rp.badge==='Sale' ? 'bg-brick text-paper' : rp.badge==='Sold out' ? 'bg-white/95 text-ink/70' : 'bg-ink/90 text-paper'}">${rp.badge}</span>` : ''}
+        </div>
+        <p class="text-[10px] font-mono uppercase tracking-tag text-ink/50 mb-1">${rp.brand}</p>
+        <p class="text-[14px] font-display-sm underline-link mb-1.5">${rp.name}</p>
+        <p class="text-[14px] font-mono">${twfFormatPrice(rp.price)}</p>
+      </a>
+    `).join('');
+  }
+</script>
+
+</body>
+</html>
