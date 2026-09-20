@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Western Fashion — A Capsule Collection</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter+Tight:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper: '#FFFFFF',
+          paperdeep: '#F4F4F4',
+          ink: '#1C1A16',
+          brick: '#9A3D28',
+          sage: '#57624A',
+          card: '#FFFFFF',
+        },
+        fontFamily: {
+          display: ['"Fraunces"', 'serif'],
+          body: ['"Inter Tight"', 'sans-serif'],
+          mono: ['"Space Mono"', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter Tight', sans-serif; background: #FFFFFF; color: #1C1A16; }
+  .font-display { font-family: 'Fraunces', serif; font-variation-settings: 'opsz' 40; }
+  .font-display-sm { font-family: 'Fraunces', serif; font-variation-settings: 'opsz' 18; }
+  .font-mono { font-family: 'Space Mono', monospace; }
+  .tracking-tag { letter-spacing: 0.14em; }
+  .tracking-wordmark { letter-spacing: 0.16em; }
+
+  ::selection { background: #1C1A16; color: #FFFFFF; }
+
+  .underline-link { background-image: linear-gradient(#1C1A16,#1C1A16); background-position: 0 100%; background-repeat: no-repeat; background-size: 0% 1px; transition: background-size .3s ease; }
+  .underline-link:hover { background-size: 100% 1px; }
+
+  /* Stitch divider — the seam motif used throughout instead of plain hairlines */
+  .stitch { border: none; border-top: 1.5px dashed rgba(28,26,22,0.28); }
+  .stitch-v { border-left: 1.5px dashed rgba(28,26,22,0.22); }
+
+  .fade-up { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+  .fade-up.in { opacity: 1; transform: translateY(0); }
+
+  .filter-pill.active { background: #1C1A16; color: #FFFFFF; border-color: #1C1A16; }
+
+  .star { color: #1C1A16; }
+  .star.empty { color: rgba(28,26,22,0.2); }
+
+  /* Hang-tag badge, punched hole, replacing the generic rounded pill */
+  .hang-tag { position: relative; padding-left: 20px; }
+  .hang-tag::before { content: ''; position: absolute; left: 7px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.55; }
+
+  /* Yoke-stitch signature — the double-line saddle stitch found on a western shirt yoke, drawn once on load */
+  .yoke-path { stroke-dasharray: 1600; stroke-dashoffset: 1600; animation: draw 2.4s cubic-bezier(.65,0,.35,1) .4s forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-up { opacity: 1; transform: none; transition: none; }
+    .yoke-path { stroke-dashoffset: 0; animation: none; }
+  }
+
+  /* Reviews slider */
+  #reviewTrack { scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; }
+  #reviewTrack::-webkit-scrollbar { display: none; }
+  .review-slide { scroll-snap-align: center; }
+  .review-dot { width: 6px; height: 6px; background: rgba(28,26,22,0.25); transition: background .25s ease, width .25s ease; }
+  .review-dot.active { background: #1C1A16; width: 20px; border-radius: 3px; }
+  .review-dot:not(.active) { border-radius: 50%; }
+</style>
+</head>
+<body class="antialiased bg-white">
+
+<!-- Top promo bar -->
+<div class="bg-ink text-paper text-[11px] font-mono tracking-tag uppercase text-center py-2 px-4">
+  Midseason Sale — 20% Off, Auto-Applied at Checkout — Limited Time
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 z-40 bg-white/92 backdrop-blur border-b border-ink/10">
+  <div class="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-10 py-4">
+    <div class="flex items-center gap-6">
+      <button id="menuBtn" class="flex items-center gap-2 text-[11px] font-mono uppercase tracking-tag">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <nav class="hidden md:flex items-center gap-6 text-[11px] font-mono uppercase tracking-tag">
+        <a href="#" class="underline-link pb-0.5">Presets</a>
+        <a href="#" class="underline-link pb-0.5">Catalog</a>
+        <a href="#" class="underline-link pb-0.5">About</a>
+        <a href="#" class="underline-link pb-0.5">Journal</a>
+      </nav>
+    </div>
+
+    <a href="#" class="font-display text-lg sm:text-xl md:text-2xl tracking-wordmark uppercase whitespace-nowrap">The Western Fashion</a>
+
+    <div class="flex items-center gap-4 md:gap-5 text-[11px] font-mono uppercase tracking-tag">
+      <button id="darkToggle" class="hidden sm:flex items-center gap-1.5">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span class="hidden lg:inline">Dark</span>
+      </button>
+      <button class="hidden sm:flex items-center gap-1.5">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="hidden lg:inline">Search</span>
+      </button>
+      <span class="hidden sm:inline text-ink/25">|</span>
+      <span class="hidden sm:inline">CA</span>
+      <span class="hidden sm:inline">EN</span>
+      <button aria-label="Account">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      </button>
+      <button aria-label="Cart">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="relative h-[560px] md:h-[660px] overflow-hidden">
+  <img
+    src="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1600&auto=format&fit=crop"
+    alt="Model wearing a quilted field jacket"
+    class="absolute inset-0 w-full h-full object-cover object-top">
+  <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/55"></div>
+
+  <div class="relative z-10 h-full flex items-center justify-center px-6">
+    <div class="text-center max-w-lg mx-auto text-paper">
+      <p class="text-[11px] font-mono tracking-tag uppercase text-paper/70 mb-5">Capsule № 04</p>
+      <h1 class="font-display text-4xl sm:text-5xl md:text-[3.4rem] leading-[1.05] mb-8">
+        A Jacket Capsule<br>by <em class="italic">Michael Brooks</em><br>AW&nbsp;'23
+      </h1>
+      <button class="inline-flex items-center gap-2 bg-paper text-ink text-[11px] font-mono uppercase tracking-tag px-7 py-3.5 hover:bg-white transition">
+        Explore Collection
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Signature: a saddle-stitch yoke seam traced across the base of the hero -->
+  <div class="absolute bottom-0 left-0 right-0 z-10">
+    <svg viewBox="0 0 1440 70" class="w-full h-[46px] md:h-[70px]" preserveAspectRatio="none">
+      <path class="yoke-path" d="M0,55 C 180,55 220,15 360,15 C 500,15 540,55 720,55 C 900,55 940,15 1080,15 C 1220,15 1260,55 1440,55"
+        fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" opacity="0.8" />
+      <path class="yoke-path" d="M0,63 C 180,63 220,23 360,23 C 500,23 540,63 720,63 C 900,63 940,23 1080,23 C 1220,23 1260,63 1440,63"
+        fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="1 9" stroke-linecap="round" opacity="0.65" />
+    </svg>
+  </div>
+</section>
+
+<!-- Trust / Benefits bar -->
+<section class="border-b border-ink/10 bg-white">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-10 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+    <div class="flex items-center gap-3">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="shrink-0"><path d="M3 7h13v10H3z"/><path d="M16 10h3l2 3v4h-5z"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="17.5" cy="18" r="1.5"/></svg>
+      <div>
+        <p class="text-[11px] font-mono uppercase tracking-tag">Free Shipping</p>
+        <p class="text-[11px] text-ink/50 mt-0.5">On orders over $150</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="shrink-0"><path d="M21 12a9 9 0 1 1-3.5-7.1"/><polyline points="21 3 21 9 15 9"/></svg>
+      <div>
+        <p class="text-[11px] font-mono uppercase tracking-tag">Easy Returns</p>
+        <p class="text-[11px] text-ink/50 mt-0.5">30-day return window</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="shrink-0"><rect x="3" y="10" width="18" height="10" rx="1.5"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg>
+      <div>
+        <p class="text-[11px] font-mono uppercase tracking-tag">Secure Payment</p>
+        <p class="text-[11px] text-ink/50 mt-0.5">Encrypted checkout</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="shrink-0"><path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.65-9.5 9-9.5 9z"/></svg>
+      <div>
+        <p class="text-[11px] font-mono uppercase tracking-tag">Made With Care</p>
+        <p class="text-[11px] text-ink/50 mt-0.5">Small-batch production</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- New Arrivals -->
+<section class="max-w-[1440px] mx-auto px-6 md:px-10 pt-16 pb-8">
+  <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+    <div>
+      <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Just Landed</p>
+      <h2 class="font-display text-3xl md:text-4xl">New Jackets</h2>
+    </div>
+    <a href="#" class="text-[11px] font-mono uppercase tracking-tag underline-link self-start md:self-auto">Shop New In</a>
+  </div>
+
+  <div id="new-arrivals-grid" class="grid grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-12"></div>
+</section>
+
+<!-- Promotional banner -->
+<section class="relative h-[300px] md:h-[360px] overflow-hidden my-16">
+  <img
+    src="https://images.unsplash.com/photo-1548624149-f9061a9a2151?q=80&w=1600&auto=format&fit=crop"
+    alt="Model wearing an outerwear jacket"
+    class="absolute inset-0 w-full h-full object-cover">
+  <div class="absolute inset-0 bg-black/40"></div>
+  <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 text-paper">
+    <p class="text-[11px] font-mono tracking-tag uppercase text-paper/70 mb-3">Outerwear Edit</p>
+    <h3 class="font-display text-2xl md:text-3xl mb-6 max-w-md">Extra 20% Off All Jackets</h3>
+    <button class="inline-flex items-center gap-2 bg-paper text-ink text-[11px] font-mono uppercase tracking-tag px-7 py-3.5 hover:bg-white transition">
+      Shop the Sale
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- Featured / Editorial split -->
+<section class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-24 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
+  <div class="fade-up">
+    <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Featured Items</p>
+    <h2 class="font-display text-3xl md:text-4xl leading-snug mb-10 max-w-md">
+      Under-the-radar jackets, consciously made for comfort, style, and elegance.
+    </h2>
+    <ul class="max-w-sm">
+      <li class="stitch"><a href="#" class="flex items-center justify-between py-4 text-[15px] font-display-sm underline-link">Women's Jackets <span class="font-mono text-sm">↗</span></a></li>
+      <li class="stitch"><a href="#" class="flex items-center justify-between py-4 text-[15px] font-display-sm underline-link">Men's Jackets <span class="font-mono text-sm">↗</span></a></li>
+      <li class="stitch"><a href="#" class="flex items-center justify-between py-4 text-[15px] font-display-sm underline-link">All Jackets <span class="font-mono text-sm">↗</span></a></li>
+    </ul>
+  </div>
+
+  <div class="relative fade-up">
+    <span class="hang-tag absolute top-4 left-4 bg-white/95 text-[10px] font-mono uppercase tracking-tag px-4 py-2">Quick View</span>
+    <img src="https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=800&auto=format&fit=crop" alt="Cropped leather jacket" class="w-full h-[460px] md:h-[560px] object-cover">
+    <div class="absolute -bottom-6 left-6 right-6 md:left-10 md:right-10 bg-white shadow-sm px-5 py-4 flex items-center justify-between">
+      <div>
+        <p class="text-[10px] font-mono uppercase tracking-tag text-ink/50 mb-1">The Western Fashion</p>
+        <p class="text-[15px] font-display-sm underline-link">Cropped Leather Jacket</p>
+      </div>
+      <span class="text-[15px] font-mono">$400.00</span>
+    </div>
+  </div>
+</section>
+
+<!-- Best Sellers -->
+<section class="max-w-[1440px] mx-auto px-6 md:px-10 pt-16 pb-24">
+  <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+    <div>
+      <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Customer Favorites</p>
+      <h2 class="font-display text-3xl md:text-4xl">Best Selling Jackets</h2>
+    </div>
+    <a href="#" class="text-[11px] font-mono uppercase tracking-tag underline-link self-start md:self-auto">View All</a>
+  </div>
+
+  <div id="filters" class="flex flex-wrap gap-2 mb-10">
+    <button data-filter="all" class="filter-pill active border border-ink/15 px-4 py-1.5 text-[11px] font-mono uppercase tracking-tag">All</button>
+    <button data-filter="leather" class="filter-pill border border-ink/15 px-4 py-1.5 text-[11px] font-mono uppercase tracking-tag">Leather</button>
+    <button data-filter="denim" class="filter-pill border border-ink/15 px-4 py-1.5 text-[11px] font-mono uppercase tracking-tag">Denim</button>
+    <button data-filter="field" class="filter-pill border border-ink/15 px-4 py-1.5 text-[11px] font-mono uppercase tracking-tag">Field</button>
+    <button data-filter="wool" class="filter-pill border border-ink/15 px-4 py-1.5 text-[11px] font-mono uppercase tracking-tag">Wool</button>
+  </div>
+
+  <div id="grid" class="grid grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-12"></div>
+</section>
+
+<!-- Brand Story -->
+<section class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-24 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+  <div class="relative fade-up order-2 md:order-1">
+    <img src="https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=800&auto=format&fit=crop" alt="A shearling aviator jacket in the workshop" class="w-full h-[400px] md:h-[500px] object-cover">
+  </div>
+  <div class="fade-up order-1 md:order-2">
+    <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Our Story</p>
+    <h2 class="font-display text-3xl md:text-4xl leading-snug mb-6 max-w-md">
+      Built on quiet craftsmanship, one small run of jackets at a time.
+    </h2>
+    <p class="text-[14px] leading-relaxed text-ink/70 mb-4 max-w-md">
+      The Western Fashion began in a single-room Portland workshop in 2016, where founder Michael Brooks set out to make jackets that lasted longer than a season. Every piece is still cut, sewn, and finished in small batches by the same close-knit team.
+    </p>
+    <p class="text-[14px] leading-relaxed text-ink/70 mb-8 max-w-md">
+      We work with mills we've known for years, favor natural fibers over synthetics, and would rather make less and make it well. That's the whole philosophy — nothing louder than that.
+    </p>
+    <a href="#" class="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-tag underline-link">
+      Read Our Full Story
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- Reviews — interactive slider -->
+<section class="bg-paperdeep py-16 md:py-24 overflow-hidden">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-10">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+      <div>
+        <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Reviews</p>
+        <h2 class="font-display text-3xl md:text-4xl">What Our Customers Say</h2>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex text-lg">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <span class="text-[13px] font-mono text-ink/60">4.8 / 5 &middot; 312 reviews</span>
+      </div>
+    </div>
+
+    <div class="relative">
+      <!-- Track -->
+      <div id="reviewTrack" class="flex overflow-x-auto gap-6 pb-2 -mx-1 px-1"></div>
+
+      <!-- Arrows -->
+      <button id="reviewPrev" aria-label="Previous review" class="hidden md:flex items-center justify-center absolute -left-5 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white border border-ink/10 hover:bg-white transition">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 6 9 12 15 18"/></svg>
+      </button>
+      <button id="reviewNext" aria-label="Next review" class="hidden md:flex items-center justify-center absolute -right-5 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white border border-ink/10 hover:bg-white transition">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>
+    </div>
+
+    <!-- Dots -->
+    <div id="reviewDots" class="flex items-center justify-center gap-2 mt-8"></div>
+  </div>
+</section>
+
+<!-- Instagram / Social Feed -->
+<section class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-24">
+  <div class="text-center mb-10">
+    <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Social</p>
+    <h2 class="font-display text-3xl md:text-4xl mb-3">Follow Along @thewesternfashion</h2>
+    <a href="#" class="text-[13px] underline-link">@thewesternfashion on Instagram</a>
+  </div>
+
+  <div id="instagram-grid" class="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3"></div>
+</section>
+
+<!-- Newsletter Signup -->
+<section class="bg-ink text-paper">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-20 text-center">
+    <p class="text-[11px] font-mono tracking-tag uppercase text-paper/50 mb-4">Join the List</p>
+    <h2 class="font-display text-3xl md:text-4xl mb-4">Get 10% Off Your First Jacket</h2>
+    <p class="text-[14px] text-paper/60 mb-8 max-w-md mx-auto">
+      Sign up for early access to new arrivals, restocks, and the occasional workshop note from Michael.
+    </p>
+    <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="return false;">
+      <input type="email" required placeholder="Email address" class="flex-1 bg-transparent border border-paper/30 px-5 py-3.5 text-[13px] outline-none placeholder:text-paper/40 focus:border-paper/70 transition">
+      <button class="bg-paper text-ink text-[11px] font-mono uppercase tracking-tag px-7 py-3.5 hover:bg-white transition">Sign Up</button>
+    </form>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-ink/10 bg-white">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-10 py-14 grid grid-cols-2 md:grid-cols-5 gap-8">
+    <div class="col-span-2">
+      <p class="font-display text-lg sm:text-xl tracking-wordmark uppercase mb-3">The Western Fashion</p>
+      <p class="text-[13px] text-ink/60 max-w-xs leading-relaxed">Under-the-radar jackets, consciously made for comfort, style, and elegance.</p>
+    </div>
+    <div>
+      <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Shop</p>
+      <ul class="space-y-2.5 text-[13px]">
+        <li><a href="#" class="underline-link">Women's Jackets</a></li>
+        <li><a href="#" class="underline-link">Men's Jackets</a></li>
+        <li><a href="#" class="underline-link">All Jackets</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Company</p>
+      <ul class="space-y-2.5 text-[13px]">
+        <li><a href="#" class="underline-link">About</a></li>
+        <li><a href="#" class="underline-link">Journal</a></li>
+        <li><a href="#" class="underline-link">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Newsletter</p>
+      <div class="flex border-b border-ink/30 pb-2">
+        <input type="email" placeholder="Email address" class="bg-transparent text-[13px] outline-none flex-1 placeholder:text-ink/40">
+        <button class="text-[13px] font-mono">↗</button>
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-ink/10 py-5 text-center text-[11px] font-mono text-ink/40 tracking-tag uppercase">
+    © 2026 The Western Fashion. All rights reserved.
+  </div>
+</footer>
+
+<script>
+  const products = [
+    { name:"Camel Wool Jacket", brand:"The Western Fashion", price:400, oldPrice:null, badge:"Sale", cat:"wool", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1544923246-77307dd654cb?q=80&w=500&auto=format&fit=crop" },
+    { name:"Quilted Field Jacket", brand:"The Western Fashion", price:400, oldPrice:450, badge:"Sale", cat:"field", swatches:["#1C1A16","#3B5BA5"], img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=500&auto=format&fit=crop" },
+    { name:"Cropped Leather Jacket", brand:"The Western Fashion", price:400, oldPrice:null, badge:"Sold out", cat:"leather", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=500&auto=format&fit=crop" },
+    { name:"Denim Trucker Jacket", brand:"The Western Fashion", price:400, oldPrice:450, badge:"Sale", cat:"denim", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?q=80&w=500&auto=format&fit=crop" },
+    { name:"Shearling Aviator Jacket", brand:"The Western Fashion", price:480, oldPrice:null, badge:null, cat:"leather", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=500&auto=format&fit=crop" },
+    { name:"Oversized Wool Jacket", brand:"The Western Fashion", price:420, oldPrice:null, badge:null, cat:"wool", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=500&auto=format&fit=crop" },
+    { name:"Waxed Cotton Field Jacket", brand:"The Western Fashion", price:400, oldPrice:450, badge:"Sold out", cat:"field", swatches:["#1C1A16","#EDE9E3"], img:"https://images.unsplash.com/photo-1548624149-f9061a9a2151?q=80&w=500&auto=format&fit=crop" },
+    { name:"Classic Denim Jacket", brand:"The Western Fashion", price:380, oldPrice:null, badge:null, cat:"denim", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1544966503-7ba532cb2513?q=80&w=500&auto=format&fit=crop" },
+  ];
+
+  const newArrivals = [
+    { name:"Oversized Wool Jacket", brand:"The Western Fashion", price:420, badge:"New", swatches:["#1C1A16","#3B5BA5"], img:"https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=500&auto=format&fit=crop" },
+    { name:"Shearling Aviator Jacket", brand:"The Western Fashion", price:480, badge:"New", swatches:["#1C1A16","#9A3D28"], img:"https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=500&auto=format&fit=crop" },
+    { name:"Belted Trench Jacket", brand:"The Western Fashion", price:390, badge:"New", swatches:["#1C1A16","#EDE9E3"], img:"https://images.unsplash.com/photo-1548624149-f9061a9a2151?q=80&w=500&auto=format&fit=crop" },
+    { name:"Quilted Puffer Jacket", brand:"The Western Fashion", price:260, badge:"New", swatches:["#1C1A16","#3B5BA5","#9A3D28"], img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=500&auto=format&fit=crop" },
+  ];
+
+  const instagramPosts = [
+    "https://images.unsplash.com/photo-1544923246-77307dd654cb?q=80&w=400&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=400&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=400&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?q=80&w=400&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=400&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400&auto=format&fit=crop",
+  ];
+
+  const reviews = [
+    { name:"Amelia R.", initials:"AR", rating:5, item:"Camel Wool Jacket", text:"The jacket is even better in person, the wool feels heavy and warm without being bulky. Runs true to size and the tailoring around the shoulders is excellent." },
+    { name:"James T.", initials:"JT", rating:5, item:"Cropped Leather Jacket", text:"Been wearing this jacket almost daily since it arrived. The leather has already started to soften up nicely and the stitching feels genuinely well made." },
+    { name:"Priya N.", initials:"PN", rating:4, item:"Waxed Cotton Field Jacket", text:"Beautiful jacket and fast shipping. Sizing runs slightly large so I'd recommend going down a size if you're between two." },
+    { name:"Daniel K.", initials:"DK", rating:5, item:"Oversized Wool Jacket", text:"This jacket is on another level compared to the mass-market stuff. Thick, warm, holds its shape after washing. Worth every dollar." },
+    { name:"Sofia M.", initials:"SM", rating:5, item:"Quilted Field Jacket", text:"Ordered this for fall hikes and it's held up through wind and light rain without any issue. The quilting pattern is a nice touch too." },
+  ];
+
+  const grid = document.getElementById('grid');
+
+  function render(filter='all'){
+    grid.innerHTML = '';
+    products
+      .filter(p => filter === 'all' || p.cat === filter)
+      .forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'group';
+        card.innerHTML = `
+          <div class="relative bg-paperdeep aspect-[3/4] overflow-hidden mb-3">
+            <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-500">
+            ${p.badge ? `<span class="hang-tag absolute top-3 right-3 text-[10px] font-mono uppercase tracking-tag px-3 py-1.5 ${p.badge==='Sale' ? 'bg-brick text-paper' : 'bg-white/95 text-ink/70'}">${p.badge}</span>` : ''}
+          </div>
+          <div class="flex items-center gap-1.5 mb-2">
+            ${p.swatches.map(c => `<span class="w-3 h-3 rounded-full border border-ink/10" style="background:${c}"></span>`).join('')}
+          </div>
+          <p class="text-[10px] font-mono uppercase tracking-tag text-ink/50 mb-1">${p.brand}</p>
+          <p class="text-[14px] font-display-sm underline-link mb-1.5">${p.name}</p>
+          <p class="text-[14px] font-mono">
+            ${p.oldPrice ? `<span class="text-brick mr-2">$${p.price.toFixed(2)}</span><span class="line-through text-ink/40">$${p.oldPrice.toFixed(2)}</span>` : `$${p.price.toFixed(2)}`}
+          </p>
+        `;
+        grid.appendChild(card);
+      });
+  }
+  render();
+
+  document.getElementById('filters').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-pill');
+    if(!btn) return;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render(btn.dataset.filter);
+  });
+
+  const newArrivalsGrid = document.getElementById('new-arrivals-grid');
+  newArrivals.forEach(p => {
+    const card = document.createElement('div');
+    card.innerHTML = `
+      <div class="relative bg-paperdeep aspect-[3/4] overflow-hidden mb-3 group">
+        <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-500">
+        <span class="hang-tag absolute top-3 right-3 text-[10px] font-mono uppercase tracking-tag px-3 py-1.5 bg-ink/90 text-paper">${p.badge}</span>
+      </div>
+      <div class="flex items-center gap-1.5 mb-2">
+        ${p.swatches.map(c => `<span class="w-3 h-3 rounded-full border border-ink/10" style="background:${c}"></span>`).join('')}
+      </div>
+      <p class="text-[10px] font-mono uppercase tracking-tag text-ink/50 mb-1">${p.brand}</p>
+      <p class="text-[14px] font-display-sm underline-link mb-1.5">${p.name}</p>
+      <p class="text-[14px] font-mono">$${p.price.toFixed(2)}</p>
+    `;
+    newArrivalsGrid.appendChild(card);
+  });
+
+  const instagramGrid = document.getElementById('instagram-grid');
+  instagramPosts.forEach(src => {
+    const tile = document.createElement('a');
+    tile.href = '#';
+    tile.className = 'relative aspect-square overflow-hidden group block';
+    tile.innerHTML = `
+      <img src="${src}" alt="The Western Fashion on Instagram" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+      <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition flex items-center justify-center">
+        <svg class="opacity-0 group-hover:opacity-100 transition" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      </div>
+    `;
+    instagramGrid.appendChild(tile);
+  });
+
+  // ---- Reviews slider ----
+  const reviewTrack = document.getElementById('reviewTrack');
+  const reviewDots = document.getElementById('reviewDots');
+  const reviewPrev = document.getElementById('reviewPrev');
+  const reviewNext = document.getElementById('reviewNext');
+  let activeReview = 0;
+  let reviewAutoplay;
+
+  reviews.forEach((r, i) => {
+    const stars = Array.from({length:5}, (_, s) => `<span class="star ${s < r.rating ? '' : 'empty'}">★</span>`).join('');
+    const slide = document.createElement('div');
+    slide.className = 'review-slide shrink-0 w-full sm:w-[420px] bg-white p-7 md:p-8';
+    slide.innerHTML = `
+      <div class="flex text-sm mb-4">${stars}</div>
+      <p class="text-[15px] leading-relaxed text-ink/80 mb-6 font-display-sm min-h-[96px]">"${r.text}"</p>
+      <div class="flex items-center gap-3 stitch pt-5">
+        <div class="w-9 h-9 rounded-full bg-paperdeep flex items-center justify-center text-[11px] font-mono tracking-wide shrink-0">${r.initials}</div>
+        <div>
+          <p class="text-[13px] font-medium">${r.name}</p>
+          <p class="text-[11px] font-mono text-ink/50">Purchased: ${r.item}</p>
+        </div>
+      </div>
+    `;
+    reviewTrack.appendChild(slide);
+
+    const dot = document.createElement('button');
+    dot.className = `review-dot ${i === 0 ? 'active' : ''}`;
+    dot.setAttribute('aria-label', `Go to review ${i + 1}`);
+    dot.addEventListener('click', () => goToReview(i));
+    reviewDots.appendChild(dot);
+  });
+
+  const slideEls = () => Array.from(reviewTrack.querySelectorAll('.review-slide'));
+  const dotEls = () => Array.from(reviewDots.querySelectorAll('.review-dot'));
+
+  function goToReview(i){
+    activeReview = (i + reviews.length) % reviews.length;
+    const target = slideEls()[activeReview];
+    reviewTrack.scrollTo({ left: target.offsetLeft - reviewTrack.offsetLeft, behavior: 'smooth' });
+    dotEls().forEach((d, idx) => d.classList.toggle('active', idx === activeReview));
+  }
+
+  reviewPrev.addEventListener('click', () => { goToReview(activeReview - 1); restartAutoplay(); });
+  reviewNext.addEventListener('click', () => { goToReview(activeReview + 1); restartAutoplay(); });
+
+  // Keep dots in sync if the person swipes/drags the track directly
+  let scrollTimeout;
+  reviewTrack.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      const trackLeft = reviewTrack.getBoundingClientRect().left;
+      let closest = 0, closestDist = Infinity;
+      slideEls().forEach((el, idx) => {
+        const dist = Math.abs(el.getBoundingClientRect().left - trackLeft);
+        if (dist < closestDist) { closestDist = dist; closest = idx; }
+      });
+      activeReview = closest;
+      dotEls().forEach((d, idx) => d.classList.toggle('active', idx === activeReview));
+    }, 120);
+  }, { passive: true });
+
+  function restartAutoplay(){
+    clearInterval(reviewAutoplay);
+    reviewAutoplay = setInterval(() => goToReview(activeReview + 1), 6000);
+  }
+  restartAutoplay();
+  reviewTrack.addEventListener('mouseenter', () => clearInterval(reviewAutoplay));
+  reviewTrack.addEventListener('mouseleave', restartAutoplay);
+
+  const darkToggle = document.getElementById('darkToggle');
+  darkToggle.addEventListener('click', () => {
+    document.body.classList.toggle('invert-mode');
+    document.body.style.filter = document.body.classList.contains('invert-mode') ? 'invert(1) hue-rotate(180deg)' : 'none';
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
