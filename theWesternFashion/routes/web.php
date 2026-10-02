@@ -4,7 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-    return view('login');
+    return view('auth/login');
+});
+Route::get('/register', function(){
+    return view('auth/register');
 });
 
 // Route::get("/home", [UserController::class, 'showHello'])->name('frontend-message');
