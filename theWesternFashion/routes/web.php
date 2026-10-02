@@ -29,6 +29,13 @@ Route::get('/products', function(){
         'products'
     );
 });
+
+Route::get(
+    '/admin-add-products', function(){
+        return view(
+            'admin.addProducts'
+        );
+    })->name('add-products');
 Route::get('/admin-dashboard', function(){return view('admin.dashboard');});
 Route::get('/admin-orders', function(){return view('admin.orders');});
 Route::get('/admin-inventory', function(){return view('admin.inventory');});

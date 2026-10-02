@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nuvo — Next-Gen Design Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: { brick:'#b5231b', ink:'#0b0b0c' },
+        fontFamily: { display:['Archivo','sans-serif'], body:['Inter','sans-serif'] }
+      }
+    }
+  }
+</script>
+<style>
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',sans-serif;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .marquee-track{display:flex;width:max-content;animation:marquee 22s linear infinite;}
+  .marquee:hover .marquee-track{animation-play-state:paused;}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    .marquee-track{animation:none;}
+    html{scroll-behavior:auto;}
+  }
+  .duotone{background:linear-gradient(160deg,var(--c1),var(--c2) 60%);}
+  .noise::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.18),transparent 60%);}
+</style>
+</head>
+<body class="bg-brick">
+
+<div class="max-w-[900px] mx-auto p-2 sm:p-3">
+<div class="bg-white rounded-[28px] overflow-hidden">
+
+  <!-- NAV -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-black/5">
+    <div class="flex items-center justify-between px-6 sm:px-10 h-20">
+      <a href="#" class="flex items-center gap-2 font-display font-800 text-lg">
+        <span class="inline-block w-6 h-6 rounded-full bg-brick relative">
+          <span class="absolute inset-0 m-auto w-2 h-2 bg-white rounded-full"></span>
+        </span>
+        Nuvo<span class="text-brick">.</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8 text-sm text-black/70">
+        <a href="#" class="text-black">Home</a>
+        <a href="#work" class="hover:text-black transition">Studio</a>
+        <a href="#work" class="hover:text-black transition relative">Work
+          <span class="absolute -top-2 -right-4 bg-brick text-white text-[10px] px-1.5 py-0.5 rounded-full">23</span>
+        </a>
+        <a href="#services" class="hover:text-black transition">Services</a>
+        <a href="#contact" class="hover:text-black transition">Contact</a>
+      </nav>
+      <a href="#contact" class="flex items-center gap-2 bg-ink text-white text-sm font-medium pl-2 pr-4 py-1.5 rounded-full hover:bg-brick transition-colors">
+        <span class="w-7 h-7 rounded-full bg-brick block"></span>
+        Book a Call
+        <span>↗</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="px-3 sm:px-4 pt-4">
+    <div id="hero" class="relative rounded-[22px] overflow-hidden bg-ink text-white p-8 sm:p-12 min-h-[460px] flex flex-col justify-between">
+      <div id="heroBg" class="absolute inset-0 duotone noise" style="--c1:#3a0d0d;--c2:#0b0b0c;"></div>
+      <div class="relative z-10 flex items-center gap-2 text-xs text-white/70">
+        <span class="w-1.5 h-1.5 bg-brick rounded-sm"></span> Next-Gen Design Studio
+      </div>
+      <div class="relative z-10 grid md:grid-cols-2 gap-8 items-end mt-8">
+        <h1 class="font-display font-800 text-4xl sm:text-5xl md:text-6xl leading-[0.98] tracking-tight">
+          A Studio Built for Growing Brands.
+        </h1>
+        <div class="text-right md:text-right space-y-4">
+          <p class="text-white/70 text-sm sm:text-base leading-relaxed">
+            Branding, product &amp; web design<br>for startups and category leaders.
+          </p>
+          <div class="flex md:justify-end gap-3">
+            <a href="#work" class="bg-brick hover:bg-white hover:text-ink transition-colors text-white text-sm font-medium px-5 py-2.5 rounded-full">View Work ↗</a>
+            <a href="#contact" class="bg-white text-ink text-sm font-medium px-5 py-2.5 rounded-full hover:bg-white/80 transition-colors">Reach Out ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="relative z-10 flex gap-10 text-xs text-white/50 mt-10">
+        <span>+ Define</span><span>+ Design</span><span>+ Develop</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGOS MARQUEE -->
+  <section class="px-6 sm:px-10 py-10 border-b border-black/5">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+      <p class="text-xs text-black/50 w-48 shrink-0 leading-snug">
+        <span class="text-brick">✳</span> TRUSTED BY 500+ TEAMS<br>AND GROWING BRANDS
+      </p>
+      <div class="marquee overflow-hidden flex-1 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+        <div class="marquee-track gap-16 font-display font-700 text-xl text-black/30">
+          <span>NIMBUS</span><span>ORBIT</span><span>VERTEX</span><span>ATLAS</span><span>PULSE</span><span>HALO</span>
+          <span>NIMBUS</span><span>ORBIT</span><span>VERTEX</span><span>ATLAS</span><span>PULSE</span><span>HALO</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO WE ARE -->
+  <section class="px-6 sm:px-10 py-16 reveal">
+    <p class="text-xs text-black/50 mb-4"><span class="text-brick">✳</span> WHO WE ARE</p>
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <h2 class="font-display font-700 text-3xl sm:text-4xl leading-tight max-w-xl">
+        We build search-first digital systems to help category <span class="text-black/35">leaders lead their industries.</span>
+      </h2>
+      <a href="#" class="shrink-0 text-sm font-medium border-b border-brick/50 pb-1 hover:border-black transition-colors">→ About the Studio</a>
+    </div>
+  </section>
+
+  <!-- COLLAGE -->
+  <section id="work" class="px-3 sm:px-4 pb-16 reveal">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="aspect-[3/4] rounded-2xl duotone noise relative overflow-hidden transition-transform duration-300 hover:-translate-y-2" style="--c1:#ff2d55;--c2:#170305;"></div>
+      <div class="aspect-[3/4] rounded-2xl duotone noise relative overflow-hidden transition-transform duration-300 hover:-translate-y-2" style="--c1:#f3caa1;--c2:#7a4a2b;"></div>
+      <div class="aspect-[3/4] rounded-2xl duotone noise relative overflow-hidden transition-transform duration-300 hover:-translate-y-2" style="--c1:#cfd8dd;--c2:#5b6a72;"></div>
+      <div class="aspect-[3/4] rounded-2xl duotone noise relative overflow-hidden transition-transform duration-300 hover:-translate-y-2" style="--c1:#ffb020;--c2:#7a2b00;"></div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="px-6 sm:px-10 py-14 border-t border-black/5 reveal">
+    <p class="text-xs text-black/50 mb-8"><span class="text-brick">✳</span> BY THE NUMBERS</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div>
+        <div class="font-display font-800 text-4xl">1%</div>
+        <div class="border-t border-dotted border-black/20 my-3"></div>
+        <p class="text-sm font-medium">Expert-Vetted</p>
+        <p class="text-xs text-black/50 mt-1">Top 1% of studios for consistent quality and trust.</p>
+      </div>
+      <div>
+        <div class="font-display font-800 text-4xl">30+</div>
+        <div class="border-t border-dotted border-black/20 my-3"></div>
+        <p class="text-sm font-medium">Clients served</p>
+        <p class="text-xs text-black/50 mt-1">From startups to global brands.</p>
+      </div>
+      <div>
+        <div class="font-display font-800 text-4xl">100%</div>
+        <div class="border-t border-dotted border-black/20 my-3"></div>
+        <p class="text-sm font-medium">Success score</p>
+        <p class="text-xs text-black/50 mt-1">Five-star reviews, no compromises.</p>
+      </div>
+      <div>
+        <div class="font-display font-800 text-4xl">8+</div>
+        <div class="border-t border-dotted border-black/20 my-3"></div>
+        <p class="text-sm font-medium">Years of expertise</p>
+        <p class="text-xs text-black/50 mt-1">Deep experience in UX and brand-led growth.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="bg-ink text-white px-6 sm:px-10 py-16 reveal">
+    <p class="text-xs text-white/50 mb-4"><span class="text-brick">✳</span> SERVICES</p>
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <h2 class="font-display font-700 text-3xl sm:text-4xl">Our Services</h2>
+      <p class="text-white/50 text-sm max-w-xs">We craft high-impact digital experiences through strategy, design and code.</p>
+    </div>
+    <div class="divide-y divide-white/10">
+      <button class="service-item group w-full flex items-center justify-between py-5 text-left" data-target="s1">
+        <span class="flex items-center gap-4"><span class="text-white/40 text-sm">01</span><span class="font-display font-700 text-xl sm:text-2xl group-hover:text-brick transition-colors">Brand Identity</span></span>
+        <span class="transition-transform group-hover:translate-x-1 group-hover:rotate-45">↗</span>
+      </button>
+      <div id="s1" class="overflow-hidden max-h-0 transition-[max-height] duration-300"><p class="pb-5 text-white/50 text-sm max-w-xl">Logo systems, visual language and guidelines built to scale with the brand.</p></div>
+
+      <button class="service-item group w-full flex items-center justify-between py-5 text-left" data-target="s2">
+        <span class="flex items-center gap-4"><span class="text-white/40 text-sm">02</span><span class="font-display font-700 text-xl sm:text-2xl group-hover:text-brick transition-colors">Web &amp; App Design</span></span>
+        <span class="transition-transform group-hover:translate-x-1 group-hover:rotate-45">↗</span>
+      </button>
+      <div id="s2" class="overflow-hidden max-h-0 transition-[max-height] duration-300"><p class="pb-5 text-white/50 text-sm max-w-xl">Interfaces engineered for clarity, conversion and speed.</p></div>
+
+      <button class="service-item group w-full flex items-center justify-between py-5 text-left" data-target="s3">
+        <span class="flex items-center gap-4"><span class="text-white/40 text-sm">03</span><span class="font-display font-700 text-xl sm:text-2xl group-hover:text-brick transition-colors">Development</span></span>
+        <span class="transition-transform group-hover:translate-x-1 group-hover:rotate-45">↗</span>
+      </button>
+      <div id="s3" class="overflow-hidden max-h-0 transition-[max-height] duration-300"><p class="pb-5 text-white/50 text-sm max-w-xl">Clean, maintainable front-end builds that ship fast.</p></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="px-6 sm:px-10 py-16 reveal">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <h2 class="font-display font-800 text-3xl sm:text-4xl">Let's build<br>something <span class="text-brick">great.</span></h2>
+      <div class="text-sm text-black/60">
+        <p>hello@nuvo.studio</p>
+        <p class="mt-1">Remote / Worldwide</p>
+        <a href="#" class="inline-block mt-4 bg-ink text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-brick transition-colors">Book a Call ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="px-6 sm:px-10 py-6 text-xs text-black/40 border-t border-black/5">© 2026 Nuvo Studio</footer>
+
+</div>
+</div>
+
+<script>
+  // scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // services accordion
+  document.querySelectorAll('.service-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById(btn.dataset.target);
+      const isOpen = panel.style.maxHeight && panel.style.maxHeight !== '0px';
+      document.querySelectorAll('[id^="s"]').forEach(p => p.style.maxHeight = '0px');
+      panel.style.maxHeight = isOpen ? '0px' : panel.scrollHeight + 'px';
+    });
+  });
+
+  // subtle hero parallax on mouse move
+  const hero = document.getElementById('hero');
+  const heroBg = document.getElementById('heroBg');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches === false) {
+    hero.addEventListener('mousemove', (e) => {
+      const r = hero.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width - 0.5) * 14;
+      const y = ((e.clientY - r.top) / r.height - 0.5) * 14;
+      heroBg.style.transform = `translate(${x}px, ${y}px) scale(1.06)`;
+    });
+    hero.addEventListener('mouseleave', () => { heroBg.style.transform = 'translate(0,0) scale(1)'; });
+  }
+</script>
+
+</body>
+</html>
