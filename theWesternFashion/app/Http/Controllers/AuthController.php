@@ -16,13 +16,11 @@ class AuthController extends Controller
     // LOGIN
     // =========================================================
 
-    // Show the login page
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    // Check the email + password
     public function login(Request $request)
     {
         $request->validate([
@@ -42,11 +40,15 @@ class AuthController extends Controller
 
         // Email not verified yet? Send a fresh code and go to the verify page.
         if (!$user->email_verified_at) {
-            $this->sendVerificationCode($user);
+            $sent = $this->sendVerificationCode($user);
             session(['verify_user_id' => $user->id]);
 
-            return redirect()->route('verify.show')
-                ->with('status', 'Please verify your email first. We sent you a new code.');
+            return redirect()->route('verify.show')->with(
+                'status',
+                $sent
+                    ? 'Please verify your email first. We sent you a new code.'
+                    : 'Please verify your email first. We could not send the code, press Resend.'
+            );
         }
 
         return $this->loginUser($request, $user, $request->boolean('remember'));
@@ -56,13 +58,11 @@ class AuthController extends Controller
     // REGISTER
     // =========================================================
 
-    // Show the registration page
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    // Create the account, then email a 6-digit code
     public function register(Request $request)
     {
         $request->validate([
@@ -81,25 +81,27 @@ class AuthController extends Controller
             'password' => $request->password, // hashed automatically by the User model
         ]);
 
-        // SECURITY: new sign-ups are NOT admins. Change 'customer' if your
-        // role column uses a different word. Make admins yourself (see notes).
-        $user->role = 'customer';
+        // SECURITY: new sign-ups are never admins.
+        $user->role = 'CUSTOMER';
         $user->save();
 
-        $this->sendVerificationCode($user);
+        $sent = $this->sendVerificationCode($user);
 
         // Remember who is verifying (they are NOT logged in yet)
         session(['verify_user_id' => $user->id]);
 
-        return redirect()->route('verify.show')
-            ->with('status', 'Account created! We emailed you a 6-digit code.');
+        return redirect()->route('verify.show')->with(
+            'status',
+            $sent
+                ? 'Account created! We emailed you a 6-digit code.'
+                : 'Account created, but we could not send the code. Press Resend.'
+        );
     }
 
     // =========================================================
     // EMAIL VERIFICATION (6-digit code)
     // =========================================================
 
-    // Show the "enter your code" page
     public function showVerify()
     {
         $user = $this->pendingUser();
@@ -111,7 +113,6 @@ class AuthController extends Controller
         return view('auth.verify', ['email' => $this->maskEmail($user->email)]);
     }
 
-    // Check the code the user typed
     public function verify(Request $request)
     {
         $request->validate(['code' => 'required|digits:6']);
@@ -149,7 +150,6 @@ class AuthController extends Controller
         return $this->loginUser($request, $user);
     }
 
-    // Send a new code
     public function resend()
     {
         $user = $this->pendingUser();
@@ -158,14 +158,18 @@ class AuthController extends Controller
             return redirect()->route('login');
         }
 
-        $this->sendVerificationCode($user);
+        $sent = $this->sendVerificationCode($user);
 
-        return back()->with('status', 'A new code has been sent to your email.');
+        return back()->with(
+            'status',
+            $sent ? 'A new code has been sent to your email.' : 'We could not send the email. Please try again in a moment.'
+        );
     }
 
     // =========================================================
     // LOGOUT
     // =========================================================
+
     public function logout(Request $request)
     {
         Auth::logout();
@@ -188,29 +192,39 @@ class AuthController extends Controller
         $request->session()->forget('verify_user_id');
         $request->session()->regenerate(); // protects against session fixation
 
-        if ($user->role === 'admin') {
+        if ($user->isAdmin()) {
             return redirect()->intended(route('products.index'));
         }
 
         return redirect()->intended('/');
     }
 
-    // Make a 6-digit code, save it (hashed) and email it
-    private function sendVerificationCode(User $user)
-    {
-        // e.g. "048213" (leading zeros are kept)
-        $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+    // Make a 6-digit code, save it (hashed) and email it. Returns false if the email failed.
+    private function sendVerificationCode(User $user): bool
+{
+    // e.g. "048213" (leading zeros are kept)
+    $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
-        $user->verification_code            = Hash::make($code);
-        $user->verification_code_expires_at = now()->addMinutes(10);
-        $user->verification_attempts        = 0;
-        $user->save();
+    $user->verification_code            = Hash::make($code);
+    $user->verification_code_expires_at = now()->addMinutes(10);
+    $user->verification_attempts        = 0;
+    $user->save();
 
+    try {
         Mail::to($user->email)->send(new VerificationCodeMail($user, $code));
+
+        return true;
+    } catch (\Throwable $e) {
+        // TEMPORARY DEBUG: testing ke baad ye dd hata ke neeche wali 2 lines wapas lagana
+        dd(get_class($e), $e->getMessage());
+
+        // report($e);
+        // return false;
     }
+}
 
     // The unverified user who is on the verify page (stored in the session)
-    private function pendingUser()
+    private function pendingUser(): ?User
     {
         $id   = session('verify_user_id');
         $user = $id ? User::find($id) : null;
@@ -225,4 +239,4 @@ class AuthController extends Controller
 
         return substr($name, 0, 2) . str_repeat('*', max(strlen($name) - 2, 1)) . '@' . $domain;
     }
-}
+}   

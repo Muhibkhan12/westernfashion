@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -14,11 +13,9 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasUuids;
 
     /**
-     * The attributes that are mass assignable.
-     *
      * NOTE: "role", "google_id" and the verification columns are NOT here on
-     * purpose. That way nobody can send them through a form. We set them in
-     * the controllers instead.
+     * purpose, so nobody can send them through a form. We set them in the
+     * controllers instead.
      *
      * @var list<string>
      */
@@ -28,28 +25,27 @@ class User extends Authenticatable
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+    /** @var list<string> */
     protected $hidden = [
         'password',
         'remember_token',
         'verification_code',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [
             'email_verified_at'            => 'datetime',
             'verification_code_expires_at' => 'datetime',
+            'verification_attempts'        => 'integer',
             'password'                     => 'hashed',
         ];
+    }
+
+    // One place to check for admin (works for 'ADMIN' or 'admin')
+    public function isAdmin(): bool
+    {
+        return strtoupper((string) $this->role) === 'ADMIN';
     }
 }

@@ -13,14 +13,20 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password');
-            $table->enum('role', ['CUSTOMER', 'ADMIN'])->nullable()->default('CUSTOMER');
+            $table->string('password')->nullable(); // nullable: Google-only users
+            $table->string('google_id')->nullable()->unique();
+            $table->enum('role', ['CUSTOMER', 'ADMIN'])->default('CUSTOMER');
+
+            // Email verification (6-digit code)
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('verification_code')->nullable(); // hashed code
+            $table->timestamp('verification_code_expires_at')->nullable();
+            $table->unsignedTinyInteger('verification_attempts')->default(0);
+
             $table->rememberToken();
             $table->timestamps();
         });
 
-        // Laravel needs these two tables too (they were not in your SQL file)
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
@@ -29,7 +35,7 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->uuid('user_id')->nullable()->index(); // uuid, because users.id is a uuid
+            $table->uuid('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
