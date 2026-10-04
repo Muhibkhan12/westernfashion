@@ -94,3 +94,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
         return redirect()->route('products.create');
     })->name('add-products');
 });
+
+Route::get('/user-dashboard', function(){
+    return view('user.dashboard');
+});
+Route::get('/user-order', function(){
+    return view('user.order');
+});
+Route::get('/user-wishlist', function(){
+    return view('user.wishlist');
+});
