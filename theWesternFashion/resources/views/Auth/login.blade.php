@@ -1,3 +1,4 @@
+{{-- resources/views/auth/login.blade.php --}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,16 +44,31 @@
       </div>
 
       <div class="rounded-xl border border-neutral-200 bg-white p-6 sm:p-8">
-        <form class="space-y-5">
+
+        {{-- Messages from the controller (e.g. "please verify your email") --}}
+        @if (session('status'))
+          <p class="mb-5 rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm text-neutral-700">
+            {{ session('status') }}
+          </p>
+        @endif
+
+        <form method="POST" action="{{ route('login') }}" class="space-y-5">
+          @csrf
 
           <div>
             <label for="email" class="text-sm font-medium">Email address</label>
             <input
               id="email"
+              name="email"
               type="email"
+              value="{{ old('email') }}"
               placeholder="you@thewesternfashion.com"
+              required
               class="mt-1.5 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm placeholder:text-neutral-400 focus:border-black focus:outline-none"
             />
+            @error('email')
+              <p class="mt-1.5 text-xs font-medium text-black">{{ $message }}</p>
+            @enderror
           </div>
 
           <div>
@@ -64,8 +80,10 @@
             <div class="relative mt-1.5">
               <input
                 id="password"
+                name="password"
                 type="password"
                 placeholder="••••••••"
+                required
                 class="w-full rounded-lg border border-neutral-200 px-3 py-2.5 pr-10 text-sm placeholder:text-neutral-400 focus:border-black focus:outline-none"
               />
               <button
@@ -86,7 +104,7 @@
           </div>
 
           <label class="flex select-none items-center gap-2 text-sm text-neutral-600">
-            <input type="checkbox" class="h-4 w-4 rounded border-neutral-300 accent-black" />
+            <input type="checkbox" name="remember" value="1" class="h-4 w-4 rounded border-neutral-300 accent-black" />
             Remember me
           </label>
 
@@ -94,7 +112,25 @@
             Sign in
           </button>
         </form>
+
+        <!-- Google -->
+        <div class="my-5 flex items-center gap-3 text-xs text-neutral-400">
+          <span class="h-px flex-1 bg-neutral-200"></span>
+          or
+          <span class="h-px flex-1 bg-neutral-200"></span>
+        </div>
+
+        <a href="{{ route('google.redirect') }}"
+           class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-sm font-medium hover:border-black">
+          <span class="font-semibold">G</span>
+          Continue with Google
+        </a>
       </div>
+
+      <p class="mt-6 text-center text-sm text-neutral-500">
+        Don't have an account?
+        <a href="{{ route('register') }}" class="font-medium text-black hover:underline">Create one</a>
+      </p>
     </div>
   </main>
 

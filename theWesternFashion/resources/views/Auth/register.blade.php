@@ -1,3 +1,4 @@
+{{-- resources/views/auth/register.blade.php --}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,30 +40,43 @@
           <span class="font-serif text-2xl leading-none">w</span>
         </span>
         <h1 class="mt-4 font-serif text-3xl tracking-tight">thewesternfashion</h1>
-        <p class="mt-1 text-sm text-neutral-500">Create your admin account</p>
+        <p class="mt-1 text-sm text-neutral-500">Create your account</p>
       </div>
 
       <div class="rounded-xl border border-neutral-200 bg-white p-6 sm:p-8">
-        <form class="space-y-5">
+        <form method="POST" action="{{ route('register') }}" class="space-y-5">
+          @csrf
 
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label for="first-name" class="text-sm font-medium">First name</label>
               <input
                 id="first-name"
+                name="first_name"
                 type="text"
+                value="{{ old('first_name') }}"
                 placeholder="Ayesha"
+                required
                 class="mt-1.5 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm placeholder:text-neutral-400 focus:border-black focus:outline-none"
               />
+              @error('first_name')
+                <p class="mt-1.5 text-xs font-medium text-black">{{ $message }}</p>
+              @enderror
             </div>
             <div>
               <label for="last-name" class="text-sm font-medium">Last name</label>
               <input
                 id="last-name"
+                name="last_name"
                 type="text"
+                value="{{ old('last_name') }}"
                 placeholder="Raza"
+                required
                 class="mt-1.5 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm placeholder:text-neutral-400 focus:border-black focus:outline-none"
               />
+              @error('last_name')
+                <p class="mt-1.5 text-xs font-medium text-black">{{ $message }}</p>
+              @enderror
             </div>
           </div>
 
@@ -70,10 +84,16 @@
             <label for="email" class="text-sm font-medium">Email address</label>
             <input
               id="email"
+              name="email"
               type="email"
+              value="{{ old('email') }}"
               placeholder="you@thewesternfashion.com"
+              required
               class="mt-1.5 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm placeholder:text-neutral-400 focus:border-black focus:outline-none"
             />
+            @error('email')
+              <p class="mt-1.5 text-xs font-medium text-black">{{ $message }}</p>
+            @enderror
           </div>
 
           <div>
@@ -81,8 +101,10 @@
             <div class="relative mt-1.5">
               <input
                 id="password"
+                name="password"
                 type="password"
                 placeholder="At least 8 characters"
+                required
                 class="w-full rounded-lg border border-neutral-200 px-3 py-2.5 pr-10 text-sm placeholder:text-neutral-400 focus:border-black focus:outline-none"
               />
               <button
@@ -109,33 +131,57 @@
               <span class="h-1 flex-1 rounded-full bg-neutral-100"></span>
             </div>
             <p id="strength-label" class="mt-1.5 text-xs text-neutral-400">Use 8+ characters with a number and a symbol.</p>
+            @error('password')
+              <p class="mt-1.5 text-xs font-medium text-black">{{ $message }}</p>
+            @enderror
           </div>
 
           <div>
             <label for="confirm-password" class="text-sm font-medium">Confirm password</label>
+            {{-- Laravel's "confirmed" rule needs this exact name: password_confirmation --}}
             <input
               id="confirm-password"
+              name="password_confirmation"
               type="password"
               placeholder="Re-enter your password"
+              required
               class="mt-1.5 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm placeholder:text-neutral-400 focus:border-black focus:outline-none"
             />
             <p id="match-hint" class="mt-1.5 hidden text-xs font-medium text-black">Passwords don't match.</p>
           </div>
 
-          <label class="flex select-none items-start gap-2 text-sm text-neutral-600">
-            <input type="checkbox" class="mt-0.5 h-4 w-4 rounded border-neutral-300 accent-black" />
-            <span>I agree to the <a href="#" class="font-medium text-black hover:underline">Terms of Service</a> and <a href="#" class="font-medium text-black hover:underline">Privacy Policy</a>.</span>
-          </label>
+          <div>
+            <label class="flex select-none items-start gap-2 text-sm text-neutral-600">
+              <input type="checkbox" name="terms" value="1" @checked(old('terms')) class="mt-0.5 h-4 w-4 rounded border-neutral-300 accent-black" />
+              <span>I agree to the <a href="#" class="font-medium text-black hover:underline">Terms of Service</a> and <a href="#" class="font-medium text-black hover:underline">Privacy Policy</a>.</span>
+            </label>
+            @error('terms')
+              <p class="mt-1.5 text-xs font-medium text-black">{{ $message }}</p>
+            @enderror
+          </div>
 
           <button type="submit" class="w-full rounded-lg bg-black px-4 py-2.5 text-sm font-medium text-white hover:bg-neutral-800">
             Create account
           </button>
         </form>
+
+        <!-- Google -->
+        <div class="my-5 flex items-center gap-3 text-xs text-neutral-400">
+          <span class="h-px flex-1 bg-neutral-200"></span>
+          or
+          <span class="h-px flex-1 bg-neutral-200"></span>
+        </div>
+
+        <a href="{{ route('google.redirect') }}"
+           class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-sm font-medium hover:border-black">
+          <span class="font-semibold">G</span>
+          Continue with Google
+        </a>
       </div>
 
       <p class="mt-6 text-center text-sm text-neutral-500">
         Already have an account?
-        <a href="login.html" class="font-medium text-black hover:underline">Sign in</a>
+        <a href="{{ route('login') }}" class="font-medium text-black hover:underline">Sign in</a>
       </p>
     </div>
   </main>

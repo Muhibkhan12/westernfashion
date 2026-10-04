@@ -15,6 +15,10 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
+     * NOTE: "role", "google_id" and the verification columns are NOT here on
+     * purpose. That way nobody can send them through a form. We set them in
+     * the controllers instead.
+     *
      * @var list<string>
      */
     protected $fillable = [
@@ -31,6 +35,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_code',
     ];
 
     /**
@@ -41,8 +46,9 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at'            => 'datetime',
+            'verification_code_expires_at' => 'datetime',
+            'password'                     => 'hashed',
         ];
     }
 }
