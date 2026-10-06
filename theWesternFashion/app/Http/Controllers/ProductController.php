@@ -13,24 +13,22 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    // 1. LIST: show all products
+    // 1. LIST -> resources/views/Admin/products.blade.php
     public function index()
     {
         $products = Product::with(['category', 'images', 'variants'])
                            ->latest()
                            ->paginate(10);
 
-        return view('products.index', compact('products'));
+        return view('Admin.products', compact('products'));
     }
 
-    // 2. CREATE: show the empty form
+    // 2. CREATE -> resources/views/Admin/addProducts.blade.php (empty form)
     public function create()
     {
         $categories = Category::all();
 
-        // The same view (products.form) is used for create AND edit.
-        // "product => null" tells the view we are adding a new product.
-        return view('products.form', [
+        return view('Admin.addProducts', [
             'product'    => null,
             'categories' => $categories,
         ]);
@@ -41,7 +39,6 @@ class ProductController extends Controller
     {
         $data = $this->validateProduct($request);
 
-        // A transaction = "all or nothing". If anything fails, nothing is saved.
         DB::transaction(function () use ($request, $data) {
             $product = Product::create([
                 'category_id' => $data['category_id'],
@@ -51,7 +48,7 @@ class ProductController extends Controller
                 'price'       => $data['price'],
                 'sale_price'  => $data['sale_price'] ?? null,
                 'status'      => $data['status'],
-                'featured'    => $request->has('featured'), // checkbox
+                'featured'    => $request->has('featured'),
             ]);
 
             $this->saveImages($request, $product);
@@ -63,21 +60,21 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', $message);
     }
 
-    // 4. SHOW: one product
+    // 4. SHOW -> resources/views/Admin/productShow.blade.php
     public function show(Product $product)
     {
         $product->load(['category', 'images', 'variants']);
 
-        return view('products.show', compact('product'));
+        return view('Admin.productShow', compact('product'));
     }
 
-    // 5. EDIT: show the form filled with the product's data
+    // 5. EDIT -> resources/views/Admin/addProducts.blade.php (filled form)
     public function edit(Product $product)
     {
         $product->load(['images', 'variants']);
         $categories = Category::all();
 
-        return view('products.form', compact('product', 'categories'));
+        return view('Admin.addProducts', compact('product', 'categories'));
     }
 
     // 6. UPDATE: save changes
@@ -97,10 +94,8 @@ class ProductController extends Controller
                 'featured'    => $request->has('featured'),
             ]);
 
-            // Add any newly uploaded images (existing ones stay)
             $this->saveImages($request, $product);
 
-            // Variants: remove the old rows, then save the submitted list again
             $product->variants()->delete();
             $this->saveVariants($data, $product);
         });
@@ -112,12 +107,10 @@ class ProductController extends Controller
     // 7. DESTROY: delete a product
     public function destroy(Product $product)
     {
-        // Delete the image files from the disk
         foreach ($product->images as $image) {
             Storage::disk('public')->delete($image->image_path);
         }
 
-        // Delete database rows (children first, then the product)
         $product->images()->delete();
         $product->variants()->delete();
         $product->delete();
@@ -126,7 +119,7 @@ class ProductController extends Controller
                          ->with('success', 'Product deleted!');
     }
 
-    // 8. Delete ONE image (the red button on the edit page)
+    // 8. Delete ONE image (red button on the edit page)
     public function destroyImage(ProductImage $image)
     {
         $product    = $image->product;
@@ -135,7 +128,6 @@ class ProductController extends Controller
         Storage::disk('public')->delete($image->image_path);
         $image->delete();
 
-        // If the cover image was deleted, make the next image the cover
         if ($wasPrimary) {
             $next = $product->images()->first();
             if ($next) {
@@ -147,10 +139,9 @@ class ProductController extends Controller
     }
 
     // ---------------------------------------------------------
-    // Helper functions (used by the methods above)
+    // Helper functions
     // ---------------------------------------------------------
 
-    // The validation rules, shared by store() and update()
     private function validateProduct(Request $request)
     {
         return $request->validate([
@@ -175,14 +166,12 @@ class ProductController extends Controller
         ]);
     }
 
-    // Save uploaded images
     private function saveImages(Request $request, Product $product)
     {
         if (!$request->hasFile('images')) {
             return;
         }
 
-        // The first image ever uploaded becomes the cover (is_primary)
         $hasPrimary = $product->images()->where('is_primary', true)->exists();
         $order      = $product->images()->count();
 
@@ -195,21 +184,15 @@ class ProductController extends Controller
                 'sort_order' => $order++,
             ]);
 
-            $hasPrimary = true; // only the very first one is the cover
+            $hasPrimary = true;
         }
     }
 
-    // Save variants (one row per size)
     private function saveVariants(array $data, Product $product)
     {
-        // The form has no SKU per size, so we build one: PREFIX-SIZE (e.g. JACKET-M)
         $prefix = $data['sku_prefix'] ?? $product->slug;
+        $price  = $data['sale_price'] ?? $data['price'];
 
-        // Each variant uses the price the customer actually pays
-        $price = $data['sale_price'] ?? $data['price'];
-
-        // Rows that already have a SKU (from the edit page) go first,
-        // so a newly generated SKU can never steal an existing one.
         $rows = collect($data['variants'])->sortByDesc(fn ($row) => !empty($row['sku']));
 
         foreach ($rows as $row) {
@@ -229,7 +212,6 @@ class ProductController extends Controller
         }
     }
 
-    // Make a unique SKU like "JACKET-M" (adds -1, -2 if it already exists)
     private function makeSku($prefix, $size)
     {
         $sku      = strtoupper(Str::slug($prefix . ' ' . $size));
@@ -243,7 +225,6 @@ class ProductController extends Controller
         return $sku;
     }
 
-    // Make a unique slug like "red-t-shirt" (adds -1, -2 if it already exists)
     private function makeSlug($name, $ignoreId = null)
     {
         $slug     = Str::slug($name);
