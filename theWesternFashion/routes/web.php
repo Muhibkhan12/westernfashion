@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShopController;
 
 /*
 | 1. PUBLIC PAGES
@@ -15,6 +16,7 @@ Route::get('/', function () {
 Route::get('/home', function () { return view('index'); });
 Route::get('/about', function () { return view('about'); });
 Route::get('/contact', function () { return view('contact'); });
+// Route::get('/products', function() {return view('products');});
 
 /*
 | 2. AUTH (guests only)
@@ -69,3 +71,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::get('/user-dashboard', function () { return view('User.Dashboard'); });
 Route::get('/user-order', function () { return view('User.Order'); });
 Route::get('/user-wishlist', function () { return view('User.Wishlist'); });
+
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.products');
+Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');

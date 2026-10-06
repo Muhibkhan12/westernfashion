@@ -87,13 +87,13 @@
       </button>
       <nav class="hidden md:flex items-center gap-6 text-[11px] font-mono uppercase tracking-tag">
         <a href="#" class="underline-link pb-0.5">Presets</a>
-        <a href="products.html" class="underline-link pb-0.5">Catalog</a>
-        <a href="#" class="underline-link pb-0.5">About</a>
+        <a href="{{ route('shop.products') }}" class="underline-link pb-0.5">Catalog</a>
+        <a href="{{ url('/about') }}" class="underline-link pb-0.5">About</a>
         <a href="#" class="underline-link pb-0.5">Journal</a>
       </nav>
     </div>
 
-    <a href="index.html" class="font-display text-lg sm:text-xl md:text-2xl tracking-wordmark uppercase whitespace-nowrap">The Western Fashion</a>
+    <a href="{{ url('/') }}" class="font-display text-lg sm:text-xl md:text-2xl tracking-wordmark uppercase whitespace-nowrap">The Western Fashion</a>
 
     <div class="flex items-center gap-4 md:gap-5 text-[11px] font-mono uppercase tracking-tag">
       <button class="hidden sm:flex items-center gap-1.5">
@@ -116,7 +116,7 @@
 <!-- Breadcrumb + Page title -->
 <section class="max-w-[1440px] mx-auto px-6 md:px-10 pt-10 pb-6">
   <p class="text-[11px] font-mono uppercase tracking-tag text-ink/45 mb-4">
-    <a href="index.html" class="underline-link">Home</a> / All Jackets
+    <a href="{{ url('/') }}" class="underline-link">Home</a> / All Jackets
   </p>
   <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
     <h1 class="font-display text-3xl md:text-4xl">All Jackets</h1>
@@ -154,10 +154,10 @@
       <!-- Price -->
       <div class="mb-8">
         <p class="text-[13px] font-display-sm mb-4">Price</p>
-        <input id="priceRange" type="range" min="200" max="500" step="10" value="500" class="w-full">
+        <input id="priceRange" type="range" step="10" class="w-full">
         <div class="flex items-center justify-between mt-3 text-[11px] font-mono text-ink/60">
-          <span>$200</span>
-          <span id="priceValue">Up to $500</span>
+          <span id="priceMinLabel"></span>
+          <span id="priceValue"></span>
         </div>
       </div>
 
@@ -207,10 +207,10 @@
     <hr class="stitch mb-8">
     <div class="mb-8">
       <p class="text-[13px] font-display-sm mb-4">Price</p>
-      <input id="priceRangeMobile" type="range" min="200" max="500" step="10" value="500" class="w-full">
+      <input id="priceRangeMobile" type="range" step="10" class="w-full">
       <div class="flex items-center justify-between mt-3 text-[11px] font-mono text-ink/60">
-        <span>$200</span>
-        <span id="priceValueMobile">Up to $500</span>
+        <span id="priceMinLabelMobile"></span>
+        <span id="priceValueMobile"></span>
       </div>
     </div>
     <hr class="stitch mb-8">
@@ -251,7 +251,7 @@
     <div>
       <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Shop</p>
       <ul class="space-y-2.5 text-[13px]">
-        <li><a href="products.html" class="underline-link">All Jackets</a></li>
+        <li><a href="{{ route('shop.products') }}" class="underline-link">All Jackets</a></li>
         <li><a href="#" class="underline-link">Women's Jackets</a></li>
         <li><a href="#" class="underline-link">Men's Jackets</a></li>
       </ul>
@@ -259,9 +259,9 @@
     <div>
       <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Company</p>
       <ul class="space-y-2.5 text-[13px]">
-        <li><a href="#" class="underline-link">About</a></li>
+        <li><a href="{{ url('/about') }}" class="underline-link">About</a></li>
         <li><a href="#" class="underline-link">Journal</a></li>
-        <li><a href="#" class="underline-link">Contact</a></li>
+        <li><a href="{{ url('/contact') }}" class="underline-link">Contact</a></li>
       </ul>
     </div>
     <div>
@@ -273,34 +273,54 @@
     </div>
   </div>
   <div class="border-t border-ink/10 py-5 text-center text-[11px] font-mono text-ink/40 tracking-tag uppercase">
-    © 2026 The Western Fashion. All rights reserved.
+    © {{ date('Y') }} The Western Fashion. All rights reserved.
   </div>
 </footer>
 
-<script src="products-data.js"></script>
 <script>
-  const CATS = [
-    { id: "all", label: "All Jackets" },
-    { id: "leather", label: "Leather" },
-    { id: "denim", label: "Denim" },
-    { id: "field", label: "Field" },
-    { id: "wool", label: "Wool" },
-  ];
-  const ALL_COLORS = [
-    { name: "Ink", hex: "#1C1A16" },
-    { name: "Slate Blue", hex: "#3B5BA5" },
-    { name: "Brick", hex: "#9A3D28" },
-    { name: "Bone", hex: "#EDE9E3" },
-  ];
-  const ALL_SIZES = ["XS", "S", "M", "L", "XL"];
+  // ---------- DATA FROM DATABASE (ShopController@index) ----------
+  const PRODUCTS   = @json($items);
+  const DB_CATS    = @json($categories);
+  const ALL_COLORS = @json($allColors);
+  const ALL_SIZES  = @json($allSizes);
+  const PRICE_MIN  = {{ $minPrice }};
+  const PRICE_MAX  = {{ $maxPrice }};
+  const SHOW_URL   = @json(url('/shop'));
+
+  const CATS = [{ id: "all", label: "All Jackets" }].concat(
+    DB_CATS.map(c => ({ id: c.id, label: c.name }))
+  );
+
+  function esc(str) {
+    return String(str ?? "").replace(/[&<>"']/g, ch => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+  }
+
+  function twfFormatPrice(n) {
+    return Number(n).toLocaleString("en-US", {
+      style: "currency", currency: "USD",
+      minimumFractionDigits: 0, maximumFractionDigits: 2
+    });
+  }
 
   const state = {
     cat: "all",
-    maxPrice: 500,
+    maxPrice: PRICE_MAX,
     colors: new Set(),
     sizes: new Set(),
     inStockOnly: false,
   };
+
+  // slider setup (dynamic min/max from DB)
+  ["priceRange", "priceRangeMobile"].forEach(id => {
+    const el = document.getElementById(id);
+    el.min = PRICE_MIN;
+    el.max = PRICE_MAX;
+    el.value = PRICE_MAX;
+  });
+  document.getElementById("priceMinLabel").textContent = twfFormatPrice(PRICE_MIN);
+  document.getElementById("priceMinLabelMobile").textContent = twfFormatPrice(PRICE_MIN);
 
   // --- Build sidebar controls (desktop + mobile, kept in sync) ---
   function buildCategoryList(containerId) {
@@ -310,7 +330,7 @@
       const row = document.createElement("button");
       row.className = `cat-row w-full flex items-center gap-2.5 py-1.5 text-[13px] text-left ${state.cat === c.id ? "active" : ""}`;
       row.dataset.cat = c.id;
-      row.innerHTML = `<span class="cat-dot w-1.5 h-1.5 rounded-full bg-ink"></span><span class="${state.cat === c.id ? "" : "pl-[14px]"}">${c.label}</span>`;
+      row.innerHTML = `<span class="cat-dot w-1.5 h-1.5 rounded-full bg-ink"></span><span class="${state.cat === c.id ? "" : "pl-[14px]"}">${esc(c.label)}</span>`;
       row.addEventListener("click", () => { state.cat = c.id; syncControls(); applyFilters(); });
       el.appendChild(row);
     });
@@ -338,7 +358,7 @@
     el.innerHTML = "";
     ALL_SIZES.forEach(s => {
       const btn = document.createElement("button");
-      btn.className = `size-btn w-9 h-9 text-[11px] font-mono ${state.sizes.has(s) ? "active" : ""}`;
+      btn.className = `size-btn min-w-9 h-9 px-2 text-[11px] font-mono ${state.sizes.has(s) ? "active" : ""}`;
       btn.textContent = s;
       btn.addEventListener("click", () => {
         state.sizes.has(s) ? state.sizes.delete(s) : state.sizes.add(s);
@@ -357,7 +377,7 @@
     buildSizeList("sizeListMobile");
     document.getElementById("priceRange").value = state.maxPrice;
     document.getElementById("priceRangeMobile").value = state.maxPrice;
-    document.getElementById("priceValue").textContent = state.maxPrice >= 500 ? "Up to $500" : `Up to $${state.maxPrice}`;
+    document.getElementById("priceValue").textContent = `Up to ${twfFormatPrice(state.maxPrice)}`;
     document.getElementById("priceValueMobile").textContent = document.getElementById("priceValue").textContent;
     document.getElementById("inStockOnly").checked = state.inStockOnly;
     document.getElementById("inStockOnlyMobile").checked = state.inStockOnly;
@@ -377,7 +397,7 @@
   });
 
   document.getElementById("clearFilters").addEventListener("click", () => {
-    state.cat = "all"; state.maxPrice = 500; state.colors.clear(); state.sizes.clear(); state.inStockOnly = false;
+    state.cat = "all"; state.maxPrice = PRICE_MAX; state.colors.clear(); state.sizes.clear(); state.inStockOnly = false;
     syncControls(); applyFilters();
   });
 
@@ -400,17 +420,26 @@
     const priceHtml = p.oldPrice
       ? `<span class="text-brick mr-2">${twfFormatPrice(p.price)}</span><span class="line-through text-ink/40">${twfFormatPrice(p.oldPrice)}</span>`
       : twfFormatPrice(p.price);
+
+    const imageHtml = p.images.length
+      ? `<img src="${esc(p.images[0])}" alt="${esc(p.name)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-500">`
+      : `<div class="w-full h-full flex items-center justify-center text-[11px] font-mono uppercase tracking-tag text-ink/30">No image</div>`;
+
+    const badgeClass = p.badge === 'Sale' ? 'bg-brick text-paper'
+                     : p.badge === 'Sold out' ? 'bg-white/95 text-ink/70'
+                     : 'bg-ink/90 text-paper';
+
     return `
-      <a href="product.html?id=${p.id}" class="group block">
+      <a href="${SHOW_URL}/${esc(p.id)}" class="group block fade-in">
         <div class="relative bg-paperdeep aspect-[3/4] overflow-hidden mb-3">
-          <img src="${p.images[0]}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-500">
-          ${p.badge ? `<span class="hang-tag absolute top-3 right-3 text-[10px] font-mono uppercase tracking-tag px-3 py-1.5 ${p.badge==='Sale' ? 'bg-brick text-paper' : p.badge==='Sold out' ? 'bg-white/95 text-ink/70' : 'bg-ink/90 text-paper'}">${p.badge}</span>` : ''}
+          ${imageHtml}
+          ${p.badge ? `<span class="hang-tag absolute top-3 right-3 text-[10px] font-mono uppercase tracking-tag px-3 py-1.5 ${badgeClass}">${esc(p.badge)}</span>` : ''}
         </div>
         <div class="flex items-center gap-1.5 mb-2">
-          ${p.colors.map(c => `<span class="w-3 h-3 rounded-full border border-ink/10" style="background:${c.hex}"></span>`).join('')}
+          ${p.colors.map(c => `<span class="w-3 h-3 rounded-full border border-ink/10" style="background:${esc(c.hex)}"></span>`).join('')}
         </div>
-        <p class="text-[10px] font-mono uppercase tracking-tag text-ink/50 mb-1">${p.brand}</p>
-        <p class="text-[14px] font-display-sm underline-link mb-1.5">${p.name}</p>
+        <p class="text-[10px] font-mono uppercase tracking-tag text-ink/50 mb-1">${esc(p.brand)}</p>
+        <p class="text-[14px] font-display-sm underline-link mb-1.5">${esc(p.name)}</p>
         <p class="text-[14px] font-mono">${priceHtml}</p>
       </a>
     `;
@@ -422,7 +451,7 @@
       if (p.price > state.maxPrice) return false;
       if (state.colors.size && !p.colors.some(c => state.colors.has(c.name))) return false;
       if (state.sizes.size && !p.sizes.some(s => state.sizes.has(s))) return false;
-      if (state.inStockOnly && p.badge === "Sold out") return false;
+      if (state.inStockOnly && !p.inStock) return false;
       return true;
     });
 
@@ -432,10 +461,13 @@
     resultCount.textContent = `${filtered.length} ${filtered.length === 1 ? "jacket" : "jackets"}`;
   }
 
-  // --- Read ?category= from URL if arriving from a nav link ---
+  // --- Read ?category= from URL (category id ya name dono chalega) ---
   const params = new URLSearchParams(window.location.search);
-  const initialCat = params.get("category");
-  if (initialCat && CATS.some(c => c.id === initialCat)) state.cat = initialCat;
+  const initialCat = (params.get("category") || "").toLowerCase();
+  if (initialCat) {
+    const match = CATS.find(c => c.id.toLowerCase() === initialCat || c.label.toLowerCase() === initialCat);
+    if (match) state.cat = match.id;
+  }
 
   syncControls();
   applyFilters();
