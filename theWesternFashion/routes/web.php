@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\InventoryController; 
 
 /*
 | 1. PUBLIC PAGES
@@ -48,7 +49,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Static admin pages
     Route::get('/admin-dashboard', function () { return view('Admin.dashboard'); });
     Route::get('/admin-orders', function () { return view('Admin.orders'); });
-    Route::get('/admin-inventory', function () { return view('Admin.inventory'); });
+Route::get('/admin-inventory', [InventoryController::class, 'index']);
+Route::patch('/admin-inventory/{product}/variants', [InventoryController::class, 'updateVariants'])
+    ->name('admin.inventory.variants');
     Route::get('/admin-customers', function () { return view('Admin.customers'); });
 
     // Products CRUD -> /admin/products, /admin/products/create, /admin/products/5/edit ...

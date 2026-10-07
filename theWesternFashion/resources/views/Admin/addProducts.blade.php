@@ -17,6 +17,11 @@
         : [$blankRow, $blankRow]);
 
     $startStatus = old('status', $isEdit ? $product->status : 'draft');
+
+    // Show the prefix that would actually be used if the user doesn't override it
+    $defaultSkuPrefix = $isEdit && $product->variants->isNotEmpty()
+        ? preg_replace('/-[^-]+$/', '', $product->variants->first()->sku)
+        : '';
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -188,6 +193,18 @@
               </div>
             </div>
             <p id="margin-hint" class="mt-3 hidden text-sm"></p>
+
+            {{-- Reorder level --}}
+            <div class="mt-5 border-t border-neutral-100 pt-5">
+              <label for="f-reorder" class="text-sm font-medium">Reorder level</label>
+              <p class="mt-1 text-xs text-neutral-500">
+                Mark this product as low stock when total units drop to this number.
+              </p>
+              <input id="f-reorder" name="reorder_level" type="number" min="0" step="1"
+                value="{{ old('reorder_level', $product->reorder_level ?? 10) }}"
+                class="tabular mt-3 w-28 rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:border-black focus:outline-none" />
+              <p id="err-reorder" class="mt-1.5 hidden text-xs font-medium text-black"></p>
+            </div>
           </section>
 
           <section class="rounded-xl border border-neutral-200 bg-white p-6">
@@ -243,7 +260,7 @@
             <div class="mt-4">
               <label for="f-sku" class="text-sm font-medium">SKU prefix</label>
               <input id="f-sku" name="sku_prefix" type="text" placeholder="Leave blank to auto-generate"
-                value="{{ old('sku_prefix') }}"
+                value="{{ old('sku_prefix', $defaultSkuPrefix) }}"
                 class="mt-1.5 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm placeholder:text-neutral-400 focus:border-black focus:outline-none" />
               <p class="mt-1.5 text-xs text-neutral-400">Each size gets its own SKU, e.g. JACKET-M.</p>
             </div>
@@ -271,7 +288,7 @@
         </div>
       </form>
 
-      {{-- Hidden forms (cannot live inside the main form) --}}
+      {{-- Hidden forms --}}
       @if ($isEdit)
         <form id="delete-form" method="POST" action="{{ route('products.destroy', $product) }}" class="hidden">
           @csrf
@@ -321,7 +338,7 @@
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const form = document.getElementById('product-form');
 
-    /* Status (Draft / Active) */
+    /* Status */
     const statusInput = document.getElementById('status-input');
     let status = ['draft', 'active'].includes(statusInput.value) ? statusInput.value : 'draft';
     const statusLabels = { draft: 'Draft', active: 'Active' };
@@ -500,9 +517,10 @@
     nameInput.addEventListener('input', updatePreview);
     catSelect.addEventListener('change', updatePreview);
 
-    /* Browser check, then real submit */
+    /* Client-side validation */
     function showError(id, msg) {
       const el = document.getElementById(id);
+      if (!el) return;
       el.textContent = msg || '';
       el.classList.toggle('hidden', !msg);
     }
@@ -510,32 +528,53 @@
     function validate() {
       let ok = true;
 
+      // Name
       const name = nameInput.value.trim();
-      showError('err-name', !name ? 'Enter a product name.' : ''); if (!name) ok = false;
+      showError('err-name', !name ? 'Enter a product name.' : '');
+      if (!name) ok = false;
 
-      showError('err-category', !catSelect.value ? 'Choose a category.' : ''); if (!catSelect.value) ok = false;
+      // Category
+      showError('err-category', !catSelect.value ? 'Choose a category.' : '');
+      if (!catSelect.value) ok = false;
 
+      // Price
       const price = parseFloat(priceInput.value);
-      showError('err-price', !(price > 0) ? 'Enter a price greater than $0.' : ''); if (!(price > 0)) ok = false;
+      showError('err-price', !(price > 0) ? 'Enter a price greater than $0.' : '');
+      if (!(price > 0)) ok = false;
 
+      // Sale price
       const saleRaw = saleInput.value;
-      const sale = saleRaw === '' ? null : parseFloat(saleRaw);
+      const sale    = saleRaw === '' ? null : parseFloat(saleRaw);
       const badSale = sale !== null && !(sale > 0 && sale < price);
-      showError('err-sale', badSale ? 'Must be lower than the price.' : ''); if (badSale) ok = false;
+      showError('err-sale', badSale ? 'Must be lower than the price.' : '');
+      if (badSale) ok = false;
 
+      // Reorder level
+      const reorderEl = document.getElementById('f-reorder');
+      const reorder   = parseInt(reorderEl.value, 10);
+      const badReorder = isNaN(reorder) || reorder < 0;
+      showError('err-reorder', badReorder ? 'Enter 0 or a positive number.' : '');
+      if (badReorder) ok = false;
+
+      // Variants
       const named = variants.filter(v => v.size.trim() !== '');
       const dupes = new Set(named.map(v => v.size.trim().toLowerCase())).size !== named.length;
-      showError('err-variants', named.length === 0 ? 'Add at least one size.' : dupes ? 'Size names must be unique.' : '');
+      showError('err-variants',
+        named.length === 0 ? 'Add at least one size.' :
+        dupes              ? 'Size names must be unique.' : '');
       if (named.length === 0 || dupes) ok = false;
 
-      return ok;
+      return ok;   // ← always last line now
     }
 
     function submitAs(choice) {
       if (choice !== 'keep') { status = choice; renderStatus(); }
       if (!validate()) return toast('Please fix the highlighted fields');
 
-      variants = variants.filter(v => v.size.trim() !== '');
+      variants = variants
+        .filter(v => v.size.trim() !== '')
+        .map(v => ({ ...v, stock: v.stock === '' ? 0 : v.stock }));
+
       renderVariants();
 
       document.querySelectorAll('[data-status]').forEach(b => b.disabled = true);

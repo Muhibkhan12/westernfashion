@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    // 1. LIST -> resources/views/Admin/products.blade.php
+    // 1. LIST
     public function index()
     {
         $products = Product::with(['category', 'images', 'variants'])
@@ -23,7 +23,7 @@ class ProductController extends Controller
         return view('Admin.products', compact('products'));
     }
 
-    // 2. CREATE -> resources/views/Admin/addProducts.blade.php (empty form)
+    // 2. CREATE
     public function create()
     {
         $categories = Category::all();
@@ -34,21 +34,22 @@ class ProductController extends Controller
         ]);
     }
 
-    // 3. STORE: save a new product
+    // 3. STORE
     public function store(Request $request)
     {
         $data = $this->validateProduct($request);
 
         DB::transaction(function () use ($request, $data) {
             $product = Product::create([
-                'category_id' => $data['category_id'],
-                'name'        => $data['name'],
-                'slug'        => $this->makeSlug($data['name']),
-                'description' => $data['description'] ?? null,
-                'price'       => $data['price'],
-                'sale_price'  => $data['sale_price'] ?? null,
-                'status'      => $data['status'],
-                'featured'    => $request->has('featured'),
+                'category_id'   => $data['category_id'],
+                'name'          => $data['name'],
+                'slug'          => $this->makeSlug($data['name']),
+                'description'   => $data['description'] ?? null,
+                'price'         => $data['price'],
+                'sale_price'    => $data['sale_price'] ?? null,
+                'status'        => $data['status'],
+                'featured'      => $request->has('featured'),
+                'reorder_level' => $data['reorder_level'] ?? 10,   // ← ADDED
             ]);
 
             $this->saveImages($request, $product);
@@ -60,7 +61,7 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', $message);
     }
 
-    // 4. SHOW -> resources/views/Admin/productShow.blade.php
+    // 4. SHOW
     public function show(Product $product)
     {
         $product->load(['category', 'images', 'variants']);
@@ -68,7 +69,7 @@ class ProductController extends Controller
         return view('Admin.productShow', compact('product'));
     }
 
-    // 5. EDIT -> resources/views/Admin/addProducts.blade.php (filled form)
+    // 5. EDIT
     public function edit(Product $product)
     {
         $product->load(['images', 'variants']);
@@ -77,21 +78,22 @@ class ProductController extends Controller
         return view('Admin.addProducts', compact('product', 'categories'));
     }
 
-    // 6. UPDATE: save changes
+    // 6. UPDATE
     public function update(Request $request, Product $product)
     {
         $data = $this->validateProduct($request);
 
         DB::transaction(function () use ($request, $data, $product) {
             $product->update([
-                'category_id' => $data['category_id'],
-                'name'        => $data['name'],
-                'slug'        => $this->makeSlug($data['name'], $product->id),
-                'description' => $data['description'] ?? null,
-                'price'       => $data['price'],
-                'sale_price'  => $data['sale_price'] ?? null,
-                'status'      => $data['status'],
-                'featured'    => $request->has('featured'),
+                'category_id'   => $data['category_id'],
+                'name'          => $data['name'],
+                'slug'          => $this->makeSlug($data['name'], $product->id),
+                'description'   => $data['description'] ?? null,
+                'price'         => $data['price'],
+                'sale_price'    => $data['sale_price'] ?? null,
+                'status'        => $data['status'],
+                'featured'      => $request->has('featured'),
+                'reorder_level' => $data['reorder_level'] ?? 10,   // ← ADDED
             ]);
 
             $this->saveImages($request, $product);
@@ -104,7 +106,7 @@ class ProductController extends Controller
                          ->with('success', 'Product updated!');
     }
 
-    // 7. DESTROY: delete a product
+    // 7. DESTROY
     public function destroy(Product $product)
     {
         foreach ($product->images as $image) {
@@ -119,7 +121,7 @@ class ProductController extends Controller
                          ->with('success', 'Product deleted!');
     }
 
-    // 8. Delete ONE image (red button on the edit page)
+    // 8. Delete ONE image
     public function destroyImage(ProductImage $image)
     {
         $product    = $image->product;
@@ -139,7 +141,7 @@ class ProductController extends Controller
     }
 
     // ---------------------------------------------------------
-    // Helper functions
+    // Helpers
     // ---------------------------------------------------------
 
     private function validateProduct(Request $request)
@@ -152,6 +154,7 @@ class ProductController extends Controller
             'sale_price'       => 'nullable|numeric|gt:0|lt:price',
             'status'           => 'required|in:draft,active',
             'sku_prefix'       => 'nullable|max:50',
+            'reorder_level'    => 'nullable|integer|min:0',
             'images'           => 'nullable|array|max:5',
             'images.*'         => 'image|mimes:jpg,jpeg,png|max:2048',
             'variants'         => 'required|array|min:1',
@@ -193,6 +196,7 @@ class ProductController extends Controller
         $prefix = $data['sku_prefix'] ?? $product->slug;
         $price  = $data['sale_price'] ?? $data['price'];
 
+        // Rows that already have a SKU keep it; new rows get auto-generated ones.
         $rows = collect($data['variants'])->sortByDesc(fn ($row) => !empty($row['sku']));
 
         foreach ($rows as $row) {
