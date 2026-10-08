@@ -102,9 +102,10 @@
       <button aria-label="Account">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
       </button>
-      <button aria-label="Cart">
+      <a href="{{ route('cart.index') }}" aria-label="Cart" class="relative">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
-      </button>
+        <span id="cartCount" class="absolute -top-2 -right-3 text-[10px] font-mono">{{ app(\App\Services\CartService::class)->count() ?: '' }}</span>
+      </a>
     </div>
   </div>
 </header>
@@ -210,6 +211,12 @@
         Select a size
       </button>
     </div>
+
+    <!-- Buy now -->
+    <button type="button" id="buyNow" disabled
+      class="w-full border border-ink text-ink text-[11px] font-mono uppercase tracking-tag py-4 mb-4 transition disabled:opacity-40 disabled:cursor-not-allowed hover:bg-ink hover:text-paper">
+      Buy now
+    </button>
 
     <p id="skuLine" class="text-[11px] font-mono text-ink/40 mb-8 min-h-[16px]"></p>
 
@@ -354,16 +361,17 @@
   const hasColors = COLORS.length > 0;
   const state = { color: null, size: null, qty: 1 };
 
-  const colorListEl = document.getElementById("colorList");
+  const colorListEl  = document.getElementById("colorList");
   const colorLabelEl = document.getElementById("colorLabel");
-  const sizeListEl  = document.getElementById("sizeList");
-  const sizeLabelEl = document.getElementById("sizeLabel");
-  const stockMsgEl  = document.getElementById("stockMsg");
-  const skuLineEl   = document.getElementById("skuLine");
-  const qtyValueEl  = document.getElementById("qtyValue");
-  const addBtn      = document.getElementById("addToCart");
+  const sizeListEl   = document.getElementById("sizeList");
+  const sizeLabelEl  = document.getElementById("sizeLabel");
+  const stockMsgEl   = document.getElementById("stockMsg");
+  const skuLineEl    = document.getElementById("skuLine");
+  const qtyValueEl   = document.getElementById("qtyValue");
+  const addBtn       = document.getElementById("addToCart");
+  const buyBtn       = document.getElementById("buyNow");
 
-  // variants visible for the chosen color (ya sab, agar color hi nahi hai)
+  // variants visible for the chosen color (or all, if the product has no colors)
   function variantsForColor() {
     return hasColors ? VARIANTS.filter(v => v.color === state.color) : VARIANTS;
   }
@@ -393,7 +401,7 @@
       btn.setAttribute("aria-label", c.name);
       btn.addEventListener("click", () => {
         state.color = c.name;
-        // agar purana size is color mein out of stock / missing hai toh reset
+        // reset the size if it is missing or out of stock in this color
         const match = variantsForColor().find(v => v.size === state.size);
         if (!match || match.stock <= 0) state.size = null;
         state.qty = 1;
@@ -430,6 +438,8 @@
       skuLineEl.textContent = "";
       addBtn.disabled = true;
       addBtn.textContent = "Select a size";
+      buyBtn.disabled = true;
+      buyBtn.textContent = "Buy now";
       qtyValueEl.textContent = state.qty;
       return;
     }
@@ -438,10 +448,13 @@
       stockMsgEl.textContent = "Sold out in this size.";
       addBtn.disabled = true;
       addBtn.textContent = "Sold out";
+      buyBtn.disabled = true;
     } else {
       stockMsgEl.textContent = v.stock <= 5 ? `Only ${v.stock} left — order soon.` : "In stock.";
       addBtn.disabled = false;
       addBtn.textContent = "Add to cart";
+      buyBtn.disabled = false;
+      buyBtn.textContent = "Buy now";
     }
 
     if (state.qty > v.stock) state.qty = Math.max(1, v.stock);
@@ -475,32 +488,73 @@
     toastTimer = setTimeout(() => toast.classList.add("translate-y-24", "opacity-0"), 2600);
   }
 
-  // ---------- ADD TO CART ----------
-  // TODO: yahan apna cart route / fetch laga dena (variant_id + qty bhejna hai).
-  function addToCart({ productId, variantId, qty }) {
-    // Example:
-    // fetch("/cart/add", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-    //   },
-    //   body: JSON.stringify({ product_id: productId, variant_id: variantId, qty })
-    // }).then(r => r.json()).then(() => showToast("Added to cart"));
-    showToast(`Added ${qty} × ${PRODUCT_NAME}`);
+  // ---------- ADD TO CART / BUY NOW ----------
+  const cartCountEl = document.getElementById("cartCount");
+
+  async function postToCart(variantId, qty) {
+    const res = await fetch("{{ route('cart.add') }}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ variant_id: variantId, qty })
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      const firstError = data.errors ? Object.values(data.errors)[0][0] : null;
+      throw new Error(firstError || data.message || "Could not add to cart");
+    }
+    return data;
   }
 
-  addBtn.addEventListener("click", () => {
+  addBtn.addEventListener("click", async () => {
     const v = currentVariant();
     if (!v || v.stock <= 0) return;
-    addToCart({ productId: PRODUCT_ID, variantId: v.id, qty: state.qty });
+
+    addBtn.disabled = true;
+    buyBtn.disabled = true;
+    try {
+      const data = await postToCart(v.id, state.qty);
+      if (cartCountEl) cartCountEl.textContent = data.count || "";
+      showToast(`Added ${state.qty} × ${PRODUCT_NAME}`);
+    } catch (e) {
+      showToast(e.message);
+    } finally {
+      renderStatus();
+    }
+  });
+
+  buyBtn.addEventListener("click", async () => {
+    const v = currentVariant();
+    if (!v || v.stock <= 0) return;
+
+    addBtn.disabled = true;
+    buyBtn.disabled = true;
+    buyBtn.textContent = "Please wait…";
+    try {
+      await postToCart(v.id, state.qty);
+      window.location.href = "{{ route('checkout.show') }}";
+    } catch (e) {
+      showToast(e.message);
+      renderStatus();
+    }
   });
 
   // ---------- INIT ----------
   if (hasColors) {
-    // pehla color jisme stock ho, warna pehla color
+    // first color that has stock, otherwise the first color
     const inStockColor = COLORS.find(c => VARIANTS.some(v => v.color === c.name && v.stock > 0));
     state.color = (inStockColor || COLORS[0]).name;
   }
-  // agar sirf ek hi size available hai toh auto-select
-  const initial = variantsForColor().filter(v => v.stock >
+
+  // if only one size is in stock, select it automatically
+  const initial = variantsForColor().filter(v => v.stock > 0);
+  if (initial.length === 1) state.size = initial[0].size;
+
+  render();
+</script>
+</body>
+</html>

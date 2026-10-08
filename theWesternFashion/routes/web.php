@@ -5,7 +5,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
-use App\Http\Controllers\InventoryController; 
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 
 /*
 | 1. PUBLIC PAGES
@@ -17,7 +21,6 @@ Route::get('/', function () {
 Route::get('/home', function () { return view('index'); });
 Route::get('/about', function () { return view('about'); });
 Route::get('/contact', function () { return view('contact'); });
-// Route::get('/products', function() {return view('products');});
 
 /*
 | 2. AUTH (guests only)
@@ -49,12 +52,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Static admin pages
     Route::get('/admin-dashboard', function () { return view('Admin.dashboard'); });
     Route::get('/admin-orders', function () { return view('Admin.orders'); });
-Route::get('/admin-inventory', [InventoryController::class, 'index']);
-Route::patch('/admin-inventory/{product}/variants', [InventoryController::class, 'updateVariants'])
-    ->name('admin.inventory.variants');
+    Route::get('/admin-inventory', [InventoryController::class, 'index']);
+    Route::patch('/admin-inventory/{product}/variants', [InventoryController::class, 'updateVariants'])
+        ->name('admin.inventory.variants');
     Route::get('/admin-customers', function () { return view('Admin.customers'); });
 
-    // Products CRUD -> /admin/products, /admin/products/create, /admin/products/5/edit ...
+    // Products CRUD -> /admin/products, /admin/products/create, /admin/products/{id}/edit ...
     Route::prefix('admin')->group(function () {
         Route::resource('products', ProductController::class);
 
@@ -62,18 +65,45 @@ Route::patch('/admin-inventory/{product}/variants', [InventoryController::class,
             ->name('product-images.destroy');
     });
 
-    // Purane sidebar links
+    // Old sidebar links
     Route::get('/admin-products', fn () => redirect()->route('products.index'));
     Route::get('/admin-add-products', fn () => redirect()->route('products.create'))
         ->name('admin-add-products');
 });
 
 /*
-| 4. USER PAGES
+| 4. SHOP (public)
 */
-Route::get('/user-dashboard', function () { return view('User.Dashboard'); });
-Route::get('/user-order', function () { return view('User.Order'); });
-Route::get('/user-wishlist', function () { return view('User.Wishlist'); });
-
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.products');
 Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
+
+/*
+| 5. CART (guests allowed, it's session based)
+*/
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add')->middleware('throttle:60,1');
+Route::patch('/cart/{variant}', [CartController::class, 'update'])->whereUuid('variant')->name('cart.update');
+Route::delete('/cart/{variant}', [CartController::class, 'destroy'])->whereUuid('variant')->name('cart.destroy');
+
+/*
+| 6. USER AREA (login required)
+*/
+Route::middleware('auth')->group(function () {
+
+    // Checkout
+    Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware('throttle:10,1');
+
+    // Orders
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
+    // Payment (gateway not connected yet)
+    Route::post('/orders/{order}/pay', [PaymentController::class, 'start'])->name('payment.start');
+
+    // User pages
+    Route::get('/user-dashboard', function () { return view('User.Dashboard'); });
+    Route::get('/user-order', fn () => redirect()->route('orders.index'));
+    Route::get('/user-wishlist', function () { return view('User.Wishlist'); });
+});
