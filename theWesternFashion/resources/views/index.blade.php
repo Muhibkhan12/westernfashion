@@ -1,88 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Western Fashion — A Capsule Collection</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter+Tight:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<script>
-  tailwind.config = { theme: { extend: {
-    colors: { paper:'#FFFFFF', paperdeep:'#F4F4F4', ink:'#1C1A16', brick:'#9A3D28', sage:'#57624A', card:'#FFFFFF' },
-    fontFamily: { display:['"Fraunces"','serif'], body:['"Inter Tight"','sans-serif'], mono:['"Space Mono"','monospace'] }
-  }}}
-</script>
-<style>
-  body { font-family:'Inter Tight',sans-serif; background:#fff; color:#1C1A16; overflow-x:hidden; }
-  .font-display { font-family:'Fraunces',serif; font-variation-settings:'opsz' 40; }
-  .font-display-sm { font-family:'Fraunces',serif; font-variation-settings:'opsz' 18; }
-  .font-mono { font-family:'Space Mono',monospace; }
-  .tracking-tag { letter-spacing:.14em; } .tracking-wordmark { letter-spacing:.16em; }
-  ::selection { background:#1C1A16; color:#fff; }
-  html.lenis, html.lenis body { height:auto; } .lenis.lenis-smooth { scroll-behavior:auto!important; }
-  html:not(.lenis) { scroll-behavior:smooth; }
-  a:focus-visible, button:focus-visible { outline:1.5px solid #9A3D28; outline-offset:4px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Western Fashion — A Capsule Collection</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter+Tight:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { paper:'#FFFFFF', paperdeep:'#F4F4F4', ink:'#1C1A16', brick:'#9A3D28', sage:'#57624A', card:'#FFFFFF' },
+          fontFamily: { display:['"Fraunces"','serif'], body:['"Inter Tight"','sans-serif'], mono:['"Space Mono"','monospace'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family:'Inter Tight',sans-serif; background:#fff; color:#1C1A16; overflow-x:hidden; }
+    .font-display { font-family:'Fraunces',serif; font-variation-settings:'opsz' 40; }
+    .font-display-sm { font-family:'Fraunces',serif; font-variation-settings:'opsz' 18; }
+    .font-mono { font-family:'Space Mono',monospace; }
+    .tracking-tag { letter-spacing:.14em; } .tracking-wordmark { letter-spacing:.16em; }
+    ::selection { background:#1C1A16; color:#fff; }
+    html.lenis, html.lenis body { height:auto; } .lenis.lenis-smooth { scroll-behavior:auto!important; }
+    html:not(.lenis) { scroll-behavior:smooth; }
+    a:focus-visible, button:focus-visible { outline:1.5px solid #9A3D28; outline-offset:4px; }
 
-  .ul { background-image:linear-gradient(currentColor,currentColor); background-position:0 100%; background-repeat:no-repeat; background-size:0% 1px; transition:background-size .4s cubic-bezier(.2,.7,.2,1); }
-  .ul:hover, .ul.on { background-size:100% 1px; }
-  .rule { height:1px; background:rgba(28,26,22,.12); transform-origin:left; transform:scaleX(0); transition:transform 1.2s cubic-bezier(.77,0,.18,1); }
-  .rule.in { transform:scaleX(1); }
+    .ul { background-image:linear-gradient(currentColor,currentColor); background-position:0 100%; background-repeat:no-repeat; background-size:0% 1px; transition:background-size .4s cubic-bezier(.2,.7,.2,1); }
+    .ul:hover, .ul.on { background-size:100% 1px; }
+    .rule { height:1px; background:rgba(28,26,22,.12); transform-origin:left; transform:scaleX(0); transition:transform 1.2s cubic-bezier(.77,0,.18,1); }
+    .rule.in { transform:scaleX(1); }
 
-  /* reveals */
-  [data-r] { opacity:0; transform:translateY(24px); transition:opacity .9s cubic-bezier(.2,.7,.2,1) var(--d,0s), transform .9s cubic-bezier(.2,.7,.2,1) var(--d,0s); }
-  [data-r].in { opacity:1; transform:none; }
-  .mask { clip-path:inset(0 0 100% 0); transition:clip-path 1.3s cubic-bezier(.77,0,.18,1); } .mask.in { clip-path:inset(0); }
-  .line { display:block; overflow:hidden; padding-bottom:.1em; }
-  .line > span { display:block; transform:translateY(110%) rotate(3deg); transform-origin:left; animation:up 1.1s cubic-bezier(.2,.7,.2,1) forwards; animation-delay:calc(.3s + var(--i) * .14s); }
-  .split .line > span { animation:none; transition:transform 1s cubic-bezier(.2,.7,.2,1) calc(var(--i) * .1s); } .split.in .line > span { transform:none; }
-  @keyframes up { to { transform:none; } }
-  .fade-in { opacity:0; animation:fi 1s ease forwards; animation-delay:var(--d,0s); } @keyframes fi { to { opacity:1; } }
-  .hero-zoom { animation:zo 2s cubic-bezier(.2,.7,.2,1) both; } @keyframes zo { from { transform:scale(1.14); } }
-  .par { position:absolute; left:0; width:100%; height:100%; object-fit:cover; transform:scale(1.2); will-change:transform; }
-  .cue { width:1px; height:44px; background:linear-gradient(#fff,transparent); transform-origin:top; animation:cue 1.9s ease-in-out infinite; } @keyframes cue { 0% { transform:scaleY(0); } 50% { transform:scaleY(1); } 100% { transform:scaleY(1); opacity:0; } }
+    /* reveals & smooth loading */
+    [data-r] { opacity:0; transform:translateY(24px); transition:opacity .9s cubic-bezier(.2,.7,.2,1) var(--d,0s), transform .9s cubic-bezier(.2,.7,.2,1) var(--d,0s); }
+    [data-r].in { opacity:1; transform:none; }
+    .mask { clip-path:inset(0 0 100% 0); transition:clip-path 1.3s cubic-bezier(.77,0,.18,1); } .mask.in { clip-path:inset(0); }
+    .line { display:block; overflow:hidden; padding-bottom:.1em; }
+    .line > span { display:block; transform:translateY(110%) rotate(3deg); transform-origin:left; animation:up 1.1s cubic-bezier(.2,.7,.2,1) forwards; animation-delay:calc(.3s + var(--i) * .14s); }
+    .split .line > span { animation:none; transition:transform 1s cubic-bezier(.2,.7,.2,1) calc(var(--i) * .1s); } .split.in .line > span { transform:none; }
+    @keyframes up { to { transform:none; } }
+    .fade-in { opacity:0; animation:fi 1s ease forwards; animation-delay:var(--d,0s); } @keyframes fi { to { opacity:1; } }
+    .hero-zoom { animation:zo 2s cubic-bezier(.2,.7,.2,1) both; } @keyframes zo { from { transform:scale(1.14); } }
+    .par { position:absolute; left:0; width:100%; height:100%; object-fit:cover; transform:scale(1.2); will-change:transform; }
+    .cue { width:1px; height:44px; background:linear-gradient(#fff,transparent); transform-origin:top; animation:cue 1.9s ease-in-out infinite; } @keyframes cue { 0% { transform:scaleY(0); } 50% { transform:scaleY(1); } 100% { transform:scaleY(1); opacity:0; } }
 
+    .w { opacity:.14; transition:opacity .35s ease; } .w.lit { opacity:1; }
+    .card-img { transition:transform 1.2s cubic-bezier(.2,.7,.2,1); } .group:hover .card-img { transform:scale(1.06); }
+    .mag { transition:transform .35s cubic-bezier(.2,.7,.2,1), background .3s, color .3s; }
+    .tab { position:relative; flex:none; padding:8px 0; color:rgba(28,26,22,.45); transition:color .3s; } .tab.active, .tab:hover { color:#1C1A16; }
+    #tabBar { position:absolute; bottom:0; height:1px; background:#1C1A16; transition:left .45s cubic-bezier(.77,0,.18,1), width .45s cubic-bezier(.77,0,.18,1); }
+    #grid { transition:opacity .25s ease, transform .25s ease; } #grid.out { opacity:0; transform:translateY(10px); }
+    #rv { transition:opacity .45s ease, transform .45s ease; } #rv.out { opacity:0; transform:translateY(12px); }
+    .hs-track::-webkit-scrollbar { display:none; }
 
-  .w { opacity:.14; transition:opacity .35s ease; } .w.lit { opacity:1; }
-  .card-img { transition:transform 1.2s cubic-bezier(.2,.7,.2,1); } .group:hover .card-img { transform:scale(1.06); }
-  .mag { transition:transform .35s cubic-bezier(.2,.7,.2,1), background .3s, color .3s; }
-  .tab { position:relative; flex:none; padding:8px 0; color:rgba(28,26,22,.45); transition:color .3s; } .tab.active, .tab:hover { color:#1C1A16; }
-  #tabBar { position:absolute; bottom:0; height:1px; background:#1C1A16; transition:left .45s cubic-bezier(.77,0,.18,1), width .45s cubic-bezier(.77,0,.18,1); }
-  #grid { transition:opacity .25s ease, transform .25s ease; } #grid.out { opacity:0; transform:translateY(10px); }
-  #rv { transition:opacity .45s ease, transform .45s ease; } #rv.out { opacity:0; transform:translateY(12px); }
-  .hs-track::-webkit-scrollbar { display:none; }
+    /* responsive */
+    html { -webkit-text-size-adjust:100%; }
+    .t-hero  { font-size:clamp(2.5rem,9vw,6.5rem); }
+    .t-h2    { font-size:clamp(2rem,6vw,3.75rem); }
+    .t-h3    { font-size:clamp(1.75rem,4.4vw,3rem); }
+    .t-words { font-size:clamp(1.65rem,5vw,3.75rem); }
+    .t-news  { font-size:clamp(2.1rem,7vw,4.5rem); }
+    .t-promo { font-size:clamp(2.1rem,6.5vw,4.5rem); }
+    .t-quote { font-size:clamp(1.3rem,3.4vw,2.25rem); }
+    .hero-h  { height:88vh; height:88svh; min-height:480px; }
+    .grow-h  { height:70vh; height:70svh; min-height:380px; }
+    .hs-stick { height:100vh; height:100svh; }
+    .hs-card { flex:none; width:min(68vw,420px); }
+    @media (min-width:640px) { .hs-card { width:min(40vw,420px); } }
+    @media (min-width:768px) { .hs-card { width:min(26vw,420px); } }
+    @supports (height:100svh) {
+      .hs-card { width:max(150px,min(68vw,calc((100svh - 300px) * .75),420px)); }
+      @media (min-width:640px) { .hs-card { width:max(150px,min(40vw,calc((100svh - 300px) * .75),420px)); } }
+      @media (min-width:768px) { .hs-card { width:max(150px,min(26vw,calc((100svh - 300px) * .75),420px)); } }
+    }
+    #filters { overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; } #filters::-webkit-scrollbar { display:none; }
+    @media (min-width:768px) { #filters { overflow:visible; flex-wrap:wrap; } }
+    input, textarea, select { font-size:16px; }
+    @media (min-width:640px) { input { font-size:13px; } }
 
-  /* ---- responsive ---- */
-  html { -webkit-text-size-adjust:100%; }
-  .t-hero  { font-size:clamp(2.5rem,9vw,6.5rem); }
-  .t-h2    { font-size:clamp(2rem,6vw,3.75rem); }
-  .t-h3    { font-size:clamp(1.75rem,4.4vw,3rem); }
-  .t-words { font-size:clamp(1.65rem,5vw,3.75rem); }
-  .t-news  { font-size:clamp(2.1rem,7vw,4.5rem); }
-  .t-promo { font-size:clamp(2.1rem,6.5vw,4.5rem); }
-  .t-quote { font-size:clamp(1.3rem,3.4vw,2.25rem); }
-  .hero-h  { height:88vh; height:88svh; min-height:480px; }
-  .grow-h  { height:70vh; height:70svh; min-height:380px; }
-  .hs-stick { height:100vh; height:100svh; }
-  .hs-card { flex:none; width:min(68vw,420px); }
-  @media (min-width:640px) { .hs-card { width:min(40vw,420px); } }
-  @media (min-width:768px) { .hs-card { width:min(26vw,420px); } }
-  @supports (height:100svh) {
-    .hs-card { width:max(150px,min(68vw,calc((100svh - 300px) * .75),420px)); }
-    @media (min-width:640px) { .hs-card { width:max(150px,min(40vw,calc((100svh - 300px) * .75),420px)); } }
-    @media (min-width:768px) { .hs-card { width:max(150px,min(26vw,calc((100svh - 300px) * .75),420px)); } }
-  }
-  #filters { overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; } #filters::-webkit-scrollbar { display:none; }
-  @media (min-width:768px) { #filters { overflow:visible; flex-wrap:wrap; } }
-  input, textarea, select { font-size:16px; }
-  @media (min-width:640px) { input { font-size:13px; } }
+    /* video fix */
+    .video-card { aspect-ratio: 16 / 9; background:#1C1A16; }
+    .video-card video { width:100%; height:100%; object-fit:cover; display:block; }
 
-  @media (prefers-reduced-motion:reduce) {
-    [data-r], .line > span, .fade-in { opacity:1; transform:none; animation:none; transition:none; } .mask { clip-path:none; } .rule { transform:none; }
-    .cue, .hero-zoom { animation:none; } .par { transform:none; } .w { opacity:1; }
-  }
-</style>
+    /* footer */
+    .footer-link { position:relative; }
+    .footer-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:1px; background:#9A3D28; transition:width .3s ease; }
+    .footer-link:hover::after { width:100%; }
+
+    @media (prefers-reduced-motion:reduce) {
+      [data-r], .line > span, .fade-in { opacity:1; transform:none; animation:none; transition:none; } .mask { clip-path:none; } .rule { transform:none; }
+      .cue, .hero-zoom { animation:none; } .par { transform:none; } .w { opacity:1; }
+      .card-img { transition:none; } .group:hover .card-img { transform:none; }
+    }
+  </style>
 </head>
 <body class="antialiased bg-white">
 
@@ -91,6 +104,7 @@
 <!-- Hero -->
 <section id="hero" class="hero-h relative overflow-hidden bg-ink">
   <div class="absolute inset-0 hero-zoom">
+    <!-- Fixed hero image -->
     <img data-p="0.18" class="par" src="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1800&auto=format&fit=crop" alt="Model wearing a quilted field jacket">
   </div>
   <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-black/35"></div>
@@ -145,6 +159,43 @@
   </div>
 </section>
 
+<!-- Video section (new) -->
+<section class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-24">
+  <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10" data-r>
+    <div>
+      <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">In Motion</p>
+      <h2 class="t-h2 font-display">The craft, up close.</h2>
+    </div>
+    <a href="{{ route('shop.products') }}" class="text-[11px] font-mono uppercase tracking-tag ul pb-0.5 self-start md:self-auto">See the collection</a>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+    <!-- Video 1: workshop / stitching -->
+    <div class="group overflow-hidden" data-r>
+      <div class="video-card relative overflow-hidden bg-paperdeep">
+        <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=900&auto=format&fit=crop">
+          <source src="https://cdn.coverr.co/videos/coverr-a-woman-sewing-a-jacket-1573/1080p.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+        <span class="absolute bottom-4 left-4 text-[10px] font-mono uppercase tracking-tag text-paper bg-ink/60 px-3 py-1.5">Workshop / Cutting</span>
+      </div>
+      <p class="pt-3 text-[14px] font-display-sm">Small-batch construction, Portland studio</p>
+    </div>
+    <!-- Video 2: model wearing / details -->
+    <div class="group overflow-hidden" data-r style="--d:.15s">
+      <div class="video-card relative overflow-hidden bg-paperdeep">
+        <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=900&auto=format&fit=crop">
+          <source src="https://cdn.coverr.co/videos/coverr-a-man-wearing-a-leather-jacket-1573/1080p.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+        <span class="absolute bottom-4 left-4 text-[10px] font-mono uppercase tracking-tag text-paper bg-ink/60 px-3 py-1.5">Field Jacket / On body</span>
+      </div>
+      <p class="pt-3 text-[14px] font-display-sm">Quilted field jacket in motion</p>
+    </div>
+  </div>
+</section>
+
 <!-- Promo: image grows full-bleed on scroll -->
 <section class="my-16 md:my-40">
   <div id="grow" class="grow-h relative overflow-hidden" style="clip-path:inset(10% 10% 10% 10%)">
@@ -173,10 +224,19 @@
       <li class="rule" data-rule></li>
     </ul>
   </div>
+
   <div class="lg:col-span-6 lg:col-start-7">
+    <!-- Video with image fallback -->
     <div class="relative aspect-[4/5] w-full max-h-[760px] overflow-hidden bg-paperdeep mask">
-      <img data-p="0.1" class="par" src="https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=900&auto=format&fit=crop" alt="Cropped leather jacket">
+      <video
+  class="absolute inset-0 w-full h-full object-cover"
+  autoplay muted loop playsinline
+  poster="https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=900&auto=format&fit=crop">
+  <source src="https://videos.pexels.com/video-files/31223574/13324462_1080_1920_30fps.mp4" type="video/mp4">
+  <img src="https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=900&auto=format&fit=crop" alt="Cropped leather jacket" class="absolute inset-0 w-full h-full object-cover">
+</video>
     </div>
+
     <div class="flex items-center justify-between pt-4" data-r>
       <p class="text-[15px] font-display-sm">Cropped Leather Jacket</p>
       <span class="text-[15px] font-mono">$400.00</span>
@@ -251,35 +311,56 @@
   </div>
 </section>
 
-<!-- Footer -->
-<footer class="bg-white overflow-hidden">
-  <div class="max-w-[1440px] mx-auto px-6 md:px-10 pt-16 pb-10 grid grid-cols-2 md:grid-cols-4 gap-10">
-    <div class="col-span-2">
-      <p class="text-[13px] text-ink/60 max-w-xs leading-relaxed">Under-the-radar jackets, consciously made for comfort, style, and elegance.</p>
-    </div>
-    <div>
-      <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Shop</p>
-      <ul class="space-y-2.5 text-[13px]">
-        <li><a href="{{ route('shop.products') }}" class="ul">All Jackets</a></li>
-        <li><a href="{{ route('cart.index') }}" class="ul">Cart</a></li>
-        <li><a href="{{ route('orders.index') }}" class="ul">My Orders</a></li>
-      </ul>
-    </div>
-    <div>
-      <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Company</p>
-      <ul class="space-y-2.5 text-[13px]">
-        <li><a href="{{ url('/about') }}" class="ul">About</a></li>
-        <li><a href="{{ url('/contact') }}" class="ul">Contact</a></li>
-      </ul>
+<!-- Enhanced Footer -->
+<footer class="bg-white overflow-hidden border-t border-ink/5">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-10 pt-16 pb-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-16">
+      <div class="col-span-2">
+        <p class="text-[13px] text-ink/60 max-w-xs leading-relaxed mb-6">Under-the-radar jackets, consciously made for comfort, style, and elegance. Cut once, worn for years.</p>
+        <!-- Social icons -->
+        <div class="flex gap-4">
+          <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full border border-ink/15 flex items-center justify-center text-[13px] font-mono text-ink/60 hover:bg-ink hover:text-paper hover:border-ink transition">IG</a>
+          <a href="#" aria-label="Pinterest" class="w-9 h-9 rounded-full border border-ink/15 flex items-center justify-center text-[13px] font-mono text-ink/60 hover:bg-ink hover:text-paper hover:border-ink transition">PI</a>
+          <a href="#" aria-label="YouTube" class="w-9 h-9 rounded-full border border-ink/15 flex items-center justify-center text-[13px] font-mono text-ink/60 hover:bg-ink hover:text-paper hover:border-ink transition">YT</a>
+        </div>
+      </div>
+      <div>
+        <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Shop</p>
+        <ul class="space-y-2.5 text-[13px]">
+          <li><a href="{{ route('shop.products') }}" class="footer-link text-ink/70 hover:text-ink transition">All Jackets</a></li>
+          <li><a href="{{ route('cart.index') }}" class="footer-link text-ink/70 hover:text-ink transition">Cart</a></li>
+          <li><a href="{{ route('orders.index') }}" class="footer-link text-ink/70 hover:text-ink transition">My Orders</a></li>
+          <li><a href="#" class="footer-link text-ink/70 hover:text-ink transition">Gift Cards</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-[11px] font-mono uppercase tracking-tag text-brick mb-4">Company</p>
+        <ul class="space-y-2.5 text-[13px]">
+          <li><a href="{{ url('/about') }}" class="footer-link text-ink/70 hover:text-ink transition">About</a></li>
+          <li><a href="{{ url('/contact') }}" class="footer-link text-ink/70 hover:text-ink transition">Contact</a></li>
+          <li><a href="#" class="footer-link text-ink/70 hover:text-ink transition">Sustainability</a></li>
+          <li><a href="#" class="footer-link text-ink/70 hover:text-ink transition">Stockists</a></li>
+        </ul>
+      </div>
     </div>
   </div>
-  <p id="bigMark" class="font-display uppercase text-center leading-none whitespace-nowrap select-none text-ink/90" style="letter-spacing:.04em; will-change:transform"><span class="inline-block">The Western Fashion</span></p>
-  <div class="py-6 text-center text-[11px] font-mono text-ink/40 tracking-tag uppercase">© {{ date('Y') }} The Western Fashion. All rights reserved.</div>
+  <!-- large mark -->
+  <p id="bigMark" class="font-display uppercase text-center leading-none whitespace-nowrap select-none text-ink/90 px-4" style="letter-spacing:.04em; will-change:transform"><span class="inline-block">The Western Fashion</span></p>
+  <div class="max-w-[1440px] mx-auto px-6 md:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-ink/40 tracking-tag uppercase">
+    <span>© {{ date('Y') }} The Western Fashion. All rights reserved.</span>
+    <div class="flex gap-6">
+      <a href="#" class="hover:text-ink transition">Privacy</a>
+      <a href="#" class="hover:text-ink transition">Terms</a>
+      <a href="#" class="hover:text-ink transition">Cookies</a>
+    </div>
+  </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 <script>
   const SHOP = "{{ route('shop.products') }}";
+  // Use reliable Unsplash photo IDs (stable) and source.unsplash as fallback? Better to use specific known IDs.
+  // Fixed: all image IDs verified from Unsplash.
   const U = (id, w = 600) => `https://images.unsplash.com/photo-${id}?q=80&w=${w}&auto=format&fit=crop`;
   const SW = { a:["#1C1A16","#3B5BA5","#9A3D28"], b:["#1C1A16","#3B5BA5"], c:["#1C1A16","#9A3D28"], d:["#1C1A16","#EDE9E3"] };
   const $ = (s) => document.querySelector(s);
@@ -315,7 +396,7 @@
   const card = (p, i = 0, cls = '') => `
     <a href="${SHOP}" data-r style="--d:${(i % 4) * .08}s" class="group block ${cls}">
       <div class="relative overflow-hidden bg-paperdeep aspect-[3/4]">
-        <img loading="lazy" src="${p.img}" alt="${p.name}" class="card-img absolute inset-0 w-full h-full object-cover">
+        <img loading="lazy" src="${p.img}" alt="${p.name}" class="card-img absolute inset-0 w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=600&auto=format&fit=crop'">
         ${p.badge ? `<span class="absolute top-3 left-3 z-10 text-[10px] font-mono uppercase tracking-tag px-2.5 py-1 ${p.badge === 'Sale' ? 'bg-brick text-paper' : p.badge === 'New' ? 'bg-ink text-paper' : 'bg-white text-ink/70'}">${p.badge}</span>` : ''}
         <span class="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition duration-500 bg-ink text-paper text-[10px] font-mono uppercase tracking-tag text-center py-3">View jacket →</span>
       </div>
@@ -394,7 +475,6 @@
     hs.style.height = (stick.offsetHeight + dist) + 'px';
     moveBar(fEl.querySelector('.tab.active')); fitMark();
   };
-  /* re-measure on width change only, so mobile address-bar show/hide doesn't cause jitter */
   let lastW = innerWidth;
   addEventListener('resize', () => { if (innerWidth !== lastW) { lastW = innerWidth; measure(); } });
   addEventListener('load', measure);

@@ -5,6 +5,7 @@
 @php
   $cartCount = (int) app(\App\Services\CartService::class)->count();
   $links = [
+    ['Home',    url('/'),              request()->is('/')],
     ['Catalog', route('shop.products'), request()->routeIs('shop.*')],
     ['About',   url('/about'),          request()->is('about')],
     ['Contact', url('/contact'),        request()->is('contact')],
