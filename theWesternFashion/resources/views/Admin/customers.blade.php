@@ -33,10 +33,8 @@
 
 <body data-page="customers" class="bg-neutral-50 font-sans text-black antialiased">
 
-@include('admin.sidebar')
+  @include('Admin.sidebar')
 
-  <!-- Sidebar is injected here from sidebar.html -->
-  <div id="sidebar-slot"></div>
   <div id="overlay" class="fixed inset-0 z-30 hidden bg-black/40 lg:hidden"></div>
 
   <div class="lg:pl-64">
@@ -73,10 +71,6 @@
           <button id="export-btn" class="inline-flex items-center gap-2 rounded-lg border border-neutral-200 bg-white px-3.5 py-2 text-sm font-medium hover:border-black">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
             Export CSV
-          </button>
-          <button class="inline-flex items-center gap-2 rounded-lg bg-black px-3.5 py-2 text-sm font-medium text-white hover:bg-neutral-800">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            Add customer
           </button>
         </div>
       </div>
@@ -137,58 +131,45 @@
 
   <script>
     /* ---------------------------------------------------------------
-       1. Sidebar (needs a local server, same as the other pages)
+       1. Sidebar (partial is included via Blade, just wire it up)
     ---------------------------------------------------------------- */
-    const sidebarSlot = document.getElementById('sidebar-slot');
-    const overlay = document.getElementById('overlay'); 
+    const overlay = document.getElementById('overlay');
+
+    function initSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      if (!sidebar) return;
+      const page = document.body.dataset.page;
+      const active = sidebar.querySelector(`[data-nav="${page}"]`);
+      if (active) { active.classList.add('is-active'); active.setAttribute('aria-current', 'page'); }
+
+      const open  = () => { sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden'); };
+      const close = () => { sidebar.classList.add('-translate-x-full');    overlay.classList.add('hidden'); };
+
+      document.getElementById('menu-btn').addEventListener('click', open);
+      const closeBtn = document.getElementById('sidebar-close');
+      if (closeBtn) closeBtn.addEventListener('click', close);
+      overlay.addEventListener('click', close);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    }
+    initSidebar();
 
     /* ---------------------------------------------------------------
-       2. Placeholder data (replace with your API)
+       2. Data from UserController@customers
     ---------------------------------------------------------------- */
     const money  = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
     const money2 = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
-    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const fmtDate = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    const initials = n => n.split(' ').slice(0, 2).map(w => w[0]).join('');
+    const initials = n => (n || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
 
-    const TODAY = new Date(2026, 8, 21);
-    const daysAgo = n => { const d = new Date(TODAY); d.setDate(d.getDate() - n); return d; };
-
-    const roster = [
-      ['Emily Carter', 'Austin, TX'], ['Hamza Sheikh', 'Karachi'], ['Jake Morrison', 'Denver, CO'], ['Sana Malik', 'Lahore'],
-      ['Daniel Brooks', 'Dallas, TX'], ['Noor Fatima', 'Islamabad'], ['Luke Hendricks', 'Tulsa, OK'], ['Areeba Khan', 'Karachi'],
-      ['Maya Thompson', 'Nashville, TN'], ['Bilal Ahmed', 'Faisalabad'], ['Chloe Adams', 'Phoenix, AZ'], ['Zainab Qureshi', 'Lahore'],
-      ['Ryan Caldwell', 'Boise, ID'], ['Hira Siddiqui', 'Karachi'], ['Olivia Reyes', 'San Antonio, TX'], ['Usman Tariq', 'Rawalpindi'],
-      ['Grace Holloway', 'Santa Fe, NM'], ['Farah Iqbal', 'Islamabad'], ['Wyatt Bennett', 'Billings, MT'], ['Ali Raza', 'Multan'],
-      ['Harper Nguyen', 'Oklahoma City, OK'], ['Mehak Javed', 'Lahore'], ['Cole Sanders', 'Cheyenne, WY'], ['Iqra Nadeem', 'Karachi'],
-      ['Tessa Whitaker', 'Amarillo, TX'], ['Danish Mirza', 'Peshawar'], ['Sloane Pierce', 'Tucson, AZ'], ['Kiran Aslam', 'Islamabad'],
-    ];
-    const statuses = ['Delivered', 'Delivered', 'Delivered', 'Shipped', 'Cancelled'];
-
-    let seed = 23;
-    const rand = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
-
-    const customers = roster.map(([name, city], i) => {
-      const joinedAgo = i < 6 ? 1 + Math.floor(rand() * 28) : 35 + Math.floor(rand() * 520);
-      const orders = joinedAgo <= 30 ? 1 + Math.floor(rand() * 2) : 2 + Math.floor(rand() * 12);
-      const spent = Math.round(orders * (45 + rand() * 90));
-      const lastAgo = Math.floor(rand() * Math.min(joinedAgo, 90));
-      const recent = Array.from({ length: Math.min(orders, 4) }, (_, k) => ({
-        id: `TWF-${2841 - Math.floor(rand() * 200) - k * 7}`,
-        date: daysAgo(lastAgo + k * (6 + Math.floor(rand() * 20))),
-        total: Math.round(30 + rand() * 190),
-        status: k === 0 && lastAgo < 5 ? (rand() < 0.5 ? 'Pending' : 'Shipped') : statuses[Math.floor(rand() * statuses.length)],
-      }));
-      return {
-        id: i + 1, name, city,
-        email: name.toLowerCase().replace(/[^a-z]+/g, '.') + '@example.com',
-        phone: `+1 555 01${String(10 + i).padStart(2, '0')}`,
-        joinedAgo, joined: daysAgo(joinedAgo), lastAgo, last: daysAgo(lastAgo),
-        orders, spent, recent, note: '',
-      };
-    });
-    customers[1].note = 'Prefers cash on delivery. Usually orders boots in size 10.';
-    customers[3].note = 'Asked to be told when suede jackets restock.';
+    const customers = @json($customers).map(c => ({
+      ...c,
+      id: String(c.id),
+      joined: new Date(c.joined),
+      last: new Date(c.last),
+      recent: c.recent.map(o => ({ ...o, date: new Date(o.date) })),
+      note: '',
+    }));
 
     /* ---------------------------------------------------------------
        3. State + helpers
@@ -206,6 +187,7 @@
       Delivered: 'bg-black text-white', Shipped: 'border border-black text-black',
       Pending: 'bg-neutral-100 text-neutral-700', Cancelled: 'border border-neutral-200 text-neutral-400',
     };
+    const statusClass = s => orderStatusStyle[s] ?? orderStatusStyle.Pending;
 
     function toast(msg) {
       const t = document.getElementById('toast');
@@ -244,12 +226,12 @@
       const total = customers.length;
       const fresh = customers.filter(c => c.joinedAgo <= 30).length;
       const returning = customers.filter(c => c.orders >= 2).length;
-      const ltv = customers.reduce((s, c) => s + c.spent, 0) / total;
+      const ltv = total ? customers.reduce((s, c) => s + c.spent, 0) / total : 0;
       const cards = [
-        ['Total customers',    total,                                  'Everyone who has ordered'],
-        ['New this month',     fresh,                                  'Joined in the last 30 days'],
-        ['Returning rate',     `${Math.round((returning / total) * 100)}%`, 'Placed 2 or more orders'],
-        ['Avg. lifetime value', money(ltv),                            'Total spend per customer'],
+        ['Total customers',     total,                                           'Everyone who has ordered'],
+        ['New this month',      fresh,                                           'Joined in the last 30 days'],
+        ['Returning rate',      `${total ? Math.round((returning / total) * 100) : 0}%`, 'Placed 2 or more orders'],
+        ['Avg. lifetime value', money(ltv),                                      'Total spend per customer'],
       ];
       document.getElementById('summary').innerHTML = cards.map(([label, val, note]) => `
         <div class="rounded-xl border border-neutral-200 bg-white p-5">
@@ -282,10 +264,10 @@
       document.getElementById('body').innerHTML = pageRows.map(c => {
         const seg = segmentOf(c);
         return `
-        <tr data-id="${c.id}" class="cursor-pointer hover:bg-neutral-50">
+        <tr data-id="${esc(c.id)}" class="cursor-pointer hover:bg-neutral-50">
           <td class="px-6 py-3.5">
             <div class="flex items-center gap-3">
-              <div class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-neutral-100 text-xs font-semibold text-neutral-700">${initials(c.name)}</div>
+              <div class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-neutral-100 text-xs font-semibold text-neutral-700">${esc(initials(c.name))}</div>
               <div class="min-w-0">
                 <p class="truncate font-medium">${esc(c.name)}</p>
                 <p class="truncate text-xs text-neutral-500">${esc(c.email)}</p>
@@ -332,7 +314,7 @@
       state.page = +b.dataset.page; render();
     });
     document.getElementById('body').addEventListener('click', e => {
-      const row = e.target.closest('tr[data-id]'); if (row) openDrawer(+row.dataset.id);
+      const row = e.target.closest('tr[data-id]'); if (row) openDrawer(row.dataset.id);
     });
 
     document.getElementById('export-btn').addEventListener('click', () => {
@@ -354,10 +336,11 @@
 
     function drawerHTML(c) {
       const seg = segmentOf(c);
+      const avg = c.orders ? c.spent / c.orders : 0;
       return `
       <div class="flex items-start justify-between border-b border-neutral-200 p-6">
         <div class="flex items-center gap-4">
-          <div class="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-black text-lg font-semibold text-white">${initials(c.name)}</div>
+          <div class="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-black text-lg font-semibold text-white">${esc(initials(c.name))}</div>
           <div>
             <h2 class="text-xl font-semibold leading-tight tracking-tight">${esc(c.name)}</h2>
             <p class="text-sm text-neutral-500">${esc(c.email)}</p>
@@ -373,13 +356,13 @@
         <div class="grid grid-cols-3 divide-x divide-neutral-200 rounded-lg border border-neutral-200 text-center">
           <div class="p-3"><p class="tabular text-lg font-semibold">${c.orders}</p><p class="text-xs text-neutral-500">Orders</p></div>
           <div class="p-3"><p class="tabular text-lg font-semibold">${money(c.spent)}</p><p class="text-xs text-neutral-500">Total spent</p></div>
-          <div class="p-3"><p class="tabular text-lg font-semibold">${money(c.spent / c.orders)}</p><p class="text-xs text-neutral-500">Avg. order</p></div>
+          <div class="p-3"><p class="tabular text-lg font-semibold">${money(avg)}</p><p class="text-xs text-neutral-500">Avg. order</p></div>
         </div>
 
         <section>
           <h3 class="text-sm font-semibold">Contact</h3>
           <dl class="mt-3 space-y-2 text-sm">
-            <div class="flex justify-between gap-4"><dt class="text-neutral-500">Phone</dt><dd class="tabular">${c.phone}</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-neutral-500">Phone</dt><dd class="tabular">${esc(c.phone)}</dd></div>
             <div class="flex justify-between gap-4"><dt class="text-neutral-500">Location</dt><dd>${esc(c.city)}</dd></div>
             <div class="flex justify-between gap-4"><dt class="text-neutral-500">Customer since</dt><dd>${fmtDate(c.joined)}</dd></div>
           </dl>
@@ -391,11 +374,11 @@
             ${c.recent.map(o => `
               <li class="flex items-center justify-between gap-3 py-3 text-sm">
                 <div>
-                  <p class="font-medium">#${o.id}</p>
+                  <p class="font-medium">#${esc(o.id)}</p>
                   <p class="text-xs text-neutral-500">${fmtDate(o.date)}</p>
                 </div>
                 <div class="flex items-center gap-3">
-                  <span class="rounded-full px-2 py-0.5 text-xs font-medium ${orderStatusStyle[o.status]}">${o.status}</span>
+                  <span class="rounded-full px-2 py-0.5 text-xs font-medium ${statusClass(o.status)}">${esc(o.status)}</span>
                   <span class="tabular w-16 text-right font-medium">${money2(o.total)}</span>
                 </div>
               </li>`).join('')}

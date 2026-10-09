@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProductController;
@@ -10,6 +11,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\DashboardController;
 
 /*
 | 1. PUBLIC PAGES
@@ -18,9 +21,9 @@ Route::get('/', function () {
     return auth()->check() ? redirect('/home') : redirect()->route('login');
 });
 
-Route::get('/home', function () { return view('index'); });
-Route::get('/about', function () { return view('about'); });
-Route::get('/contact', function () { return view('contact'); });
+Route::get('/home', function () { return view('index'); })->name('home');
+Route::get('/about', function () { return view('about'); })->name('about');
+Route::get('/contact', function () { return view('contact'); })->name('contact');
 
 /*
 | 2. AUTH (guests only)
@@ -49,13 +52,22 @@ Route::post('/logout', [AuthController::class, 'logout'])
 */
 Route::middleware(['auth', 'admin'])->group(function () {
 
-    // Static admin pages
-    Route::get('/admin-dashboard', function () { return view('Admin.dashboard'); });
-    Route::get('/admin-orders', function () { return view('Admin.orders'); });
-    Route::get('/admin-inventory', [InventoryController::class, 'index']);
+    // Dashboard
+    Route::get('/admin-dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    // Orders (PATCH uses {id}, the controller looks the order up by UUID itself)
+    Route::get('/admin-orders', [OrderController::class, 'adminIndex'])->name('admin.orders');
+    Route::patch('/admin-orders/{id}/status', [OrderController::class, 'adminUpdateStatus'])
+    ->whereUuid('id')
+    ->name('admin.orders.status');
+
+    // Inventory
+    Route::get('/admin-inventory', [InventoryController::class, 'index'])->name('admin.inventory');
     Route::patch('/admin-inventory/{product}/variants', [InventoryController::class, 'updateVariants'])
         ->name('admin.inventory.variants');
-    Route::get('/admin-customers', function () { return view('Admin.customers'); });
+
+    // Customers
+    Route::get('/admin-customers', [UserController::class, 'customers'])->name('admin.customers');
 
     // Products CRUD -> /admin/products, /admin/products/create, /admin/products/{id}/edit ...
     Route::prefix('admin')->group(function () {
@@ -103,7 +115,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders/{order}/pay', [PaymentController::class, 'start'])->name('payment.start');
 
     // User pages
-    Route::get('/user-dashboard', function () { return view('User.Dashboard'); });
+    Route::get('/user-dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/user-order', fn () => redirect()->route('orders.index'));
-    Route::get('/user-wishlist', function () { return view('User.Wishlist'); });
+    Route::get('/user-wishlist', function () { return view('User.Wishlist'); })->name('user.wishlist');
 });

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
   <title>Orders · thewesternfashion admin</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -33,10 +34,8 @@
 
 <body data-page="orders" class="bg-neutral-50 font-sans text-black antialiased">
 
-    @include('admin.sidebar')
+  @include('Admin.sidebar')
 
-  <!-- Sidebar is injected here from sidebar.html -->
-  <div id="sidebar-slot"></div>
   <div id="overlay" class="fixed inset-0 z-30 hidden bg-black/40 lg:hidden"></div>
 
   <div class="lg:pl-64">
@@ -73,10 +72,6 @@
           <button id="export-btn" class="inline-flex items-center gap-2 rounded-lg border border-neutral-200 bg-white px-3.5 py-2 text-sm font-medium hover:border-black">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
             Export CSV
-          </button>
-          <button class="inline-flex items-center gap-2 rounded-lg bg-black px-3.5 py-2 text-sm font-medium text-white hover:bg-neutral-800">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            Create order
           </button>
         </div>
       </div>
@@ -159,64 +154,37 @@
 
   <script>
     /* ---------------------------------------------------------------
-       1. Sidebar (needs a local server, see note in dashboard.html)
+       1. Sidebar (partial is included via Blade, just wire it up)
     ---------------------------------------------------------------- */
-    const sidebarSlot = document.getElementById('sidebar-slot');
     const overlay = document.getElementById('overlay');
 
+    function initSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      if (!sidebar) return;
+      const page = document.body.dataset.page;
+      const active = sidebar.querySelector(`[data-nav="${page}"]`);
+      if (active) { active.classList.add('is-active'); active.setAttribute('aria-current', 'page'); }
+
+      const open  = () => { sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden'); };
+      const close = () => { sidebar.classList.add('-translate-x-full');    overlay.classList.add('hidden'); };
+
+      document.getElementById('menu-btn').addEventListener('click', open);
+      const closeBtn = document.getElementById('sidebar-close');
+      if (closeBtn) closeBtn.addEventListener('click', close);
+      overlay.addEventListener('click', close);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    }
+    initSidebar();
 
     /* ---------------------------------------------------------------
-       2. Placeholder data (replace with your API)
+       2. Data from OrderController@adminIndex
     ---------------------------------------------------------------- */
     const money  = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
     const money0 = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
-    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const fmtDate = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
-    const catalog = [
-      ['Suede Fringe Jacket', 129], ['Ranch Wash Jeans', 74], ['Leather Western Boots', 168],
-      ['Straw Cowboy Hat', 46], ['Concho Leather Belt', 38], ['Turquoise Bolo Tie', 32],
-      ['Rancher Denim Shirt', 58], ['Bandana Print Scarf', 18],
-    ];
-    const people = [
-      ['Hamza Sheikh', 'Karachi'], ['Emily Carter', 'Austin, TX'], ['Sana Malik', 'Lahore'], ['Jake Morrison', 'Denver, CO'],
-      ['Noor Fatima', 'Islamabad'], ['Daniel Brooks', 'Dallas, TX'], ['Areeba Khan', 'Karachi'], ['Luke Hendricks', 'Tulsa, OK'],
-      ['Maya Thompson', 'Nashville, TN'], ['Bilal Ahmed', 'Faisalabad'], ['Chloe Adams', 'Phoenix, AZ'], ['Zainab Qureshi', 'Lahore'],
-    ];
-    const methods = ['Visa ending 4242', 'Mastercard ending 8890', 'Cash on delivery', 'PayPal'];
-
-    let seed = 11;
-    const rand = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
-    const pick = arr => arr[Math.floor(rand() * arr.length)];
-
-    const today = new Date(2026, 8, 21);
-    const orders = Array.from({ length: 34 }, (_, i) => {
-      const num = 2841 - i;
-      const [name, city] = pick(people);
-      const items = Array.from({ length: 1 + Math.floor(rand() * 3) }, () => {
-        const [title, price] = pick(catalog);
-        return { title, price, qty: 1 + Math.floor(rand() * 2) };
-      });
-      const subtotal = items.reduce((s, it) => s + it.price * it.qty, 0);
-      const shipping = subtotal >= 100 ? 0 : 8;
-      const date = new Date(today); date.setDate(today.getDate() - Math.floor(i / 2));
-
-      let status, payment;
-      if (i < 5)       status = rand() < 0.8 ? 'Pending' : 'Shipped';
-      else if (i < 11) status = rand() < 0.7 ? 'Shipped' : 'Pending';
-      else             status = rand() < 0.1 ? 'Cancelled' : 'Delivered';
-
-      const method = pick(methods);
-      if (status === 'Cancelled') payment = rand() < 0.6 ? 'Refunded' : 'Unpaid';
-      else if (status === 'Pending') payment = method === 'Cash on delivery' || rand() < 0.25 ? 'Unpaid' : 'Paid';
-      else payment = 'Paid';
-
-      return {
-        num, id: `TWF-${num}`, customer: name, city,
-        email: name.toLowerCase().replace(/[^a-z]+/g, '.') + '@example.com',
-        date, items, subtotal, shipping, total: subtotal + shipping, status, payment, method,
-      };
-    });
+    const orders = @json($orders).map(o => ({ ...o, date: new Date(o.date) }));
 
     /* ---------------------------------------------------------------
        3. State + helpers
@@ -230,11 +198,13 @@
       Pending:   'bg-neutral-100 text-neutral-700',
       Cancelled: 'border border-neutral-200 text-neutral-400',
     };
+    const badgeFor = s => statusBadge[s] ?? statusBadge.Pending;
     const payDot = {
       Paid:     '<span class="h-1.5 w-1.5 rounded-full bg-black"></span>',
       Unpaid:   '<span class="h-1.5 w-1.5 rounded-full border border-neutral-400"></span>',
       Refunded: '<span class="h-1.5 w-1.5 rounded-full bg-neutral-300"></span>',
     };
+    const dotFor = p => payDot[p] ?? payDot.Unpaid;
 
     function getFiltered() {
       const q = state.q.trim().toLowerCase();
@@ -243,8 +213,8 @@
         (state.payment === 'All' || o.payment === state.payment) &&
         (!q || o.id.toLowerCase().includes(q) || o.customer.toLowerCase().includes(q) || o.email.includes(q)));
       const sorters = {
-        new:  (a, b) => b.num - a.num,
-        old:  (a, b) => a.num - b.num,
+        new:  (a, b) => b.date - a.date,
+        old:  (a, b) => a.date - b.date,
         high: (a, b) => b.total - a.total,
         low:  (a, b) => a.total - b.total,
       };
@@ -256,14 +226,40 @@
       t.textContent = msg;
       t.classList.remove('opacity-0', 'translate-y-2');
       clearTimeout(toast.timer);
-      toast.timer = setTimeout(() => t.classList.add('opacity-0', 'translate-y-2'), 2400);
+      toast.timer = setTimeout(() => t.classList.add('opacity-0', 'translate-y-2'), 2800);
     }
 
-    function setStatus(order, status) {
-      order.status = status;
-      if (status === 'Cancelled' && order.payment === 'Paid') order.payment = 'Refunded';
-      if (status === 'Delivered' && order.method === 'Cash on delivery') order.payment = 'Paid';
+    /* Saves the status on the server. Returns { ok, message } */
+    async function saveStatus(order, status) {
+  try {
+    const res = await fetch(`/admin-orders/${encodeURIComponent(order.key)}/status`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+      },
+      body: JSON.stringify({ status: status.toLowerCase() }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const reason =
+        res.status === 419 ? 'Session expired. Refresh the page.' :
+        res.status === 404 ? 'Route or order not found (404).' :
+        res.status === 405 ? 'PATCH route is missing (405).' :
+        res.status === 403 ? 'Not allowed (403).' :
+        data.message || `Server error (${res.status}).`;
+      console.error('Status update failed', res.status, data);
+      return { ok: false, message: reason };
     }
+    order.status = data.status || status;
+    if (order.status === 'Cancelled' && order.payment === 'Paid') order.payment = 'Refunded';
+    return { ok: true };
+  } catch (e) {
+    console.error(e);
+    return { ok: false, message: 'Network error. Try again.' };
+  }
+}
 
     /* ---------------------------------------------------------------
        4. Render: summary, tabs, table, pagination
@@ -271,10 +267,10 @@
     function renderSummary() {
       const live = orders.filter(o => o.status !== 'Cancelled');
       const cards = [
-        ['Total orders',         orders.length,                              'All time in this list'],
-        ['To fulfil',            orders.filter(o => o.status === 'Pending').length, 'Waiting to be shipped'],
-        ['In transit',           orders.filter(o => o.status === 'Shipped').length, 'On the way to customers'],
-        ['Revenue',              money0(live.reduce((s, o) => s + o.total, 0)),     'Excludes cancelled orders'],
+        ['Total orders', orders.length,                                              'All time'],
+        ['To fulfil',    orders.filter(o => o.status === 'Pending').length,          'Waiting to be shipped'],
+        ['In transit',   orders.filter(o => o.status === 'Shipped').length,          'On the way to customers'],
+        ['Revenue',      money0(live.reduce((s, o) => s + o.total, 0)),              'Excludes cancelled orders'],
       ];
       document.getElementById('summary').innerHTML = cards.map(([label, value, note]) => `
         <div class="rounded-xl border border-neutral-200 bg-white p-5">
@@ -290,7 +286,7 @@
         const count = t === 'All' ? orders.length : orders.filter(o => o.status === t).length;
         const on = state.status === t;
         return `<button data-status="${t}" role="tab" aria-selected="${on}" class="rounded-lg px-3 py-1.5 ${on ? 'bg-black text-white' : 'text-neutral-600 hover:bg-neutral-100 hover:text-black'}">
-          ${t} <span class="tabular ml-1 text-xs ${on ? 'text-neutral-400' : 'text-neutral-400'}">${count}</span></button>`;
+          ${t} <span class="tabular ml-1 text-xs text-neutral-400">${count}</span></button>`;
       }).join('');
     }
 
@@ -307,34 +303,31 @@
       document.getElementById('orders-body').innerHTML = pageRows.map(o => {
         const count = o.items.reduce((s, it) => s + it.qty, 0);
         return `
-        <tr data-id="${o.id}" class="cursor-pointer hover:bg-neutral-50">
-          <td class="w-12 py-3.5 pl-6"><input type="checkbox" data-check="${o.id}" class="h-4 w-4 rounded border-neutral-300 accent-black" aria-label="Select ${o.id}" ${state.selected.has(o.id) ? 'checked' : ''} /></td>
-          <td class="px-3 py-3.5 font-medium">#${o.id}</td>
+        <tr data-key="${esc(o.key)}" class="cursor-pointer hover:bg-neutral-50">
+          <td class="w-12 py-3.5 pl-6"><input type="checkbox" data-check="${esc(o.key)}" class="h-4 w-4 rounded border-neutral-300 accent-black" aria-label="Select ${esc(o.id)}" ${state.selected.has(o.key) ? 'checked' : ''} /></td>
+          <td class="px-3 py-3.5 font-medium">#${esc(o.id)}</td>
           <td class="px-3 py-3.5">
             <p class="font-medium">${esc(o.customer)}</p>
             <p class="text-xs text-neutral-500">${esc(o.email)}</p>
           </td>
           <td class="px-3 py-3.5 text-neutral-500">${fmtDate(o.date)}</td>
           <td class="px-3 py-3.5 text-neutral-500">${count} ${count === 1 ? 'item' : 'items'}</td>
-          <td class="px-3 py-3.5"><span class="inline-flex items-center gap-2 text-neutral-700">${payDot[o.payment]}${o.payment}</span></td>
-          <td class="px-3 py-3.5"><span class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${statusBadge[o.status]}">${o.status}</span></td>
+          <td class="px-3 py-3.5"><span class="inline-flex items-center gap-2 text-neutral-700">${dotFor(o.payment)}${esc(o.payment)}</span></td>
+          <td class="px-3 py-3.5"><span class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${badgeFor(o.status)}">${esc(o.status)}</span></td>
           <td class="tabular px-6 py-3.5 text-right font-medium">${money(o.total)}</td>
         </tr>`;
       }).join('');
 
       document.getElementById('empty').classList.toggle('hidden', rows.length > 0);
 
-      // Select-all state
-      const allChecked = pageRows.length > 0 && pageRows.every(o => state.selected.has(o.id));
+      const allChecked = pageRows.length > 0 && pageRows.every(o => state.selected.has(o.key));
       document.getElementById('check-all').checked = allChecked;
 
-      // Bulk bar
       const bulk = document.getElementById('bulk');
       bulk.classList.toggle('hidden', state.selected.size === 0);
       bulk.classList.toggle('flex', state.selected.size > 0);
       document.getElementById('bulk-count').textContent = state.selected.size;
 
-      // Pagination
       document.getElementById('page-info').textContent = rows.length
         ? `Showing ${start + 1}–${Math.min(start + PER_PAGE, rows.length)} of ${rows.length} orders`
         : '0 orders';
@@ -343,7 +336,7 @@
       let pager = btn('Prev', state.page - 1, state.page === 1, false);
       for (let p = 1; p <= pages; p++) pager += btn(p, p, false, p === state.page);
       pager += btn('Next', state.page + 1, state.page === pages, false);
-      document.getElementById('pager').innerHTML = rows.length ? pager : '';
+      document.getElementById('pager').innerHTML = rows.length && pages > 1 ? pager : '';
     }
 
     /* ---------------------------------------------------------------
@@ -373,29 +366,31 @@
         check.checked ? state.selected.add(check.dataset.check) : state.selected.delete(check.dataset.check);
         render(); return;
       }
-      const row = e.target.closest('tr[data-id]');
-      if (row) openDrawer(row.dataset.id);
+      const row = e.target.closest('tr[data-key]');
+      if (row) openDrawer(row.dataset.key);
     });
 
     document.getElementById('check-all').addEventListener('change', e => {
       const rows = getFiltered().slice((state.page - 1) * PER_PAGE, state.page * PER_PAGE);
-      rows.forEach(o => e.target.checked ? state.selected.add(o.id) : state.selected.delete(o.id));
+      rows.forEach(o => e.target.checked ? state.selected.add(o.key) : state.selected.delete(o.key));
       render();
     });
 
+    async function bulkApply(fromStatuses, toStatus, doneWord, blockedMsg) {
+      const targets = orders.filter(o => state.selected.has(o.key) && fromStatuses.includes(o.status));
+      if (!targets.length) { toast(blockedMsg); return; }
+      const results = await Promise.all(targets.map(o => saveStatus(o, toStatus)));
+      const n = results.filter(r => r.ok).length;
+      const failed = results.length - n;
+      state.selected.clear(); render();
+      toast(`${n} ${n === 1 ? 'order' : 'orders'} ${doneWord}` + (failed ? `, ${failed} failed` : ''));
+    }
+
     document.getElementById('bulk-clear').addEventListener('click', () => { state.selected.clear(); render(); });
-    document.getElementById('bulk-ship').addEventListener('click', () => {
-      let n = 0;
-      orders.forEach(o => { if (state.selected.has(o.id) && o.status === 'Pending') { setStatus(o, 'Shipped'); n++; } });
-      state.selected.clear(); render();
-      toast(n ? `${n} ${n === 1 ? 'order' : 'orders'} marked as shipped` : 'Only pending orders can be marked as shipped');
-    });
-    document.getElementById('bulk-cancel').addEventListener('click', () => {
-      let n = 0;
-      orders.forEach(o => { if (state.selected.has(o.id) && (o.status === 'Pending' || o.status === 'Shipped')) { setStatus(o, 'Cancelled'); n++; } });
-      state.selected.clear(); render();
-      toast(n ? `${n} ${n === 1 ? 'order' : 'orders'} cancelled` : 'Delivered orders can\'t be cancelled');
-    });
+    document.getElementById('bulk-ship').addEventListener('click', () =>
+      bulkApply(['Pending'], 'Shipped', 'marked as shipped', 'Only pending orders can be marked as shipped'));
+    document.getElementById('bulk-cancel').addEventListener('click', () =>
+      bulkApply(['Pending', 'Shipped'], 'Cancelled', 'cancelled', 'Delivered orders can\'t be cancelled'));
 
     /* Export the currently filtered list as CSV */
     document.getElementById('export-btn').addEventListener('click', () => {
@@ -415,7 +410,7 @@
     ---------------------------------------------------------------- */
     const drawer = document.getElementById('drawer');
     const drawerOverlay = document.getElementById('drawer-overlay');
-    let openId = null;
+    let openKey = null;
 
     function timeline(o) {
       const steps = [
@@ -434,12 +429,13 @@
     }
 
     function drawerHTML(o) {
+      const locked = o.status === 'Cancelled';
       return `
       <div class="flex items-start justify-between border-b border-neutral-200 p-6">
         <div>
           <p class="text-xs text-neutral-500">${fmtDate(o.date)}</p>
-          <h2 class="mt-0.5 text-xl font-semibold tracking-tight">#${o.id}</h2>
-          <span class="mt-2 inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${statusBadge[o.status]}">${o.status}</span>
+          <h2 class="mt-0.5 text-xl font-semibold tracking-tight">#${esc(o.id)}</h2>
+          <span class="mt-2 inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${badgeFor(o.status)}">${esc(o.status)}</span>
         </div>
         <button id="drawer-close" class="rounded-md p-1.5 text-neutral-500 hover:bg-neutral-100 hover:text-black" aria-label="Close order details">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18"/></svg>
@@ -479,7 +475,7 @@
           </div>
           <div class="col-span-2">
             <h3 class="font-semibold">Payment</h3>
-            <p class="mt-2 flex items-center gap-2">${payDot[o.payment]}${o.payment} <span class="text-neutral-400">·</span> <span class="text-neutral-500">${o.method}</span></p>
+            <p class="mt-2 flex items-center gap-2">${dotFor(o.payment)}${esc(o.payment)} <span class="text-neutral-400">·</span> <span class="text-neutral-500">${esc(o.method)}</span></p>
           </div>
         </section>
 
@@ -492,17 +488,18 @@
       <div class="border-t border-neutral-200 p-6">
         <label for="status-select" class="text-sm font-medium">Order status</label>
         <div class="mt-2 flex gap-2">
-          <select id="status-select" class="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm focus:border-black focus:outline-none">
+          <select id="status-select" ${locked ? 'disabled' : ''} class="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm focus:border-black focus:outline-none disabled:bg-neutral-50 disabled:text-neutral-400">
             ${['Pending', 'Shipped', 'Delivered', 'Cancelled'].map(s => `<option ${s === o.status ? 'selected' : ''}>${s}</option>`).join('')}
           </select>
-          <button id="status-save" class="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800">Save changes</button>
+          <button id="status-save" ${locked ? 'disabled' : ''} class="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-30">Save changes</button>
         </div>
+        ${locked ? '<p class="mt-2 text-xs text-neutral-500">Cancelled orders can\'t be changed.</p>' : ''}
       </div>`;
     }
 
-    function openDrawer(id) {
-      const o = orders.find(x => x.id === id); if (!o) return;
-      openId = id;
+    function openDrawer(key) {
+      const o = orders.find(x => x.key === key); if (!o) return;
+      openKey = key;
       drawer.innerHTML = drawerHTML(o);
       drawer.setAttribute('aria-hidden', 'false');
       drawerOverlay.classList.remove('hidden');
@@ -510,24 +507,26 @@
       document.getElementById('drawer-close').focus();
     }
     function closeDrawer() {
-      openId = null;
+      openKey = null;
       drawer.classList.add('translate-x-full');
       drawer.setAttribute('aria-hidden', 'true');
       drawerOverlay.classList.add('hidden');
     }
 
-    drawer.addEventListener('click', e => {
-      if (e.target.closest('#drawer-close')) closeDrawer();
-      if (e.target.closest('#status-save')) {
-        const o = orders.find(x => x.id === openId); if (!o) return;
-        setStatus(o, document.getElementById('status-select').value);
+    drawer.addEventListener('click', async e => {
+      if (e.target.closest('#drawer-close')) return closeDrawer();
+      const save = e.target.closest('#status-save');
+      if (save) {
+        const o = orders.find(x => x.key === openKey); if (!o) return;
+        save.disabled = true;
+        const r = await saveStatus(o, document.getElementById('status-select').value);
         drawer.innerHTML = drawerHTML(o);
         render();
-        toast(`Order #${o.id} updated`);
+        toast(r.ok ? `Order #${o.id} updated` : r.message);
       }
     });
     drawerOverlay.addEventListener('click', closeDrawer);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && openId) closeDrawer(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && openKey) closeDrawer(); });
 
     render();
   </script>
