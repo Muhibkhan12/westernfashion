@@ -47,11 +47,36 @@
   .w { opacity:.14; transition:opacity .35s ease; } .w.lit { opacity:1; }
   .card-img { transition:transform 1.2s cubic-bezier(.2,.7,.2,1); } .group:hover .card-img { transform:scale(1.06); }
   .mag { transition:transform .35s cubic-bezier(.2,.7,.2,1), background .3s, color .3s; }
-  .tab { position:relative; padding-bottom:6px; color:rgba(28,26,22,.45); transition:color .3s; } .tab.active, .tab:hover { color:#1C1A16; }
+  .tab { position:relative; flex:none; padding:8px 0; color:rgba(28,26,22,.45); transition:color .3s; } .tab.active, .tab:hover { color:#1C1A16; }
   #tabBar { position:absolute; bottom:0; height:1px; background:#1C1A16; transition:left .45s cubic-bezier(.77,0,.18,1), width .45s cubic-bezier(.77,0,.18,1); }
   #grid { transition:opacity .25s ease, transform .25s ease; } #grid.out { opacity:0; transform:translateY(10px); }
   #rv { transition:opacity .45s ease, transform .45s ease; } #rv.out { opacity:0; transform:translateY(12px); }
   .hs-track::-webkit-scrollbar { display:none; }
+
+  /* ---- responsive ---- */
+  html { -webkit-text-size-adjust:100%; }
+  .t-hero  { font-size:clamp(2.5rem,9vw,6.5rem); }
+  .t-h2    { font-size:clamp(2rem,6vw,3.75rem); }
+  .t-h3    { font-size:clamp(1.75rem,4.4vw,3rem); }
+  .t-words { font-size:clamp(1.65rem,5vw,3.75rem); }
+  .t-news  { font-size:clamp(2.1rem,7vw,4.5rem); }
+  .t-promo { font-size:clamp(2.1rem,6.5vw,4.5rem); }
+  .t-quote { font-size:clamp(1.3rem,3.4vw,2.25rem); }
+  .hero-h  { height:88vh; height:88svh; min-height:480px; }
+  .grow-h  { height:70vh; height:70svh; min-height:380px; }
+  .hs-stick { height:100vh; height:100svh; }
+  .hs-card { flex:none; width:min(68vw,420px); }
+  @media (min-width:640px) { .hs-card { width:min(40vw,420px); } }
+  @media (min-width:768px) { .hs-card { width:min(26vw,420px); } }
+  @supports (height:100svh) {
+    .hs-card { width:max(150px,min(68vw,calc((100svh - 300px) * .75),420px)); }
+    @media (min-width:640px) { .hs-card { width:max(150px,min(40vw,calc((100svh - 300px) * .75),420px)); } }
+    @media (min-width:768px) { .hs-card { width:max(150px,min(26vw,calc((100svh - 300px) * .75),420px)); } }
+  }
+  #filters { overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; } #filters::-webkit-scrollbar { display:none; }
+  @media (min-width:768px) { #filters { overflow:visible; flex-wrap:wrap; } }
+  input, textarea, select { font-size:16px; }
+  @media (min-width:640px) { input { font-size:13px; } }
 
   @media (prefers-reduced-motion:reduce) {
     [data-r], .line > span, .fade-in { opacity:1; transform:none; animation:none; transition:none; } .mask { clip-path:none; } .rule { transform:none; }
@@ -64,18 +89,18 @@
 @include('partials.header')
 
 <!-- Hero -->
-<section id="hero" class="relative h-[88vh] min-h-[560px] overflow-hidden bg-ink">
+<section id="hero" class="hero-h relative overflow-hidden bg-ink">
   <div class="absolute inset-0 hero-zoom">
     <img data-p="0.18" class="par" src="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1800&auto=format&fit=crop" alt="Model wearing a quilted field jacket">
   </div>
   <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-black/35"></div>
-  <div id="heroC" class="relative z-10 h-full max-w-[1440px] mx-auto px-6 md:px-10 flex flex-col justify-end pb-16 md:pb-24 text-paper">
+  <div id="heroC" class="relative z-10 h-full max-w-[1440px] mx-auto px-6 md:px-10 flex flex-col justify-end pb-12 sm:pb-16 md:pb-24 text-paper">
     <p class="fade-in text-[11px] font-mono tracking-tag uppercase text-paper/70 mb-6" style="--d:.2s">Capsule № 04 — AW '23</p>
-    <h1 class="font-display text-5xl sm:text-6xl md:text-[6.5rem] leading-[1] mb-10 max-w-4xl">
+    <h1 class="t-hero font-display leading-[1] mb-8 md:mb-10 max-w-4xl">
       <span class="line" style="--i:0"><span>A Jacket Capsule</span></span>
       <span class="line" style="--i:1"><span>by <em class="italic">Michael Brooks</em></span></span>
     </h1>
-    <div class="fade-in flex flex-wrap items-center gap-8" style="--d:1.1s">
+    <div class="fade-in flex flex-wrap items-center gap-x-8 gap-y-5" style="--d:1.1s">
       <a href="{{ route('shop.products') }}" class="mag group inline-flex items-center gap-3 bg-paper text-ink text-[11px] font-mono uppercase tracking-tag px-8 py-4 hover:bg-transparent hover:text-paper border border-paper">
         Explore Collection <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
       </a>
@@ -96,24 +121,24 @@
 </section>
 
 <!-- Statement: words fill on scroll -->
-<section class="max-w-[1100px] mx-auto px-6 md:px-10 py-28 md:py-44">
+<section class="max-w-[1100px] mx-auto px-6 md:px-10 py-20 md:py-44">
   <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-8" data-r>The idea</p>
-  <p id="words" class="font-display text-3xl sm:text-4xl md:text-6xl leading-[1.15]">Under-the-radar jackets, consciously made for comfort, style, and elegance. Cut once, worn for years.</p>
+  <p id="words" class="t-words font-display leading-[1.15]">Under-the-radar jackets, consciously made for comfort, style, and elegance. Cut once, worn for years.</p>
 </section>
 
 <!-- New jackets: pinned horizontal scroll -->
 <section id="new">
   <div id="hs" class="relative">
-    <div class="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-      <div class="max-w-[1440px] w-full mx-auto px-6 md:px-10 flex items-end justify-between mb-8 md:mb-10">
+    <div id="hsStick" class="hs-stick sticky top-0 flex flex-col justify-center overflow-hidden">
+      <div class="max-w-[1440px] w-full mx-auto px-6 md:px-10 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 mb-6 md:mb-10">
         <div data-r>
           <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-3">Just Landed</p>
-          <h2 class="font-display text-4xl md:text-6xl">New Jackets</h2>
+          <h2 class="t-h2 font-display">New Jackets</h2>
         </div>
         <a href="{{ route('shop.products') }}" class="text-[11px] font-mono uppercase tracking-tag ul pb-0.5">Shop New In</a>
       </div>
       <div id="hsTrack" class="flex gap-5 md:gap-8 px-6 md:px-10 will-change-transform w-max"></div>
-      <div class="max-w-[1440px] w-full mx-auto px-6 md:px-10 mt-8 md:mt-10">
+      <div class="max-w-[1440px] w-full mx-auto px-6 md:px-10 mt-6 md:mt-10">
         <div class="h-px bg-ink/10"><div id="hsLine" class="h-px bg-ink origin-left" style="transform:scaleX(0)"></div></div>
       </div>
     </div>
@@ -121,23 +146,23 @@
 </section>
 
 <!-- Promo: image grows full-bleed on scroll -->
-<section class="my-24 md:my-40">
-  <div id="grow" class="relative h-[70vh] min-h-[420px] overflow-hidden" style="clip-path:inset(10% 10% 10% 10%)">
+<section class="my-16 md:my-40">
+  <div id="grow" class="grow-h relative overflow-hidden" style="clip-path:inset(10% 10% 10% 10%)">
     <img data-p="0.14" class="par" src="https://images.unsplash.com/photo-1548624149-f9061a9a2151?q=80&w=1800&auto=format&fit=crop" alt="Model wearing an outerwear jacket">
     <div class="absolute inset-0 bg-black/40"></div>
     <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 text-paper">
       <p class="text-[11px] font-mono tracking-tag uppercase text-paper/70 mb-5" data-r>Outerwear Edit</p>
-      <h3 class="font-display text-4xl md:text-7xl mb-9 max-w-2xl leading-[1.05]" data-r style="--d:.1s">Extra 20% off all jackets</h3>
+      <h3 class="t-promo font-display mb-8 md:mb-9 max-w-2xl leading-[1.05]" data-r style="--d:.1s">Extra 20% off all jackets</h3>
       <a href="{{ route('shop.products') }}" class="mag bg-paper text-ink text-[11px] font-mono uppercase tracking-tag px-8 py-4 border border-paper hover:bg-transparent hover:text-paper">Shop the Sale →</a>
     </div>
   </div>
 </section>
 
 <!-- Featured -->
-<section class="max-w-[1440px] mx-auto px-6 md:px-10 py-10 md:py-20 grid grid-cols-1 md:grid-cols-12 gap-14 md:gap-8 items-center">
-  <div class="md:col-span-5" data-r>
+<section class="max-w-[1440px] mx-auto px-6 md:px-10 py-10 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+  <div class="lg:col-span-5" data-r>
     <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Featured</p>
-    <h2 class="font-display text-3xl md:text-5xl leading-[1.1] mb-10 max-w-md">The cropped leather jacket.</h2>
+    <h2 class="t-h3 font-display leading-[1.1] mb-8 md:mb-10 max-w-md">The cropped leather jacket.</h2>
     <ul class="max-w-sm">
       <li class="rule" data-rule></li>
       <li><a href="{{ route('shop.products') }}" class="group flex items-center justify-between py-5 text-lg font-display-sm transition-all duration-300 hover:pl-3">Women's Jackets <span class="font-mono text-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">↗</span></a></li>
@@ -148,8 +173,8 @@
       <li class="rule" data-rule></li>
     </ul>
   </div>
-  <div class="md:col-span-6 md:col-start-7">
-    <div class="relative h-[480px] md:h-[640px] overflow-hidden bg-paperdeep mask">
+  <div class="lg:col-span-6 lg:col-start-7">
+    <div class="relative aspect-[4/5] w-full max-h-[760px] overflow-hidden bg-paperdeep mask">
       <img data-p="0.1" class="par" src="https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=900&auto=format&fit=crop" alt="Cropped leather jacket">
     </div>
     <div class="flex items-center justify-between pt-4" data-r>
@@ -160,26 +185,26 @@
 </section>
 
 <!-- Best sellers -->
-<section class="max-w-[1440px] mx-auto px-6 md:px-10 pt-24 pb-28">
+<section class="max-w-[1440px] mx-auto px-6 md:px-10 pt-16 md:pt-24 pb-20 md:pb-28">
   <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10" data-r>
     <div>
       <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Customer Favorites</p>
-      <h2 class="font-display text-4xl md:text-6xl">Best Selling Jackets</h2>
+      <h2 class="t-h2 font-display">Best Selling Jackets</h2>
     </div>
     <a href="{{ route('shop.products') }}" class="text-[11px] font-mono uppercase tracking-tag ul pb-0.5 self-start md:self-auto">View All</a>
   </div>
   <div id="filters" class="relative flex flex-wrap gap-x-8 gap-y-2 mb-12 border-b border-ink/10" data-r><span id="tabBar"></span></div>
-  <div id="grid" class="grid grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-12"></div>
+  <div id="grid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 sm:gap-x-5 gap-y-10 md:gap-y-12"></div>
 </section>
 
 <!-- Story -->
-<section class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-28 grid grid-cols-1 md:grid-cols-2 gap-14 md:gap-24">
-  <div class="md:sticky md:top-24 self-start relative h-[420px] md:h-[640px] overflow-hidden mask">
+<section class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
+  <div class="lg:sticky lg:top-24 self-start relative aspect-[4/5] lg:aspect-auto lg:h-[min(640px,80vh)] w-full max-h-[760px] overflow-hidden mask">
     <img data-p="0.12" class="par" src="https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=900&auto=format&fit=crop" alt="A shearling aviator jacket in the workshop">
   </div>
-  <div class="md:py-24" data-r>
+  <div class="lg:py-24" data-r>
     <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Our Story</p>
-    <h2 class="font-display text-3xl md:text-5xl leading-[1.1] mb-8 max-w-md">Built on quiet craftsmanship, one small run at a time.</h2>
+    <h2 class="t-h3 font-display leading-[1.1] mb-8 max-w-md">Built on quiet craftsmanship, one small run at a time.</h2>
     <p class="text-[14px] leading-relaxed text-ink/70 mb-4 max-w-md">The Western Fashion began in a single-room Portland workshop in 2016, where founder Michael Brooks set out to make jackets that lasted longer than a season. Every piece is still cut, sewn, and finished in small batches by the same close-knit team.</p>
     <p class="text-[14px] leading-relaxed text-ink/70 mb-12 max-w-md">We work with mills we've known for years, favor natural fibers over synthetics, and would rather make less and make it well.</p>
     <div class="rule" data-rule></div>
@@ -194,12 +219,12 @@
 </section>
 
 <!-- Reviews -->
-<section class="bg-paperdeep py-24 md:py-36">
+<section class="bg-paperdeep py-20 md:py-36">
   <div class="max-w-[960px] mx-auto px-6 md:px-10 text-center">
     <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-10" data-r>4.8 / 5 · 312 reviews</p>
-    <div id="rv" class="min-h-[300px] md:min-h-[260px]">
+    <div id="rv" class="min-h-[22rem] sm:min-h-[18rem] md:min-h-[16rem]">
       <p id="rvStars" class="mb-6 tracking-widest"></p>
-      <p id="rvText" class="font-display text-2xl md:text-4xl leading-[1.3] mb-8"></p>
+      <p id="rvText" class="t-quote font-display leading-[1.3] mb-8"></p>
       <p id="rvBy" class="text-[11px] font-mono uppercase tracking-tag text-ink/50"></p>
     </div>
     <div class="flex items-center justify-center gap-6 mt-8">
@@ -212,15 +237,15 @@
 
 <!-- Newsletter -->
 <section class="bg-ink text-paper">
-  <div class="max-w-[1440px] mx-auto px-6 md:px-10 py-24 md:py-32 text-center">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-10 py-20 md:py-32 text-center">
     <p class="text-[11px] font-mono tracking-tag uppercase text-paper/50 mb-6" data-r>Join the list</p>
-    <h2 class="split font-display text-4xl md:text-7xl mb-6" data-r-split>
+    <h2 class="split t-news font-display mb-6" data-r-split>
       <span class="line" style="--i:0"><span>10% off your</span></span>
       <span class="line" style="--i:1"><span><em class="italic">first jacket</em></span></span>
     </h2>
     <p class="text-[14px] text-paper/60 mb-10 max-w-md mx-auto" data-r>Early access to new arrivals, restocks, and the occasional workshop note from Michael.</p>
     <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="return false;" data-r>
-      <input type="email" required placeholder="Email address" class="flex-1 bg-transparent border-b border-paper/30 px-1 py-4 text-[13px] outline-none placeholder:text-paper/40 focus:border-paper transition">
+      <input type="email" required placeholder="Email address" class="flex-1 bg-transparent border-b border-paper/30 px-1 py-4 outline-none placeholder:text-paper/40 focus:border-paper transition">
       <button class="mag bg-paper text-ink text-[11px] font-mono uppercase tracking-tag px-8 py-4 border border-paper hover:bg-transparent hover:text-paper">Sign Up</button>
     </form>
   </div>
@@ -248,7 +273,7 @@
       </ul>
     </div>
   </div>
-  <p id="bigMark" class="font-display uppercase text-center leading-none whitespace-nowrap select-none text-ink/90" style="font-size:7.4vw; letter-spacing:.04em; will-change:transform">The Western Fashion</p>
+  <p id="bigMark" class="font-display uppercase text-center leading-none whitespace-nowrap select-none text-ink/90" style="letter-spacing:.04em; will-change:transform"><span class="inline-block">The Western Fashion</span></p>
   <div class="py-6 text-center text-[11px] font-mono text-ink/40 tracking-tag uppercase">© {{ date('Y') }} The Western Fashion. All rights reserved.</div>
 </footer>
 
@@ -294,7 +319,7 @@
         ${p.badge ? `<span class="absolute top-3 left-3 z-10 text-[10px] font-mono uppercase tracking-tag px-2.5 py-1 ${p.badge === 'Sale' ? 'bg-brick text-paper' : p.badge === 'New' ? 'bg-ink text-paper' : 'bg-white text-ink/70'}">${p.badge}</span>` : ''}
         <span class="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition duration-500 bg-ink text-paper text-[10px] font-mono uppercase tracking-tag text-center py-3">View jacket →</span>
       </div>
-      <div class="pt-3 flex items-start justify-between gap-3">
+      <div class="pt-3 flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
         <div>
           <p class="text-[14px] font-display-sm mb-1.5">${p.name}</p>
           <div class="flex items-center gap-1.5">${p.sw.map(c => `<span class="w-2.5 h-2.5 rounded-full border border-ink/10" style="background:${c}"></span>`).join('')}</div>
@@ -303,7 +328,7 @@
       </div>
     </a>`;
 
-  $('#hsTrack').innerHTML = fresh.map((p, i) => card(p, i, 'w-[68vw] sm:w-[40vw] md:w-[26vw] max-w-[420px] shrink-0')).join('');
+  $('#hsTrack').innerHTML = fresh.map((p, i) => card(p, i, 'hs-card')).join('');
 
   const filters = ["all","leather","denim","field","wool"], fEl = $('#filters'), bar = $('#tabBar');
   fEl.insertAdjacentHTML('beforeend', filters.map((f, i) => `<button data-f="${f}" class="tab ${i ? '' : 'active'} text-[11px] font-mono uppercase tracking-tag">${f}</button>`).join(''));
@@ -362,15 +387,26 @@
         hs = $('#hs'), hsT = $('#hsTrack'), hsL = $('#hsLine'), mark = $('#bigMark'),
         pars = [...document.querySelectorAll('[data-p]')];
   let dist = 0;
-  const measure = () => { dist = Math.max(0, hsT.scrollWidth - innerWidth); hs.style.height = (innerHeight + dist) + 'px'; moveBar(fEl.querySelector('.tab.active')); };
-  addEventListener('resize', measure); addEventListener('load', measure); measure();
+  const stick = $('#hsStick');
+  const fitMark = () => { mark.style.fontSize = '100px'; const w = mark.firstElementChild.getBoundingClientRect().width; mark.style.fontSize = (100 * mark.parentElement.clientWidth * .94 / w) + 'px'; };
+  const measure = () => {
+    dist = Math.max(0, hsT.scrollWidth - document.documentElement.clientWidth);
+    hs.style.height = (stick.offsetHeight + dist) + 'px';
+    moveBar(fEl.querySelector('.tab.active')); fitMark();
+  };
+  /* re-measure on width change only, so mobile address-bar show/hide doesn't cause jitter */
+  let lastW = innerWidth;
+  addEventListener('resize', () => { if (innerWidth !== lastW) { lastW = innerWidth; measure(); } });
+  addEventListener('load', measure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  measure();
 
   function update() {
     const y = scrollY, vh = innerHeight, max = document.documentElement.scrollHeight - vh;
 
     if (y < vh * 1.2) { const k = clamp(y / (vh * .6)); heroC.style.opacity = 1 - k; heroC.style.transform = `translate3d(0,${y * .25}px,0)`; }
 
-    const r = hs.getBoundingClientRect(), p = clamp(-r.top / Math.max(1, r.height - vh));
+    const r = hs.getBoundingClientRect(), p = clamp(-r.top / Math.max(1, r.height - stick.offsetHeight));
     hsT.style.transform = `translate3d(${-p * dist}px,0,0)`; hsL.style.transform = `scaleX(${p})`;
 
     const g = grow.getBoundingClientRect(), gp = clamp((vh - g.top) / (vh * .8)), ins = (1 - gp) * 10;
