@@ -5,21 +5,12 @@
 @php
   $cartCount = (int) app(\App\Services\CartService::class)->count();
   $links = [
-    ['Home',    url('/'),              request()->is('/')],
     ['Catalog', route('shop.products'), request()->routeIs('shop.*')],
+    ['Custom order', route('custom-order.create'), request()->routeIs('custom-order.*')],
     ['About',   url('/about'),          request()->is('about')],
     ['Contact', url('/contact'),        request()->is('contact')],
   ];
   $menuLinks = array_merge($links, [['Cart', route('cart.index'), request()->routeIs('cart.*')]]);
-
-  // Where the account icon should go, based on auth + role
-  if (auth()->check()) {
-      $dashboardUrl = auth()->user()->is_admin
-          ? route('admin.dashboard')
-          : route('user.dashboard');
-  } else {
-      $dashboardUrl = route('login');
-  }
 @endphp
 
 <style>
@@ -128,16 +119,7 @@
       <button class="dk sm:hidden inline-flex items-center gap-2 text-paper py-2" aria-label="Toggle dark mode" aria-pressed="false">
         <span class="dk-ico"><svg class="moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span> Dark
       </button>
-      @auth
-        @if (auth()->user()->is_admin)
-          <a href="{{ route('admin.dashboard') }}" class="ul pb-0.5 text-paper py-2">Admin Dashboard ↗</a>
-        @else
-          <a href="{{ route('user.dashboard') }}" class="ul pb-0.5 text-paper py-2">My Dashboard ↗</a>
-          <a href="{{ route('orders.index') }}" class="ul pb-0.5 text-paper py-2">My Orders ↗</a>
-        @endif
-      @else
-        <a href="{{ route('login') }}" class="ul pb-0.5 text-paper py-2">Sign in ↗</a>
-      @endauth
+      <a href="{{ route('orders.index') }}" class="ul pb-0.5 text-paper py-2">My Orders ↗</a>
     </div>
   </div>
 </div>
@@ -160,9 +142,7 @@
       <button class="dk hit hidden sm:inline-flex" aria-label="Toggle dark mode" aria-pressed="false">
         <span class="dk-ico"><svg class="moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span>
       </button>
-      <a id="dash" href="{{ $dashboardUrl }}"
-         aria-label="{{ auth()->check() ? (auth()->user()->is_admin ? 'Admin dashboard' : 'My dashboard') : 'Sign in' }}"
-         class="hit relative transition-transform duration-300 hover:-translate-y-0.5">
+      <a href="{{ route('orders.index') }}" aria-label="Account" class="hit relative transition-transform duration-300 hover:-translate-y-0.5">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
       </a>
       <a href="{{ route('cart.index') }}" aria-label="Cart{{ $cartCount ? ' ('.$cartCount.' items)' : '' }}" class="hit relative transition-transform duration-300 hover:-translate-y-0.5">
@@ -192,8 +172,6 @@
     addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
     addEventListener('resize', onScroll); onScroll();
 
-
-    
     /* fullscreen menu (pauses Lenis if the page exposes it as window.lenis) */
     const menu = $('#menu'), menuBtn = $('#menuBtn'), menuClose = $('#menuClose');
     function setMenu(open) {
