@@ -208,3 +208,6 @@
     }));
   })();
 </script>
+
+{{-- heart buttons (data-wish) work on every page --}}
+@include('partials.wishlist')

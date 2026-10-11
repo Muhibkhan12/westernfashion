@@ -127,6 +127,8 @@
           <span class="absolute top-4 left-4 z-10 text-[10px] font-mono uppercase tracking-tag px-3 py-1.5 bg-ink text-paper">Featured</span>
         @endif
 
+        <button type="button" data-wish="{{ $product->id }}" class="wish-btn absolute top-4 right-4 z-10" aria-pressed="false" aria-label="Save to wishlist"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
+
         @if($images->count() > 1)
           <button type="button" id="gPrev" class="g-arrow absolute left-3 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/90 flex items-center justify-center" aria-label="Previous image">←</button>
           <button type="button" id="gNext" class="g-arrow absolute right-3 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/90 flex items-center justify-center" aria-label="Next image">→</button>

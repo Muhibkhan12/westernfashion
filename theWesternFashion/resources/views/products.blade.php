@@ -343,6 +343,8 @@
   // --- Grid rendering ---
   const grid = byId("grid"), emptyState = byId("emptyState");
 
+  const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
+
   function cardHtml(p, i, animate) {
     const priceHtml = p.oldPrice
       ? `<span class="text-brick mr-2">${twfFormatPrice(p.price)}</span><span class="line-through text-ink/40">${twfFormatPrice(p.oldPrice)}</span>`
@@ -360,6 +362,7 @@
         <div class="relative bg-paperdeep aspect-[3/4] overflow-hidden mb-3">
           ${imageHtml}
           ${p.badge ? `<span class="absolute top-3 left-3 z-10 text-[10px] font-mono uppercase tracking-tag px-2.5 py-1 ${badgeClass}">${esc(p.badge)}</span>` : ""}
+          <button type="button" data-wish="${esc(p.id)}" class="wish-btn absolute top-2.5 right-2.5 z-20" aria-pressed="false" aria-label="Save to wishlist">${HEART}</button>
           <span class="absolute inset-x-0 bottom-0 z-10 translate-y-full group-hover:translate-y-0 transition duration-500 bg-ink text-paper text-[10px] font-mono uppercase tracking-tag text-center py-3">View jacket →</span>
         </div>
         <div class="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
@@ -418,6 +421,7 @@
       grid.classList.toggle("hidden", filtered.length === 0);
       emptyState.classList.toggle("hidden", filtered.length !== 0);
       grid.classList.remove("out");
+      window.TWFWish && TWFWish.mark();
     };
     // quick fade-out / fade-in swap when the list changes (not while dragging the slider)
     if (animate && !reduce && grid.children.length) { grid.classList.add("out"); setTimeout(render, 220); } else render();

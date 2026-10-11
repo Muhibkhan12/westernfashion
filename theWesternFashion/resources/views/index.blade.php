@@ -183,7 +183,8 @@
   <p id="words" class="t-words font-display leading-[1.15]">Under-the-radar jackets, consciously made for comfort, style, and elegance. Cut once, worn for years.</p>
 </section>
 
-<!-- New jackets: pinned horizontal scroll -->
+@if (count($fresh))
+<!-- New jackets: pinned horizontal scroll (newest products from the database) -->
 <section id="new">
   <div id="hs" class="relative">
     <div id="hsStick" class="hs-stick sticky top-0 flex flex-col justify-center overflow-hidden">
@@ -201,6 +202,7 @@
     </div>
   </div>
 </section>
+@endif
 
 <!-- Video section -->
 <!--
@@ -260,30 +262,27 @@
   </div>
 </section>
 
-<!-- Featured -->
+@if ($featured)
+<!-- Featured: a product marked "featured" in the admin (falls back to the top seller) -->
 <section class="max-w-[1440px] mx-auto px-6 md:px-10 py-10 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
   <div class="lg:col-span-5" data-r>
     <p class="text-[11px] font-mono tracking-tag uppercase text-brick mb-4">Featured</p>
-    <h2 class="t-h3 font-display leading-[1.1] mb-8 md:mb-10 max-w-md">The cropped leather jacket.</h2>
+    <h2 class="t-h3 font-display leading-[1.1] mb-8 md:mb-10 max-w-md">{{ $featured['name'] }}</h2>
     <ul class="max-w-sm">
       <li class="rule" data-rule></li>
-      <li><a href="{{ route('shop.products') }}" class="group flex items-center justify-between py-5 text-lg font-display-sm transition-all duration-300 hover:pl-3">Women's Jackets <span class="font-mono text-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">↗</span></a></li>
-      <li class="rule" data-rule></li>
-      <li><a href="{{ route('shop.products') }}" class="group flex items-center justify-between py-5 text-lg font-display-sm transition-all duration-300 hover:pl-3">Men's Jackets <span class="font-mono text-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">↗</span></a></li>
-      <li class="rule" data-rule></li>
+      @foreach ($navCats as $c)
+        <li><a href="{{ route('shop.products', ['category' => $c->id]) }}" class="group flex items-center justify-between py-5 text-lg font-display-sm transition-all duration-300 hover:pl-3">{{ $c->name }} <span class="font-mono text-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">↗</span></a></li>
+        <li class="rule" data-rule></li>
+      @endforeach
       <li><a href="{{ route('shop.products') }}" class="group flex items-center justify-between py-5 text-lg font-display-sm transition-all duration-300 hover:pl-3">All Jackets <span class="font-mono text-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">↗</span></a></li>
       <li class="rule" data-rule></li>
     </ul>
   </div>
 
   <div class="lg:col-span-6 lg:col-start-7 relative">
-    <div class="relative aspect-[4/5] w-full max-h-[760px] overflow-hidden bg-sand mask" data-vbox>
-      <img class="vid-fb" src="https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=1000&auto=format&fit=crop" alt="Cropped leather jacket" loading="lazy" onerror="imgFail(this)">
-      <video class="vid" muted loop playsinline preload="none" aria-hidden="true">
-        <source src="https://videos.pexels.com/video-files/31223574/13324462_1080_1920_30fps.mp4" type="video/mp4">
-        <source src="{{ asset('storage/assets/videos/cropped-leather.mp4') }}" type="video/mp4">
-      </video>
-    </div>
+    <a href="{{ $featured['url'] }}" class="block relative aspect-[4/5] w-full max-h-[760px] overflow-hidden bg-sand mask" aria-label="{{ $featured['name'] }}">
+      <img class="vid-fb" src="{{ $featured['img'] ?: 'https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=1000&auto=format&fit=crop' }}" alt="{{ $featured['name'] }}" loading="lazy" onerror="imgFail(this)">
+    </a>
 
     <!-- Rotating seal: turns as you scroll -->
     <div class="absolute -top-8 right-2 md:-right-6 w-28 h-28 md:w-32 md:h-32 rounded-full bg-paper border border-ink/10 shadow-sm flex items-center justify-center z-10" aria-hidden="true">
@@ -294,14 +293,22 @@
       </svg>
     </div>
 
-    <div class="flex items-center justify-between pt-4" data-r>
-      <p class="text-[15px] font-display-sm">Cropped Leather Jacket</p>
-      <span class="text-[15px] font-mono">$400.00</span>
-    </div>
+    <a href="{{ $featured['url'] }}" class="flex items-center justify-between gap-4 pt-4" data-r>
+      <p class="text-[15px] font-display-sm ul">{{ $featured['name'] }}</p>
+      <span class="text-[15px] font-mono whitespace-nowrap">
+        @if ($featured['oldPrice'])
+          <span class="text-brick mr-2">${{ number_format($featured['price'], 2) }}</span><span class="line-through text-ink/40">${{ number_format($featured['oldPrice'], 2) }}</span>
+        @else
+          ${{ number_format($featured['price'], 2) }}
+        @endif
+      </span>
+    </a>
   </div>
 </section>
+@endif
 
-<!-- Best sellers -->
+@if (count($best))
+<!-- Best sellers: most units sold; falls back to featured / newest until there are sales -->
 <section class="max-w-[1440px] mx-auto px-6 md:px-10 pt-16 md:pt-24 pb-20 md:pb-28">
   <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10" data-r>
     <div>
@@ -313,6 +320,7 @@
   <div id="filters" class="relative flex flex-wrap gap-x-8 gap-y-2 mb-12 border-b border-ink/10" data-r><span id="tabBar"></span></div>
   <div id="grid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 sm:gap-x-5 gap-y-10 md:gap-y-12"></div>
 </section>
+@endif
 
 <!-- Story -->
 <section class="max-w-[1440px] mx-auto px-6 md:px-10 py-16 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
@@ -460,30 +468,19 @@
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 <script>
-  const SHOP = "{{ route('shop.products') }}";
-  const U = (id, w = 700) => `https://images.unsplash.com/photo-${id}?q=80&w=${w}&auto=format&fit=crop`;
-  const SW = { a:["#1C1A16","#3B5BA5","#9A3D28"], b:["#1C1A16","#3B5BA5"], c:["#1C1A16","#9A3D28"], d:["#1C1A16","#EDE9E3"] };
+  /* ---------- DATA FROM DATABASE (HomeController@index) ---------- */
+  const FRESH = @json($fresh);   // newest products   -> "New Jackets"
+  const BEST  = @json($best);    // best sellers      -> "Best Selling Jackets"
+  const TABS  = @json($tabs);    // [{key, label}]    -> filter tabs (categories)
+
   const $ = (s) => document.querySelector(s);
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canHover = matchMedia('(hover:hover)').matches;
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  const EMPTY_IMG = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 4"><rect width="3" height="4" fill="#E9E6E0"/></svg>');
 
-  /* One product = one photo. "New" items are pulled from this list, so a jacket can never show two different pictures. */
-  const products = [
-    { name:"Camel Wool Jacket",         price:400, cat:"wool",    sw:SW.a, img:U("1544923246-77307dd654cb") },
-    { name:"Quilted Field Jacket",      price:400, old:450, badge:"Sale",     cat:"field",   sw:SW.b, img:U("1551028719-00167b16eac5") },
-    { name:"Cropped Leather Jacket",    price:400, badge:"Sold out", cat:"leather", sw:SW.c, img:U("1521223890158-f9f7c3d5d504") },
-    { name:"Denim Trucker Jacket",      price:400, old:450, badge:"Sale",     cat:"denim",   sw:SW.c, img:U("1611312449408-fcece27cdbb7") },
-    { name:"Shearling Aviator Jacket",  price:480, cat:"leather", sw:SW.a, img:U("1544441893-675973e31985") },
-    { name:"Oversized Wool Jacket",     price:420, cat:"wool",    sw:SW.a, img:U("1591047139829-d91aecb6caea") },
-    { name:"Waxed Cotton Field Jacket", price:400, badge:"Sold out", cat:"field",   sw:SW.d, img:U("1548624149-f9061a9a2151") },
-    { name:"Classic Denim Jacket",      price:380, cat:"denim",   sw:SW.c, img:U("1544966503-7ba532cb2513") },
-  ];
-  const fresh = ["Oversized Wool Jacket","Shearling Aviator Jacket","Camel Wool Jacket","Classic Denim Jacket"]
-    .map(n => ({ ...products.find(p => p.name === n), badge:"New" }));
-
-  /* dev check: warn if two different products ever share a photo */
-  (() => { const seen = {}; products.forEach(p => { if (seen[p.img]) console.warn(`Duplicate image: "${p.name}" and "${seen[p.img]}"`); seen[p.img] = p.name; }); })();
+  const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
 
   const reviews = [
     ["Amelia R.","Camel Wool Jacket",5,"Even better in person. The wool feels heavy and warm without being bulky, and the tailoring around the shoulders is excellent."],
@@ -511,44 +508,54 @@
   }
 
   /* ---------- builders ---------- */
-  const price = (p) => p.old ? `<span class="text-brick mr-2">$${p.price.toFixed(2)}</span><span class="line-through text-ink/40">$${p.old.toFixed(2)}</span>` : `$${p.price.toFixed(2)}`;
+  const price = (p) => p.oldPrice
+    ? `<span class="text-brick mr-2">$${p.price.toFixed(2)}</span><span class="line-through text-ink/40">$${p.oldPrice.toFixed(2)}</span>`
+    : `$${p.price.toFixed(2)}`;
+
   const card = (p, i = 0, cls = '') => {
     const out = p.badge === 'Sold out';
     return `
-    <a href="${SHOP}" data-r style="--d:${(i % 4) * .08}s" class="group block ${cls} ${out ? 'is-out' : ''}">
+    <a href="${esc(p.url)}" data-r style="--d:${(i % 4) * .08}s" class="group block ${cls} ${out ? 'is-out' : ''}">
       <div class="relative overflow-hidden bg-sand aspect-[3/4]">
-        <img loading="lazy" src="${p.img}" alt="${p.name}" class="card-img absolute inset-0 w-full h-full object-cover" onerror="imgFail(this)">
-        ${p.badge ? `<span class="absolute top-3 left-3 z-10 text-[10px] font-mono uppercase tracking-tag px-2.5 py-1 ${p.badge === 'Sale' ? 'bg-brick text-paper' : p.badge === 'New' ? 'bg-ink text-paper' : 'bg-white text-ink/70'}">${p.badge}</span>` : ''}
+        <img loading="lazy" src="${esc(p.img || EMPTY_IMG)}" alt="${esc(p.name)}" class="card-img absolute inset-0 w-full h-full object-cover" onerror="imgFail(this)">
+        ${p.badge ? `<span class="absolute top-3 left-3 z-10 text-[10px] font-mono uppercase tracking-tag px-2.5 py-1 ${p.badge === 'Sale' ? 'bg-brick text-paper' : (p.badge === 'New' || p.badge === 'Featured') ? 'bg-ink text-paper' : 'bg-white text-ink/70'}">${esc(p.badge)}</span>` : ''}
+        <button type="button" data-wish="${esc(p.id)}" class="wish-btn absolute top-2.5 right-2.5 z-20" aria-pressed="false" aria-label="Save to wishlist">${HEART}</button>
         <span class="absolute inset-x-0 bottom-0 z-10 translate-y-full group-hover:translate-y-0 transition duration-500 bg-ink text-paper text-[10px] font-mono uppercase tracking-tag text-center py-3">${out ? 'Sold out' : 'View jacket →'}</span>
       </div>
       <div class="pt-3 flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
         <div>
-          <p class="text-[14px] font-display-sm mb-1.5">${p.name}</p>
-          <div class="flex items-center gap-1.5">${p.sw.map(c => `<span class="w-2.5 h-2.5 rounded-full border border-ink/10" style="background:${c}"></span>`).join('')}</div>
+          <p class="text-[14px] font-display-sm mb-1.5">${esc(p.name)}</p>
+          <div class="flex items-center gap-1.5">${p.colors.map(c => `<span class="w-2.5 h-2.5 rounded-full border border-ink/10" title="${esc(c.name)}" style="background:${esc(c.hex)}"></span>`).join('')}</div>
         </div>
         <p class="text-[13px] font-mono whitespace-nowrap">${price(p)}</p>
       </div>
     </a>`;
   };
 
-  $('#hsTrack').innerHTML = fresh.map((p, i) => card(p, i, 'hs-card')).join('');
+  /* new jackets */
+  const hsT = $('#hsTrack');
+  if (hsT) { hsT.innerHTML = FRESH.map((p, i) => card(p, i, 'hs-card')).join(''); window.TWFWish && TWFWish.mark(); }
 
-  const filters = ["all","leather","denim","field","wool"], fEl = $('#filters'), bar = $('#tabBar');
-  fEl.insertAdjacentHTML('beforeend', filters.map((f, i) => `<button data-f="${f}" class="tab ${i ? '' : 'active'} text-[11px] font-mono uppercase tracking-tag">${f}</button>`).join(''));
-  const moveBar = (b) => { bar.style.left = b.offsetLeft + 'px'; bar.style.width = b.offsetWidth + 'px'; };
-
-  const grid = $('#grid');
+  /* best sellers + category tabs */
+  const fEl = $('#filters'), bar = $('#tabBar'), grid = $('#grid');
+  const moveBar = (b) => { if (bar && b) { bar.style.left = b.offsetLeft + 'px'; bar.style.width = b.offsetWidth + 'px'; } };
   function renderGrid(f = 'all') {
-    grid.innerHTML = products.filter(p => f === 'all' || p.cat === f).map((p, i) => card(p, i)).join('');
+    grid.innerHTML = BEST.filter(p => f === 'all' || p.cat === f).map((p, i) => card(p, i)).join('');
     grid.querySelectorAll('[data-r]').forEach(el => io.observe(el));
+    window.TWFWish && TWFWish.mark();
   }
-  fEl.addEventListener('click', (e) => {
-    const b = e.target.closest('.tab'); if (!b) return;
-    fEl.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-    b.classList.add('active'); moveBar(b);
-    grid.classList.add('out');
-    setTimeout(() => { renderGrid(b.dataset.f); grid.classList.remove('out'); }, 250);
-  });
+  if (fEl && grid) {
+    const tabs = [{ key: 'all', label: 'All' }, ...(TABS.length > 1 ? TABS : [])];   // one category = no point in tabs
+    fEl.insertAdjacentHTML('beforeend', tabs.map((t, i) => `<button data-f="${esc(t.key)}" class="tab ${i ? '' : 'active'} text-[11px] font-mono uppercase tracking-tag">${esc(t.label)}</button>`).join(''));
+    fEl.addEventListener('click', (e) => {
+      const b = e.target.closest('.tab'); if (!b) return;
+      fEl.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      b.classList.add('active'); moveBar(b);
+      grid.classList.add('out');
+      setTimeout(() => { renderGrid(b.dataset.f); grid.classList.remove('out'); }, 250);
+    });
+    if (tabs.length === 1) fEl.classList.add('hidden');
+  }
 
   /* ---------- statement words ---------- */
   const wEl = $('#words');
@@ -572,8 +579,7 @@
     if (e.target === mark) setTimeout(() => mark.classList.add('done'), 2000);
   }), { threshold: .15, rootMargin: '0px 0px -6% 0px' });
   document.querySelectorAll('[data-r], .mask, [data-rule], .split, #bigMark').forEach(el => io.observe(el));
-  renderGrid();
-  requestAnimationFrame(() => moveBar(fEl.querySelector('.tab.active')));
+  if (grid) { renderGrid(); requestAnimationFrame(() => moveBar(fEl.querySelector('.tab.active'))); }
 
   function count(el) {
     const end = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0), t0 = performance.now();
@@ -614,17 +620,20 @@
 
   /* ---------- scroll-driven engine (one loop) ---------- */
   const hero = $('#hero'), heroC = $('#heroC'), grow = $('#grow'),
-        hs = $('#hs'), hsT = $('#hsTrack'), hsL = $('#hsLine'),
+        hs = $('#hs'), hsL = $('#hsLine'),
         prog = $('#prog'), seal = $('#seal'),
         pars = [...document.querySelectorAll('[data-p]')];
   let dist = 0, lastY = scrollY, sv = 0;
   const stick = $('#hsStick');
   const fitMark = () => { mark.style.fontSize = '100px'; const w = markTxt.getBoundingClientRect().width; mark.style.fontSize = (100 * mark.parentElement.clientWidth * .94 / w) + 'px'; };
   const measure = () => {
-    dist = Math.max(0, hsT.scrollWidth - document.documentElement.clientWidth);
-    hs.style.height = (stick.offsetHeight + dist) + 'px';
+    if (hs) {
+      dist = Math.max(0, hsT.scrollWidth - document.documentElement.clientWidth);
+      hs.style.height = (stick.offsetHeight + dist) + 'px';
+    }
     mqW = mqEl.scrollWidth / 4;
-    moveBar(fEl.querySelector('.tab.active')); fitMark();
+    if (fEl) moveBar(fEl.querySelector('.tab.active'));
+    fitMark();
   };
   let lastW = innerWidth;
   addEventListener('resize', () => { if (innerWidth !== lastW) { lastW = innerWidth; measure(); } });
@@ -635,15 +644,17 @@
   function update() {
     const y = scrollY, vh = innerHeight, max = Math.max(1, document.documentElement.scrollHeight - vh);
 
-    // scroll velocity (smoothed) drives skew + marquee
+    // scroll velocity (smoothed) drives the marquee
     sv += ((y - lastY) - sv) * .12; lastY = y;
 
     prog.style.transform = `scaleX(${clamp(y / max)})`;
 
     if (y < vh * 1.2) { const k = clamp(y / (vh * .6)); heroC.style.opacity = 1 - k; heroC.style.transform = `translate3d(0,${y * .25}px,0)`; }
 
-    const r = hs.getBoundingClientRect(), p = clamp(-r.top / Math.max(1, r.height - stick.offsetHeight));
-    hsT.style.transform = `translate3d(${-p * dist}px,0,0)`; hsL.style.transform = `scaleX(${p})`;
+    if (hs) {
+      const r = hs.getBoundingClientRect(), p = clamp(-r.top / Math.max(1, r.height - stick.offsetHeight));
+      hsT.style.transform = `translate3d(${-p * dist}px,0,0)`; hsL.style.transform = `scaleX(${p})`;
+    }
 
     const g = grow.getBoundingClientRect(), gp = clamp((vh - g.top) / (vh * .8)), ins = (1 - gp) * 10;
     grow.style.clipPath = `inset(${ins}% ${ins}% ${ins}% ${ins}%)`;
@@ -667,7 +678,7 @@
         mqEl.style.transform = `translate3d(${mqX}px,0,0)`;
       }
       // seal rotates with the page
-      seal.style.transform = `rotate(${y * .12}deg)`;
+      if (seal) seal.style.transform = `rotate(${y * .12}deg)`;
     }
   }
   (function raf(t) { lenis && lenis.raf(t); update(); requestAnimationFrame(raf); })(0);
