@@ -14,6 +14,7 @@ use App\Http\Controllers\UserDashboardController;   // NEW
 use App\Http\Controllers\CustomOrderController;     // NEW
 use App\Http\Controllers\HomeController;            // NEW
 use App\Http\Controllers\WishlistController;       // NEW
+use App\Http\Controllers\PaypalWebhookController;   // NEW
 
 /*
 | 1. PUBLIC PAGES
@@ -93,6 +94,9 @@ Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add')->midd
 Route::patch('/cart/{variant}', [CartController::class, 'update'])->whereUuid('variant')->name('cart.update');
 Route::delete('/cart/{variant}', [CartController::class, 'destroy'])->whereUuid('variant')->name('cart.destroy');
 
+// PayPal webhook (public; its signature is verified in the controller, CSRF is switched off for it in bootstrap/app.php)   // NEW
+Route::post('/webhooks/paypal', [PaypalWebhookController::class, 'handle'])->name('webhooks.paypal');
+
 // Wishlist: saved ids for the heart buttons (public: guests just get an empty list)   // NEW
 Route::get('/wishlist/ids', [WishlistController::class, 'ids'])->name('wishlist.ids');
 
@@ -110,8 +114,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
-    // Payment (gateway not connected yet)
+    // Payment
     Route::post('/orders/{order}/pay', [PaymentController::class, 'start'])->name('payment.start');
+    Route::get('/payments/{order}/return', [PaymentController::class, 'approved'])->name('payment.return');   // NEW: customer comes back from PayPal
+    Route::get('/payments/{order}/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');    // NEW
+    Route::get('/payments/{order}/mock', [PaymentController::class, 'mock'])->name('payment.mock');          // NEW: pretend PayPal page (fake mode only)
 
     // User pages
     Route::get('/user-dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');   // NEW: was a closure
