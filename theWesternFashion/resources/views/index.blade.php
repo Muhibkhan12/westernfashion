@@ -17,10 +17,43 @@
         }
       }
     }
-    /* One shared image fallback: a broken image becomes a neutral tile, never a wrong picture */
+
+    /* ---------- IMAGE SYSTEM ----------
+       1) Illustrated jacket placeholder (inline SVG, always works, no network needed)
+       2) imgFail: if the photo fails, try data-fb once, then fall back to the illustration
+       Change any static picture in ONE place: the IMG map below. */
+    window.ph = function (n) {
+      var tones = [['#E9E6E0','#57624A'],['#EFE9E1','#9A3D28'],['#E4E6E0','#1C1A16'],['#ECE8E0','#7A6A55']];
+      var t = tones[(+n || 0) % tones.length];
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice">' +
+        '<rect width="300" height="400" fill="' + t[0] + '"/>' +
+        '<path d="M105 110 L135 95 Q150 118 165 95 L195 110 L242 152 L226 292 L200 282 L200 332 L100 332 L100 282 L74 292 L58 152 Z" fill="' + t[1] + '"/>' +
+        '<path d="M135 95 Q150 118 165 95 L172 88 Q150 108 128 88 Z" fill="rgba(255,255,255,.28)"/>' +
+        '<path d="M150 112 V332" stroke="rgba(255,255,255,.45)" stroke-width="2" stroke-dasharray="5 4"/>' +
+        '<path d="M112 250 H138 M162 250 H188" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-linecap="round"/>' +
+        '</svg>';
+      return 'data:image/svg+xml,' + encodeURIComponent(svg);
+    };
     window.imgFail = function (i) {
+      if (i.dataset.fb && !i.dataset.tried) { i.dataset.tried = '1'; i.src = i.dataset.fb; return; }
       i.onerror = null;
-      i.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 4"><rect width="3" height="4" fill="#E9E6E0"/></svg>');
+      i.src = window.ph(i.dataset.n);
+    };
+
+    /* Static pictures: edit these URLs (or point them to your own files in storage/assets) */
+    window.IMG = {
+      hero:     'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1800&auto=format&fit=crop',
+      workshop: 'https://images.unsplash.com/photo-1544966503-7ba532cb2513?q=80&w=1200&auto=format&fit=crop',
+      field:    'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1200&auto=format&fit=crop',
+      promo:    'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1800&auto=format&fit=crop',
+      featured: 'https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=1000&auto=format&fit=crop',
+      story:    'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1200&auto=format&fit=crop',
+      stock: [
+        'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1544966503-7ba532cb2513?q=80&w=800&auto=format&fit=crop'
+      ]
     };
   </script>
   <style>
@@ -148,7 +181,7 @@
 <!-- Hero -->
 <section id="hero" class="hero-h relative overflow-hidden bg-ink">
   <div class="absolute inset-0 hero-zoom">
-    <img data-p="0.18" class="par" src="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1800&auto=format&fit=crop" alt="Model wearing a quilted field jacket" onerror="imgFail(this)">
+    <img data-p="0.18" data-img="hero" data-n="2" class="par" alt="Model wearing a quilted field jacket" onerror="imgFail(this)">
   </div>
   <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-black/35"></div>
   <div id="heroC" class="relative z-10 h-full max-w-[1440px] mx-auto px-6 md:px-10 flex flex-col justify-end pb-12 sm:pb-16 md:pb-24 text-paper">
@@ -221,7 +254,7 @@
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
     <div data-r>
       <div class="video-card mask overflow-hidden" data-vbox>
-        <img class="vid-fb" src="https://images.unsplash.com/photo-1544966503-7ba532cb2513?q=80&w=1200&auto=format&fit=crop" alt="Denim jacket on a workshop table" loading="lazy" onerror="imgFail(this)">
+        <img class="vid-fb" data-img="workshop" data-n="0" alt="Denim jacket on a workshop table" loading="lazy" onerror="imgFail(this)">
         <video class="vid" muted loop playsinline preload="none" aria-hidden="true">
           <source src="{{ asset('storage/assets/videos/workshop.mp4') }}" type="video/mp4">
         </video>
@@ -232,7 +265,7 @@
     </div>
     <div data-r style="--d:.15s">
       <div class="video-card mask overflow-hidden" data-vbox>
-        <img class="vid-fb" src="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1200&auto=format&fit=crop" alt="Quilted field jacket" loading="lazy" onerror="imgFail(this)">
+        <img class="vid-fb" data-img="field" data-n="1" alt="Quilted field jacket" loading="lazy" onerror="imgFail(this)">
         <video class="vid" muted loop playsinline preload="none" aria-hidden="true">
           <source src="{{ asset('storage/assets/videos/field-jacket.mp4') }}" type="video/mp4">
         </video>
@@ -252,7 +285,7 @@
 <!-- Promo: image grows full-bleed on scroll -->
 <section class="my-16 md:my-40">
   <div id="grow" class="grow-h relative overflow-hidden bg-ink" style="clip-path:inset(10% 10% 10% 10%)">
-    <img data-p="0.14" class="par" src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1800&auto=format&fit=crop" alt="Model wearing an oversized wool jacket" loading="lazy" onerror="imgFail(this)">
+    <img data-p="0.14" data-img="promo" data-n="3" class="par" alt="Model wearing an oversized wool jacket" loading="lazy" onerror="imgFail(this)">
     <div class="absolute inset-0 bg-black/40"></div>
     <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 text-paper">
       <p class="text-[11px] font-mono tracking-tag uppercase text-paper/70 mb-5" data-r>Outerwear Edit</p>
@@ -281,7 +314,7 @@
 
   <div class="lg:col-span-6 lg:col-start-7 relative">
     <a href="{{ $featured['url'] }}" class="block relative aspect-[4/5] w-full max-h-[760px] overflow-hidden bg-sand mask" aria-label="{{ $featured['name'] }}">
-      <img class="vid-fb" src="{{ $featured['img'] ?: 'https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=1000&auto=format&fit=crop' }}" alt="{{ $featured['name'] }}" loading="lazy" onerror="imgFail(this)">
+      <img class="vid-fb" src="{{ $featured['img'] ?: '' }}" @if (empty($featured['img'])) data-img="featured" @else data-fb="https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?q=80&w=1000&auto=format&fit=crop" @endif data-n="2" alt="{{ $featured['name'] }}" loading="lazy" onerror="imgFail(this)">
     </a>
 
     <!-- Rotating seal: turns as you scroll -->
@@ -331,6 +364,8 @@
     <div class="relative w-full h-full overflow-hidden rounded-sm bg-sand mask">
       <img
         src="{{ asset('storage/assets/jackets.jpg') }}"
+        data-fb="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1200&auto=format&fit=crop"
+        data-n="1"
         alt="Handcrafted jacket from The Western Fashion"
         loading="lazy"
         decoding="async"
@@ -468,6 +503,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 <script>
+  /* ---------- STATIC PICTURES: fill every [data-img] from the IMG map in <head> ---------- */
+  document.querySelectorAll('img[data-img]').forEach(img => {
+    const url = window.IMG[img.dataset.img];
+    if (url) img.src = url; else img.src = window.ph(img.dataset.n);
+  });
+
   /* ---------- DATA FROM DATABASE (HomeController@index) ---------- */
   const FRESH = @json($fresh);   // newest products   -> "New Jackets"
   const BEST  = @json($best);    // best sellers      -> "Best Selling Jackets"
@@ -478,7 +519,7 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canHover = matchMedia('(hover:hover)').matches;
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
-  const EMPTY_IMG = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 4"><rect width="3" height="4" fill="#E9E6E0"/></svg>');
+  const stock = (i) => window.IMG.stock[i % window.IMG.stock.length];
 
   const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
 
@@ -517,7 +558,7 @@
     return `
     <a href="${esc(p.url)}" data-r style="--d:${(i % 4) * .08}s" class="group block ${cls} ${out ? 'is-out' : ''}">
       <div class="relative overflow-hidden bg-sand aspect-[3/4]">
-        <img loading="lazy" src="${esc(p.img || EMPTY_IMG)}" alt="${esc(p.name)}" class="card-img absolute inset-0 w-full h-full object-cover" onerror="imgFail(this)">
+        <img loading="lazy" src="${esc(p.img || stock(i))}" ${p.img ? `data-fb="${stock(i)}"` : ''} data-n="${i}" alt="${esc(p.name)}" class="card-img absolute inset-0 w-full h-full object-cover" onerror="imgFail(this)">
         ${p.badge ? `<span class="absolute top-3 left-3 z-10 text-[10px] font-mono uppercase tracking-tag px-2.5 py-1 ${p.badge === 'Sale' ? 'bg-brick text-paper' : (p.badge === 'New' || p.badge === 'Featured') ? 'bg-ink text-paper' : 'bg-white text-ink/70'}">${esc(p.badge)}</span>` : ''}
         <button type="button" data-wish="${esc(p.id)}" class="wish-btn absolute top-2.5 right-2.5 z-20" aria-pressed="false" aria-label="Save to wishlist">${HEART}</button>
         <span class="absolute inset-x-0 bottom-0 z-10 translate-y-full group-hover:translate-y-0 transition duration-500 bg-ink text-paper text-[10px] font-mono uppercase tracking-tag text-center py-3">${out ? 'Sold out' : 'View jacket →'}</span>
